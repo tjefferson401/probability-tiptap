@@ -15,6 +15,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { RunnableCode } from "./extensions/RunnableCode";
 import { InlineTex } from "./extensions/InlineTex";
 import { BlockTex } from "./extensions/BlockTex";
+import { generateJSON } from "@tiptap/react";
 
 // yjs
 import './TipTap.scss';
@@ -89,7 +90,8 @@ export const TipTap = (props) => {
 
 const TipTapSafe = ({
   editable,
-    user
+    user,
+    content=""
 }) => {
 
   // listen to changes to the firebase document path
@@ -98,6 +100,7 @@ const TipTapSafe = ({
     <TipTapWithData
       editable={editable}
       user={user}
+      content={content}
     />
   );
 };
@@ -107,7 +110,8 @@ const TipTapSafe = ({
  */
 export const TipTapWithData = ({
   editable,
-  user
+  user,
+  content
 }) => {
 
   // test cases
@@ -139,6 +143,7 @@ export const TipTapWithData = ({
       provider={webProvider}
       editable={editable}
       user={user}
+      content={content}
     />
   );
 };
@@ -146,7 +151,7 @@ export const TipTapWithData = ({
 /**
  * This is the actual editor
  */
-const TipTapWithDoc = ({ provider, onUpdate, editable, user }) => {
+const TipTapWithDoc = ({ provider, onUpdate, editable, user, content=""}) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -166,8 +171,13 @@ const TipTapWithDoc = ({ provider, onUpdate, editable, user }) => {
       // Register the document with Tiptap
     ],
     editable: editable,
+    content: content,
   });
 
+  useEffect(() => {
+    if (!editor) return;
+    editor.commands.setContent(content);
+  }, [content])
 
   useEffect(() => {
     if (editor) {
@@ -225,7 +235,7 @@ const TipTapWithDoc = ({ provider, onUpdate, editable, user }) => {
         onInsertImage={onInsertImage}
       />
       <div 
-        style={{minHeight: "200px"}}
+        style={{minHeight: "800px"}}
         className={"tiptapContentWrapper " +(editable ? "editor editableWrapper" : "")}
       >
         <EditorContent editor={editor} />
