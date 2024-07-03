@@ -2,6 +2,8 @@
 // import PyodideProvider from './pyodide/PyodideProvider'
 // import { RichTextEditor } from "./richText/RichTextEditor"
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'katex/dist/katex.min.css'
+
 
 
 // function App() {

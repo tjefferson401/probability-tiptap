@@ -16,6 +16,7 @@ import { RunnableCode } from "./extensions/RunnableCode";
 import { InlineTex } from "./extensions/InlineTex";
 import { BlockTex } from "./extensions/BlockTex";
 import { generateJSON } from "@tiptap/react";
+import latexPlugin  from "./extensions/Latex";
 
 // yjs
 import './TipTap.scss';
@@ -171,7 +172,7 @@ const TipTapWithDoc = ({ provider, onUpdate, editable, user, content=""}) => {
       // Register the document with Tiptap
     ],
     editable: editable,
-    content: content,
+    content: content
   });
 
   useEffect(() => {
