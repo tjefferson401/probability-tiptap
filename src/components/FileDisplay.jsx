@@ -16,6 +16,7 @@ export const FileDisplay = ({filePath, setCurrFile }) => {
         fetchFile()
     }, [filePath])
 
+    console.log(fileContent)
     return <div className="h-100">
         <button onClick={() => setCurrFile(null)}>Back</button>
         <button onClick={() => setIsEditable(!isEditable)}>Toggle Editable</button>

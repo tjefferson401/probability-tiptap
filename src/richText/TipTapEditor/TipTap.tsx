@@ -15,8 +15,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { RunnableCode } from "./extensions/RunnableCode";
 import { InlineTex } from "./extensions/InlineTex";
 import { BlockTex } from "./extensions/BlockTex";
-import { generateJSON } from "@tiptap/react";
-import latexPlugin  from "./extensions/Latex";
+import { parseMathJax } from "./parser/latex";
 
 // yjs
 import './TipTap.scss';
@@ -153,6 +152,7 @@ export const TipTapWithData = ({
  * This is the actual editor
  */
 const TipTapWithDoc = ({ provider, onUpdate, editable, user, content=""}) => {
+  const [readyChanges, setReadyChanges] = useState(content);
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -172,12 +172,15 @@ const TipTapWithDoc = ({ provider, onUpdate, editable, user, content=""}) => {
       // Register the document with Tiptap
     ],
     editable: editable,
-    content: content
+    content: parseMathJax(content),
   });
 
+
   useEffect(() => {
-    if (!editor) return;
-    editor.commands.setContent(content);
+    if(editor) {
+      // set editor content
+      editor.commands.setContent(parseMathJax(content));
+    }
   }, [content])
 
   useEffect(() => {

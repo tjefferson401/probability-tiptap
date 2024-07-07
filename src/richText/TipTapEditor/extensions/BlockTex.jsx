@@ -195,7 +195,10 @@ const CodeSnippet = (props) => {
     const containerRef = createRef();
     useEffect(() => {
       if (containerRef.current && props.content) {
-        katex.render(props.content, containerRef.current, {displayMode: true});
+        katex.render(props.content, containerRef.current, {
+          displayMode: true,
+          throwOnError: false,
+        });
       }
     }, [props.content]);
   

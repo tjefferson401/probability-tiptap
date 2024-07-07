@@ -36,6 +36,7 @@ import 'katex/dist/katex.min.css'
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Link, Route, Routes } from 'react-router-dom';
 import { FileDisplay } from './components/FileDisplay';
+import { MathJax } from 'better-react-mathjax';
 
 const fetchFileStructure = async () => {
     const response = await fetch('/fileStructure.json');
