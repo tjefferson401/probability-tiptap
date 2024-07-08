@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import  { useState, useEffect, useRef } from "react";
 
 
 
@@ -16,6 +16,7 @@ import { RunnableCode } from "./extensions/RunnableCode";
 import { InlineTex } from "./extensions/InlineTex";
 import { BlockTex } from "./extensions/BlockTex";
 import { parseMathJax } from "./parser/latex";
+import { ChartBlock } from "./extensions/Chart";
 
 // yjs
 import './TipTap.scss';
@@ -163,6 +164,7 @@ const TipTapWithDoc = ({ provider, onUpdate, editable, user, content=""}) => {
       InlineTex,
       BlockTex,
       RunnableCode,
+      ChartBlock,
       Placeholder.configure({
         placeholder: "Write something …",
       }),
