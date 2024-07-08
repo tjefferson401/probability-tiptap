@@ -52,6 +52,7 @@ export const RenderInlineTex = (props) => {
   
   
   let rawTex = props.node.attrs.rawTex
+
   let selected = props.node.attrs.editing
   const [isEditable, setIsEditable, editableRef] = useState(props.editor.isEditable)
   useEffect(() => {
@@ -141,7 +142,7 @@ export const RenderedInlineKatex = (props) => {
   if(hasError) {
     return <span className="badge bg-danger" onClick={props.onClick}>tex error</span>
   }
-  if(props.content.trim() == '') {
+  if(props.content.trim && props.content.trim() == '') {
     return <span className="badge bg-info" onClick={props.onClick}>empty tex</span>
   }
   return <span className={wrapperClass} ref={containerRef} onClick={props.onClick} />

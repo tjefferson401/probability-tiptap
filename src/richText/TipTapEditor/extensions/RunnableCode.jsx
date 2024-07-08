@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-
-
 import { MonacoTipTap } from './MonacoTipTap';
 import { FaPlay, FaStop, FaTerminal } from 'react-icons/fa';
-
-
 // tiptap
 import { NodeViewWrapper } from '@tiptap/react'
 import { Node, mergeAttributes } from '@tiptap/core'

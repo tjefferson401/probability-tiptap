@@ -26,6 +26,7 @@ export const ButtonBar = ({ editor, editable, onInsertImage }) => {
         <InlineLatexButton editor={editor}/>
         <PythonButton editor={editor}/>
         <ImageButton editor={editor} onInsertImage={onInsertImage}/>
+        <ChartButton editor={editor}/>
         
   
       </div>
@@ -75,4 +76,16 @@ export const ButtonBar = ({ editor, editable, onInsertImage }) => {
       .run()} className="btn btn-sm btn-light">
       <FaAlignCenter /> Block LaTeX
     </button>;
+  }
+
+  function ChartButton({editor}) {
+    return <button onClick={() =>
+      editor
+        .chain()
+        .focus()
+        .insertContent("<chart-block></chart-block>")
+        .run()
+    } className="btn btn-sm btn-light">
+    <FaHeading /> Chart
+  </button>
   }

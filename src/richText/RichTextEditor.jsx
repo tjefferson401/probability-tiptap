@@ -16,8 +16,7 @@ export const RichTextEditor = ({
     user,
     editable,
     firebaseDocPath,
-    collaborative=true,
-    contentKey='content'
+    content=""
   }) => {
 
   if(!firebaseDocPath) {
@@ -28,5 +27,6 @@ export const RichTextEditor = ({
     firebaseDocPath={firebaseDocPath}
     editable={editable}
     user={user}
+    content={content}
   />
 };

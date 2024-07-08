@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import  { useState, useEffect, useRef } from "react";
 
 
 
@@ -15,6 +15,8 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { RunnableCode } from "./extensions/RunnableCode";
 import { InlineTex } from "./extensions/InlineTex";
 import { BlockTex } from "./extensions/BlockTex";
+import { parseMathJax } from "./parser/latex";
+import { ChartBlock } from "./extensions/Chart";
 
 // yjs
 import './TipTap.scss';
@@ -89,7 +91,8 @@ export const TipTap = (props) => {
 
 const TipTapSafe = ({
   editable,
-    user
+    user,
+    content=""
 }) => {
 
   // listen to changes to the firebase document path
@@ -98,6 +101,7 @@ const TipTapSafe = ({
     <TipTapWithData
       editable={editable}
       user={user}
+      content={content}
     />
   );
 };
@@ -107,7 +111,8 @@ const TipTapSafe = ({
  */
 export const TipTapWithData = ({
   editable,
-  user
+  user,
+  content
 }) => {
 
   // test cases
@@ -139,6 +144,7 @@ export const TipTapWithData = ({
       provider={webProvider}
       editable={editable}
       user={user}
+      content={content}
     />
   );
 };
@@ -146,7 +152,8 @@ export const TipTapWithData = ({
 /**
  * This is the actual editor
  */
-const TipTapWithDoc = ({ provider, onUpdate, editable, user }) => {
+const TipTapWithDoc = ({ provider, onUpdate, editable, user, content=""}) => {
+  const [readyChanges, setReadyChanges] = useState(content);
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -157,6 +164,7 @@ const TipTapWithDoc = ({ provider, onUpdate, editable, user }) => {
       InlineTex,
       BlockTex,
       RunnableCode,
+      ChartBlock,
       Placeholder.configure({
         placeholder: "Write something …",
       }),
@@ -166,8 +174,16 @@ const TipTapWithDoc = ({ provider, onUpdate, editable, user }) => {
       // Register the document with Tiptap
     ],
     editable: editable,
+    content: parseMathJax(content),
   });
 
+
+  useEffect(() => {
+    if(editor) {
+      // set editor content
+      editor.commands.setContent(parseMathJax(content));
+    }
+  }, [content])
 
   useEffect(() => {
     if (editor) {
@@ -225,7 +241,7 @@ const TipTapWithDoc = ({ provider, onUpdate, editable, user }) => {
         onInsertImage={onInsertImage}
       />
       <div 
-        style={{minHeight: "200px"}}
+        style={{minHeight: "800px"}}
         className={"tiptapContentWrapper " +(editable ? "editor editableWrapper" : "")}
       >
         <EditorContent editor={editor} />

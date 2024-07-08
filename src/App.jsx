@@ -1,33 +1,15 @@
+import { BrowserRouter as Router, Link, Route, Routes, createBrowserRouter } from 'react-router-dom';
+import { FileStructureOuter } from './Textbook';
+import { GameOfUr } from './gameUr/GameOfUr';
 
-import PyodideProvider from './pyodide/PyodideProvider'
-import { RichTextEditor } from "./richText/RichTextEditor"
-import 'bootstrap/dist/css/bootstrap.min.css';
 
-
-function App() {
-  /*
-  export const RichTextEditor = ({
-    user,
-    editable,
-    firebaseDocPath,
-    collaborative=true,
-    contentKey='content'
-  }) => {
-    */
-
-  return (
-    <>
-    <PyodideProvider>
-      <RichTextEditor
-        user={{name: 'test'}}
-        editable={true}
-        firebaseDocPath='test'
-        collaborative={false}
-        contentKey='content'
-      />
-    </PyodideProvider>
-    </>
-  )
-}
-
-export default App
+export const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <FileStructureOuter/>
+    },
+    {
+        path:"/ur",
+        element: <GameOfUr/>
+    }
+])
