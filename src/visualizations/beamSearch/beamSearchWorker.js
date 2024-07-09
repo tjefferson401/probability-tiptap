@@ -8,6 +8,9 @@ import { pipeline, env } from '@xenova/transformers';
  */
 env.allowLocalModels = false;
 
+// hide all warnings from this worker
+env.logLevel = 'error';
+
 class GPT2Pipeline {
     // static task = 'text-generation';
     // static model = 'gpt2';
