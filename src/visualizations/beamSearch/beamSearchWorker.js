@@ -41,7 +41,15 @@ self.addEventListener('message', async (event) => {
     });
 
     // Actually perform the translation
-    let output = await gpt2TextGen(event.data.text, {
+    let output = await gpt2TextGen([event.data.text], {
+        max_new_tokens: 3,
+        num_beams: 3,
+        num_return_sequences: 3,
+        length_penalty: 1.0,
+        output_scores: true,
+        do_sample: false,
+        return_dict_in_generate: true,
+
 
         // Allows for partial output
         callback_function: x => {
