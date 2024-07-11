@@ -17,6 +17,8 @@ import { InlineTex } from "./extensions/InlineTex";
 import { BlockTex } from "./extensions/BlockTex";
 import { parseMathJax } from "./parser/latex";
 import { ChartBlock } from "./extensions/Chart";
+import { Paper } from "./extensions/Paper";
+import { SimpleCalculator } from "./extensions/SimpleCalculator";
 
 // yjs
 import './TipTap.scss';
@@ -165,6 +167,8 @@ const TipTapWithDoc = ({ provider, onUpdate, editable, user, content=""}) => {
       BlockTex,
       RunnableCode,
       ChartBlock,
+      Paper,
+      SimpleCalculator,
       Placeholder.configure({
         placeholder: "Write something …",
       }),

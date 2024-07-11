@@ -2,98 +2,6 @@
 
 // import { Node } from '@tiptap/core';
 import { Chart } from 'chart.js';
-
-// export const ChartNode = Node.create({
-//   name: 'chart',
-
-//   // Define the default attributes for your chart
-//   defaultAttributes: {
-//     type: 'bar',  // Chart type (bar, line, pie, etc.)
-//     data: {},     // Data for the chart
-//     options: {}   // Chart.js options
-//   },
-
-//   // This node is a leaf (no content inside)
-//   group: 'block',
-//   atom: true,
-
-//   // Add the chart as an HTML element
-//   addNodeView() {
-//     return ({ node, HTMLAttributes }) => {
-//       const el = document.createElement('canvas');
-//       const chart = new Chart(el, {
-//         type: node.attrs.type,
-//         data: node.attrs.data,
-//         options: node.attrs.options,
-//       });
-
-//       return {
-//         dom: el,
-//         update: (updatedNode) => {
-//           if (updatedNode.type === node.type) {
-//             chart.config.type = updatedNode.attrs.type;
-//             chart.config.data = updatedNode.attrs.data;
-//             chart.config.options = updatedNode.attrs.options;
-//             chart.update();
-//             return true;
-//           }
-//           return false;
-//         },
-//         destroy: () => {
-//           chart.destroy();
-//         }
-//       };
-//     };
-//   },
-
-//   // Parse HTML and determine how to extract the attributes
-//   addAttributes() {
-//     return {
-//       type: {
-//         default: 'bar',
-//         parseHTML: element => element.getAttribute('data-type'),
-//         renderHTML: attributes => ({
-//           'data-type': attributes.type
-//         }),
-//       },
-//       data: {
-//         default: {},
-//         parseHTML: element => JSON.parse(element.getAttribute('data-data')),
-//         renderHTML: attributes => ({
-//           'data-data': JSON.stringify(attributes.data)
-//         }),
-//       },
-//       options: {
-//         default: {},
-//         parseHTML: element => JSON.parse(element.getAttribute('data-options')),
-//         renderHTML: attributes => ({
-//           'data-options': JSON.stringify(attributes.options)
-//         }),
-//       }
-//     };
-//   },
-
-//   // Specify how this node should be serialized to HTML
-//   renderHTML({ node }) {
-//     return ['div', { 'data-type': node.attrs.type, 'data-data': JSON.stringify(node.attrs.data), 'data-options': JSON.stringify(node.attrs.options) }, ''];
-//   },
-
-//   // Parse the node from the DOM
-//   parseHTML() {
-//     return [
-//       {
-//         tag: 'chart-content',
-//         getAttrs: dom => ({
-//           type: dom.getAttribute('data-type'),
-//           data: JSON.parse(dom.getAttribute('data-data')),
-//           options: JSON.parse(dom.getAttribute('data-options')),
-//         }),
-//       },
-//     ];
-//   },
-// });
-
-
 import React, {createRef, useEffect, useRef} from 'react';
 import useState from 'react-usestateref';
 
@@ -102,6 +10,7 @@ import useState from 'react-usestateref';
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react'
 import { Node, mergeAttributes } from '@tiptap/core'
 import { ReactNodeViewRenderer } from '@tiptap/react'
+import { ControlledInput } from './InlineTex';
 
 /**
  * Notes: Controlling the cursor is very important. Specifically, when you set
@@ -181,41 +90,45 @@ export const RenderChartBlock = (props) => {
 
     // ignore this if you are not editable
     if(!isEditable && newValue) {
+      console.log("HERE1111")
       return
     }
 
     // make sure that editing isn't turned off for 
     // empty latex
-    if(newValue) {
       props.updateAttributes({
         editing:newValue
       })
-    }
   }
 
 
-  const onXLabelChange = (newXLabel) => {
+  const onXLabelChange = (event) => {
+    const newXLabel = event.target.value
+
     setXLabel(newXLabel)
     props.updateAttributes({
       xLabel: newXLabel
     })
   }
 
-const onYLabelChange = (newYLabel) => {
+const onYLabelChange = (event) => {
+    const newYLabel = event.target.value
     setYLabel(newYLabel)
     props.updateAttributes({
         yLabel: newYLabel
     })
 }
 
-const onChartTypeChange = (newChartType) => {
+const onChartTypeChange = (event) => {
+    const newChartType = event.target.value
     setChartType(newChartType)
     props.updateAttributes({
         chartType: newChartType
     })
 }
 
-const onDataChange = (newData) => {
+const onDataChange = (event) => {
+    const newData = event.target.value
     setData(newData)
     props.updateAttributes({
         data: newData
@@ -230,20 +143,19 @@ const onDataChange = (newData) => {
 
   const inputKeyDown = (event) => {
     if (event.key === 'Enter') {
-      onBlur()
+      setSelected(false)
     }
     if (event.key === 'Tab') {
-      onBlur()
+      setSelected(false)
     }
   }
 
+
   if(selected && isEditable) {
-    console.log("HEREE")
     return (
       <NodeViewWrapper as="span">
         <label>x Axis Label</label>
         <ControlledInput
-            style={INPUT_STYLE}
             value={xLabel}
             onChange={onXLabelChange}
             onKeyDown={inputKeyDown}
@@ -253,7 +165,6 @@ const onDataChange = (newData) => {
         ></ControlledInput>
         <label>y Axis Label</label>
         <ControlledInput
-            style={INPUT_STYLE}
             value={yLabel}
             onChange={onYLabelChange}
             onKeyDown={inputKeyDown}
@@ -263,7 +174,6 @@ const onDataChange = (newData) => {
         ></ControlledInput>
         <label>Chart Type</label>
         <ControlledInput
-            style={INPUT_STYLE}
             value={chartType}
             onChange={onChartTypeChange}
             onKeyDown={inputKeyDown}
@@ -273,7 +183,6 @@ const onDataChange = (newData) => {
         ></ControlledInput>
         <label>Data</label>
         <ControlledInput
-            style={INPUT_STYLE}
             value={data}
             onChange={onDataChange}
             onKeyDown={inputKeyDown}
@@ -285,7 +194,7 @@ const onDataChange = (newData) => {
       </NodeViewWrapper>
     )
   }
-  console.log("HE:(REE")
+
 
   return (
       <NodeViewWrapper>
@@ -294,34 +203,54 @@ const onDataChange = (newData) => {
             xLabel={xLabel}
             yLabel={yLabel}
             chartType={chartType}
+            setSelected={setSelected}
         />
       </NodeViewWrapper>
   )
 }
 
 export const ChartView = (props) => {
+    const canvasRef = useRef(null)
     const chartRef = useRef(null)
+    const setSelected = props.setSelected
+
+    const onChartClick = (event) => {
+      setSelected(true)
+    }
 
     useEffect(() => {
-        if(chartRef.current) {
-            const ctx = chartRef.current.getContext('2d');
-            new Chart(ctx, {
+      console.log(props.data)
+      const data = JSON.parse(props.data)
+      console.log(data)
+        if(canvasRef.current) {
+            const ctx = canvasRef.current.getContext('2d');
+            if(chartRef.current) {
+              chartRef.current.destroy()
+            }
+            chartRef.current = new Chart(ctx, {
                 type: props.chartType,
                 data: {
-                    labels: props.data.map((d,i) => i),
+                    labels: data.map((d,i) => i),
                     datasets: [
                         {
                             label: props.yLabel,
-                            data: JSON.parse(props.data),
+                            data: data
                         }
                     ]
                 }
             })
         }
+
+        return () => {
+            if(chartRef.current) {
+              chartRef.current.destroy()
+            }
+        
+        }
     }, [props.data, props.xLabel, props.yLabel, props.chartType])
 
 
     return (
-        <canvas ref={chartRef}></canvas>
+        <canvas ref={canvasRef} id="0" onClick={onChartClick}></canvas>
     )
 }

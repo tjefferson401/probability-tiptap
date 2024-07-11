@@ -6,6 +6,8 @@ import {
   FaImage,
   FaPython,
   FaSquareRootAlt,
+  FaPaperPlane,
+  FaCalculator
 } from "react-icons/fa";
 
 export const ButtonBar = ({ editor, editable, onInsertImage }) => {
@@ -27,6 +29,8 @@ export const ButtonBar = ({ editor, editable, onInsertImage }) => {
         <PythonButton editor={editor}/>
         <ImageButton editor={editor} onInsertImage={onInsertImage}/>
         <ChartButton editor={editor}/>
+        <PaperButton editor={editor}/>
+        <CalcButton editor={editor}/>
         
   
       </div>
@@ -88,4 +92,30 @@ export const ButtonBar = ({ editor, editable, onInsertImage }) => {
     } className="btn btn-sm btn-light">
     <FaHeading /> Chart
   </button>
+  }
+
+
+  function PaperButton({editor}) {
+    return <button onClick={() =>
+      editor
+        .chain()
+        .focus()
+        .insertContent("<paper></paper>")
+        .run()
+    } className="btn btn-sm btn-light">
+    <FaPaperPlane /> Paper
+  </button>
+  }
+
+
+  function CalcButton({editor}) {
+    return <button onClick={() =>
+      editor
+        .chain()
+        .focus()
+        .insertContent("<simple-calculator></simple-calculator>")
+        .run()
+    } className="btn btn-sm btn-light">
+    <FaCalculator /> Calc
+    </button>
   }

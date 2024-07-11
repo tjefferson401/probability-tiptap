@@ -73,7 +73,7 @@ export const RenderInlineTex = (props) => {
 
     // make sure that editing isn't turned off for 
     // empty latex
-    if(newValue || rawTex.trim() != '') {
+    if(newValue || (rawTex && rawTex.trim() != '')) {
       props.updateAttributes({
         editing:newValue
       })
@@ -153,7 +153,7 @@ const INPUT_STYLE = {
 }
 
 // This class is a wrapper around input which keeps track of cursor position
-const ControlledInput = (props) => {
+export const ControlledInput = (props) => {
 
   const { value, onChange, ...rest } = props;
   const [cursor, setCursor] = useState(null);
