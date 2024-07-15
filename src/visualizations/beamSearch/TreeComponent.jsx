@@ -8,10 +8,6 @@ const TreeComponent = () => {
 
     const [hiddenNodes, setHiddenNodes] = useState([]);
 
-    console.log("Tree in TreeComponent", tree)
-
-    
-
     /* @tree: the root node of the 
      * @childArray: the topK words that are predicted by the transformer model
      * @targetNode: the target node in the tree that we wish to append the children
@@ -47,16 +43,19 @@ const TreeComponent = () => {
         }
 
         addToTarget(tree, 0);
-        return tree;
+        return {...tree};
     }
 
     useEffect(() => {
-        const initialTree = {
-            name: 'root',
-            children: []
-        };
+        // const initialTree = {
+        //     name: 'root',
+        //     children: []
+        // };
 
-        let updatedTree = addToTarget(initialTree, ['A', 'B', 'C', 'D', "E"], 'root', 0);
+        console.log("Updating the Tree");
+        console.log("Tree before updating the tree", tree);
+
+        let updatedTree = addToTarget(tree, ['A', 'B', 'C', 'D', "E"], 'root', 0);
         updatedTree = addToTarget(updatedTree, ['A', 'B', 'C', 'D', 'E'], 'A', 1)
         updatedTree = addToTarget(updatedTree, ['A', 'B', 'C', 'D', 'E'], 'B', 1)
         updatedTree = addToTarget(updatedTree, ['A', 'B', 'C', 'D', 'E'], 'C', 1)
@@ -68,7 +67,8 @@ const TreeComponent = () => {
         // const finalTree = addToTarget(updatedTreeAgainAgain, ['A', 'B', 'C'], 'C', 1);
         // console.log("Final Tree:", finalTree);
         setTree(updatedTree);
-    }, [setTree]);
+        console.log("Tree after setTree is called", tree);``
+    }, []);
 
     useEffect(() => {
         const handleResize = () => {
@@ -116,7 +116,7 @@ const TreeComponent = () => {
                     scaleExtent={{ min: 0.1, max: 2 }}  // Allow zooming in and out
                     draggable={true}
                     transitionDuration={500}
-                    enableLegacyTransition={true}
+                    enableLegacyTransitions={true}
                 />
             </div>
         </div>
