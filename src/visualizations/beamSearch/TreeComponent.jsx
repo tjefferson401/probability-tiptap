@@ -17,34 +17,31 @@ const TreeComponent = () => {
     const addToTarget = (tree, childArray, targetNode, maxDepth) => {
         
         const addToTarget = (node, currentDepth) => {
-
+        
             if (currentDepth > maxDepth) {
                 return false;
             }
-
+        
             // Base Case -- success, we have found the target; add all the children to the leaf node, return true
-
+        
             if (node.name === targetNode && node.children.length === 0) {
-                node.children = childArray.map((child, index) => ({
+                node.children = childArray.map((child) => ({
                     name: `${child}`,
                     children: [],
                 }));
                 return true; 
             }
-
-
+        
+        
             // recursive case, loop through all the children and add to the target
             for (let child of node.children) {
-                if (addToTarget(child, currentDepth + 1)) {
-                    return true;
-                }
+                addToTarget(child, currentDepth + 1);
             }
-            return false;
         }
-
+        
         addToTarget(tree, 0);
         return {...tree};
-    }
+        }
 
     useEffect(() => {
         // const initialTree = {
@@ -117,6 +114,7 @@ const TreeComponent = () => {
                     draggable={true}
                     transitionDuration={500}
                     enableLegacyTransitions={true}
+                    separation={{ siblings: 1, nonSiblings: 1.5}}
                 />
             </div>
         </div>
