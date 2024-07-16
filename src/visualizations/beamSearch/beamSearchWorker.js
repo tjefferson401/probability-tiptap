@@ -11,6 +11,10 @@ env.allowLocalModels = false;
 // hide all warnings from this worker
 env.logLevel = 'error';
 
+console.warn = () => {};
+
+
+
 class GPT2Pipeline {
     // static task = 'text-generation';
     // static model = 'gpt2';
@@ -43,16 +47,23 @@ self.addEventListener('message', async (event) => {
     // Actually perform the translation
     let output = await gpt2TextGen([event.data.text], {
         max_new_tokens: 3,
-        num_beams: 3,
-        num_return_sequences: 3,
-        length_penalty: 1.0,
+        min_length: 2,
+        num_beams: 2,
+        num_return_sequences: 2,
+        // length_penalty: 1.0,
         output_scores: true,
         do_sample: false,
-        return_dict_in_generate: true,
+        // return_dict_in_generate: true,
 
         // Allows for partial output
         callback_function: x => {
-            console.log(x)
+            console.log("PARTIAL OUTPUT!!!!!")
+            for (let i = 0; i < x.length; i++) {
+                console.log("Full Object", x[i])
+                console.log("Score: ", x[i].score)
+                console.log("Token IDs: ", x[i].output_token_ids)
+                console.log(gpt2TextGen.tokenizer.decode(x[i].output_token_ids, { skip_special_tokens: true }))
+            }
             
             self.postMessage({
                 status: 'update',

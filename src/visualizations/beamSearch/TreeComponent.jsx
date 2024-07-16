@@ -2,6 +2,27 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import Tree from 'react-d3-tree';
 import { useAppContext } from './BeamSearchContext';
 
+const customNodeRender = ({ nodeDatum }) => {
+    // Adjust the x and y offset values to change the position of the node names
+    const xOffset = 0;
+    const yOffset = 20;
+  
+    return (
+      <g>
+        <circle r="10" fill="red"></circle>
+        <text
+          x={xOffset}
+          y={yOffset}
+          textAnchor="middle"
+          fill="black"
+          fontSize="12"
+        >
+          {nodeDatum.name}
+        </text>
+      </g>
+    );
+  };
+
 const TreeComponent = () => {
     const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
     const { tree, setTree } = useAppContext();
@@ -49,9 +70,6 @@ const TreeComponent = () => {
         //     children: []
         // };
 
-        console.log("Updating the Tree");
-        console.log("Tree before updating the tree", tree);
-
         let updatedTree = addToTarget(tree, ['A', 'B', 'C', 'D', "E"], 'root', 0);
         updatedTree = addToTarget(updatedTree, ['A', 'B', 'C', 'D', 'E'], 'A', 1)
         updatedTree = addToTarget(updatedTree, ['A', 'B', 'C', 'D', 'E'], 'B', 1)
@@ -64,7 +82,6 @@ const TreeComponent = () => {
         // const finalTree = addToTarget(updatedTreeAgainAgain, ['A', 'B', 'C'], 'C', 1);
         // console.log("Final Tree:", finalTree);
         setTree(updatedTree);
-        console.log("Tree after setTree is called", tree);``
     }, []);
 
     useEffect(() => {
@@ -104,9 +121,13 @@ const TreeComponent = () => {
                 <button onClick ={hideNodes}>Hide Nodes!</button>
             </div>
 
-            <div style={{width: '80%'}}>
+            <div style={{
+                        width: '80%'
+                        
+                        }}>
                 <Tree 
                     data={filterTree(tree)}
+                    renderCustomNodeElement = {customNodeRender}
                     translate={translate}
                     zoom={.75}  // Adjusted zoom level
                     nodeSize={nodeSize}
@@ -115,6 +136,7 @@ const TreeComponent = () => {
                     transitionDuration={500}
                     enableLegacyTransitions={true}
                     separation={{ siblings: 1, nonSiblings: 1.5}}
+                    
                 />
             </div>
         </div>

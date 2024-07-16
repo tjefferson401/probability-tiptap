@@ -71,11 +71,11 @@ export const BeamSearchVis = () => {
         <div>
             <h1>Beam Search Visualization</h1>
             <AppContext.Provider value = {initialState}>
-                {/* <button onClick={generate}>Generate</button>
+                <button onClick={generate}>Generate</button>
                 <input value={input} onChange={(e) => setInput(e.target.value)} />
                 <div>
                     {lastMessage}
-                </div> */}
+                </div>
                 <TreeComponent />
             </AppContext.Provider>
         </div>
