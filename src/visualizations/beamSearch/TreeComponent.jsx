@@ -2,6 +2,11 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import Tree from 'react-d3-tree';
 import { useAppContext } from './BeamSearchContext';
 
+/**
+ * This function tells d3-tree what to render for each node
+ * @param {object} nodeDatum - the node to render
+ * @returns {JSX.Element} - the JSX element to render
+ */
 const customNodeRender = ({ nodeDatum }) => {
     // Adjust the x and y offset values to change the position of the node names
     const xOffset = 0;
@@ -24,17 +29,26 @@ const customNodeRender = ({ nodeDatum }) => {
   };
 
 const TreeComponent = () => {
-    const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
-    const { tree, setTree } = useAppContext();
-
+    const { tree, setTree } = useAppContext();              // consume the tree state and setTree function from the context
+    
+    const [dimensions, setDimensions] = useState({
+        width: window.innerWidth, 
+        height: window.innerHeight 
+    });
     const [hiddenNodes, setHiddenNodes] = useState([]);
 
+    const [renderTree, setRenderTree] = useState({
+        name: 'root',
+        children: []
+    });
+
+
+    /*
     /* @tree: the root node of the 
      * @childArray: the topK words that are predicted by the transformer model
      * @targetNode: the target node in the tree that we wish to append the children
      * 
      * @retval -- a new tree populated with children at the appropriate targetNode
-     */
     const addToTarget = (tree, childArray, targetNode, maxDepth) => {
         
         const addToTarget = (node, currentDepth) => {
@@ -63,7 +77,7 @@ const TreeComponent = () => {
         addToTarget(tree, 0);
         return {...tree};
         }
-
+    
     useEffect(() => {
         // const initialTree = {
         //     name: 'root',
@@ -93,17 +107,7 @@ const TreeComponent = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const translate = {
-        x: dimensions.width / 32,  // Adjusted for better positioning
-        y: dimensions.height / 2.25   // Adjusted for better positioning
-    };
 
-    const nodeSize = { x: 200, y: 30 };  // Adjusted node size
-
-    const hideNodes = () => {
-        const toHide = ['what', 'sigma']
-        setHiddenNodes(toHide)
-    }
 
     const filterTree = (node) => {
         if (hiddenNodes.includes(node.name)) {
@@ -114,29 +118,149 @@ const TreeComponent = () => {
             children: node.children.map(filterTree).filter(Boolean)
         }
     }
+    */
+
+    const translate = {
+        x: dimensions.width / 32,  // Adjusted for better positioning
+        y: dimensions.height / 2.25   // Adjusted for better positioning
+    };
+
+    const hideNodes = () => {
+        const toHide = ['what', 'sigma']
+        setHiddenNodes(toHide)
+    }
+
+    const animate = () => {
+        console.log('Animating!');
+
+        // render the roots we care about and their children
+        // Step 0: Loading the input sequence into the root node's children
+        console.log("Children", tree.children[0])
+
+        let root = {
+            name: tree.children[0].name,
+            children: []
+        }
+
+        let updatedTree = {
+            ...renderTree,
+            children: [root]
+        }
+
+        setRenderTree(updatedTree)
+
+
+        //Wait 1 second before continuing
+        setTimeout(() => {
+            let layer = tree.children
+            console.log('Layer:', layer)
+            
+            let beams = []
+            for (let beam of layer) {
+
+                let candidates  = []
+                for (let child of beam.children) {
+                    let candidate = {
+                        name: child.name,
+                        children: []
+                    }
+
+                    console.log("Candidate:", candidate)
+
+                    candidates.push(candidate)
+                }
+                beams.push({
+                    name: beam.name,
+                    children: candidates
+                })
+            }
+
+            updatedTree = {
+                ...renderTree,
+                children: beams
+            }
+
+            setRenderTree(updatedTree)  
+
+            console.log(beams)
+
+            // Prune and Pick the new Beams
+            setTimeout(() => {
+                // look two ahead
+                let toKeep = []
+                let stage = tree.children
+                console.log("Stage", stage)
+
+
+                // RIGHT NOW BEAM IS GRABBING THE INDEX OF STAGE INSTEAD OF THE CHILD OBJECT
+                for (let beam in stage) {
+                    console.log("Beam", beam)
+
+                    for (let child of beam.children) {
+                        console.log("Child", child)
+                        if (child.children) {
+                            toKeep.push(child)
+                        }
+                    }
+                }
+
+                console.log("To Keep", toKeep)
+                updatedTree = {
+                    ...renderTree,
+                    children: toKeep
+                }
+
+            }, 1000);
+
+        }, 1000);
+
+
+
+
+
+
+
+
+        // Step 1: Get all children from children of the root
+    //     const roots = fakeTree.children;
+    //     console.log('Roots:', roots);
+
+    //     let candidates = roots[0].children.map((child) => ({
+    //             ...child,
+    //             children: []
+    //     }));
+
+    //     console.log('Candidates:', candidates);
+
+    //     updatedTree = {
+    //         ...tree,
+    //         children: candidates
+    //     }
+
+    //     console.log('Updated Tree:', updatedTree);
+        
+    //     // setTree(updatedTree)
+    }
+
 
     return (
         <div style={{display: 'flex', height: '100vh', width: '100vw'}}>
             <div style ={{width: '20%'}}>
-                <button onClick ={hideNodes}>Hide Nodes!</button>
+                <button onClick={hideNodes}>Hide Nodes!</button>
+                <button onClick={animate}>Animate!</button>
             </div>
-
-            <div style={{
-                        width: '80%'
-                        
-                        }}>
+            <div style={{ width: '80%' }}>
                 <Tree 
-                    data={filterTree(tree)}
+                    data={renderTree}
                     renderCustomNodeElement = {customNodeRender}
                     translate={translate}
                     zoom={.75}  // Adjusted zoom level
-                    nodeSize={nodeSize}
+                    nodeSize={{x: 200, y: 30}}  // Adjusted node size
                     scaleExtent={{ min: 0.1, max: 2 }}  // Allow zooming in and out
                     draggable={true}
                     transitionDuration={500}
                     enableLegacyTransitions={true}
-                    separation={{ siblings: 1, nonSiblings: 1.5}}
-                    
+                    separation={{ siblings: 1, nonSiblings: 1.5}}  
                 />
             </div>
         </div>
