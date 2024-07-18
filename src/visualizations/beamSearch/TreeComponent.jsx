@@ -248,7 +248,7 @@ const TreeComponent = () => {
                     draggable={true}
                     transitionDuration={500}
                     enableLegacyTransitions={true}
-                    separation={{ siblings: 1, nonSiblings: 1.5}}  
+                    separation={{ siblings: 1, nonSiblings: 1.5}}
                 />
             </div>
         </div>

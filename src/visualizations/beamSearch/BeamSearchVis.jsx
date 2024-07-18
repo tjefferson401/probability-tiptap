@@ -71,8 +71,6 @@ export const BeamSearchVis = () => {
         setTree
     };
 
-
-
     // const [numberSteps, setNumberSteps] = useState(5);
     // const [numberBeams, setNumberBeams] = useState(4);
     // const [lengthPenalty, setLengthPenalty] = useState(1.0);
@@ -89,10 +87,13 @@ export const BeamSearchVis = () => {
         // When the worker returns an output, update the lastMessage to be the "most likely" sequence at that point
         const onMessage = (event) => {
             if (event.data.status === 'update') {
-                setLastMessage(event.data.output);
+                console.log("EVENT OUTPUT")
+                console.log(event.data.output);
+                //setLastMessage(event.data.output.output_sequence);
             }
             if (event.data.status === 'complete') {
-                setLastMessage(event.data.output);
+                console.log("EVENT OUTPUT", event.data)
+                //setLastMessage(event.data.output.output_sequence);
             }
         }
 
