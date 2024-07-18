@@ -11,6 +11,10 @@ const customNodeRender = ({ nodeDatum }) => {
     // Adjust the x and y offset values to change the position of the node names
     const xOffset = 0;
     const yOffset = 20;
+
+    // console.log("Node Data", nodeDatum)
+    // console.log("Node Data Score!", nodeDatum.score)
+    // console.log("Node Data Children!", nodeDatum.children)
   
     return (
       <g>
@@ -24,101 +28,36 @@ const customNodeRender = ({ nodeDatum }) => {
         >
           {nodeDatum.name}
         </text>
+
+        {(!nodeDatum.children || nodeDatum.children.length === 0) && nodeDatum.score && (
+            <text
+                x={xOffset + 30}
+                y= {0}
+                textAnchor="middle"
+                fill="black"
+                fontSize="12"
+          >
+            {nodeDatum.score}
+            </text>
+        )}
       </g>
     );
   };
 
 const TreeComponent = () => {
-    const { tree, setTree } = useAppContext();              // consume the tree state and setTree function from the context
-    
+    const { tree, setTree } = useAppContext();   // consume the tree state and setTree function from the context
+
     const [dimensions, setDimensions] = useState({
         width: window.innerWidth, 
         height: window.innerHeight 
     });
+
     const [hiddenNodes, setHiddenNodes] = useState([]);
 
     const [renderTree, setRenderTree] = useState({
         name: 'root',
         children: []
     });
-
-
-    /*
-    /* @tree: the root node of the 
-     * @childArray: the topK words that are predicted by the transformer model
-     * @targetNode: the target node in the tree that we wish to append the children
-     * 
-     * @retval -- a new tree populated with children at the appropriate targetNode
-    const addToTarget = (tree, childArray, targetNode, maxDepth) => {
-        
-        const addToTarget = (node, currentDepth) => {
-        
-            if (currentDepth > maxDepth) {
-                return false;
-            }
-        
-            // Base Case -- success, we have found the target; add all the children to the leaf node, return true
-        
-            if (node.name === targetNode && node.children.length === 0) {
-                node.children = childArray.map((child) => ({
-                    name: `${child}`,
-                    children: [],
-                }));
-                return true; 
-            }
-        
-        
-            // recursive case, loop through all the children and add to the target
-            for (let child of node.children) {
-                addToTarget(child, currentDepth + 1);
-            }
-        }
-        
-        addToTarget(tree, 0);
-        return {...tree};
-        }
-    
-    useEffect(() => {
-        // const initialTree = {
-        //     name: 'root',
-        //     children: []
-        // };
-
-        let updatedTree = addToTarget(tree, ['A', 'B', 'C', 'D', "E"], 'root', 0);
-        updatedTree = addToTarget(updatedTree, ['A', 'B', 'C', 'D', 'E'], 'A', 1)
-        updatedTree = addToTarget(updatedTree, ['A', 'B', 'C', 'D', 'E'], 'B', 1)
-        updatedTree = addToTarget(updatedTree, ['A', 'B', 'C', 'D', 'E'], 'C', 1)
-        updatedTree = addToTarget(updatedTree, ['A', 'B', 'C', 'D', 'E'], 'D', 1)
-        updatedTree = addToTarget(updatedTree, ['A', 'B', 'C', 'D', 'E'], 'E', 1)
-        updatedTree = addToTarget(updatedTree, ["what", "the", "sigma"], 'A',2)
-
-        // const updatedTree = addToTarget(updatedTreeAgain, ['A', 'B', 'C'], 'B', 1)
-        // const finalTree = addToTarget(updatedTreeAgainAgain, ['A', 'B', 'C'], 'C', 1);
-        // console.log("Final Tree:", finalTree);
-        setTree(updatedTree);
-    }, []);
-
-    useEffect(() => {
-        const handleResize = () => {
-            setDimensions({ width: window.innerWidth, height: window.innerHeight });
-        };
-
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-
-
-    const filterTree = (node) => {
-        if (hiddenNodes.includes(node.name)) {
-            return null;
-        } 
-        return {
-            ...node,
-            children: node.children.map(filterTree).filter(Boolean)
-        }
-    }
-    */
 
     const translate = {
         x: dimensions.width / 32,  // Adjusted for better positioning
@@ -130,117 +69,166 @@ const TreeComponent = () => {
         setHiddenNodes(toHide)
     }
 
-    const animate = () => {
-        console.log('Animating!');
+    const animate = async (layer, depth = 0) => {
+        try {
+            console.log("NEW RECURSIVE CALL!!!!!!!")
+            console.log('Animating at depth:', depth);
 
-        // render the roots we care about and their children
-        // Step 0: Loading the input sequence into the root node's children
-        console.log("Children", tree.children[0])
+        
+            if (depth === 0) {
+                layer = [...JSON.parse(JSON.stringify(tree)).children]
+                console.log("Layer at beginning of recursive function in the Base:", layer)
 
-        let root = {
-            name: tree.children[0].name,
-            children: []
-        }
+                let root = {
+                    name: layer[0].name,
+                    children: []
+                }
 
-        let updatedTree = {
-            ...renderTree,
-            children: [root]
-        }
+                let updatedTree = {
+                    ...renderTree,
+                    children: [root]
+                }
 
-        setRenderTree(updatedTree)
+                setRenderTree(updatedTree)
 
+            } else {
+                console.log("Layer at beginning of recursive function:", layer)
+            }
 
-        //Wait 1 second before continuing
-        setTimeout(() => {
-            let layer = tree.children
-            console.log('Layer:', layer)
-            
+            await new Promise(resolve => setTimeout(resolve, 4000));
+
             let beams = []
             for (let beam of layer) {
+                console.log("Beam in the layer", beam)
+                console.log("Beam Children", beam.children)
 
                 let candidates  = []
                 for (let child of beam.children) {
+                    console.log("Child of Beam.children in the adding step", child)
                     let candidate = {
                         name: child.name,
+                        score: child.score,
                         children: []
                     }
-
                     console.log("Candidate:", candidate)
-
                     candidates.push(candidate)
                 }
+
+                console.log("Candidates after we add all of them!", candidates)
+
                 beams.push({
                     name: beam.name,
                     children: candidates
                 })
+
+                console.log("Beams after push", beams)
             }
 
-            updatedTree = {
+            console.log("Beams", beams) 
+
+            let updatedTree = {
                 ...renderTree,
                 children: beams
             }
 
             setRenderTree(updatedTree)  
 
-            console.log(beams)
+            console.log("Logging the layer parameter after visualizing the candidates", layer)
 
             // Prune and Pick the new Beams
-            setTimeout(() => {
-                // look two ahead
-                let toKeep = []
-                let stage = tree.children
-                console.log("Stage", stage)
+            await new Promise(resolve => setTimeout(resolve, 4000));
+            // look two ahead
+            let toKeep = []
+            let toKeepTemp = []
+            let stage = layer
+            let allChildren = []
+            let emptyBeams = 0
 
+            console.log("Layer before the prune step", layer)
 
-                // RIGHT NOW BEAM IS GRABBING THE INDEX OF STAGE INSTEAD OF THE CHILD OBJECT
-                for (let beam in stage) {
-                    console.log("Beam", beam)
+            for (let beam of stage) {
+                console.log("Beam", beam)
+                let beamChildren = []
 
-                    for (let child of beam.children) {
-                        console.log("Child", child)
-                        if (child.children) {
-                            toKeep.push(child)
+                for (let child of beam.children) {
+                    allChildren.push(child)
+                    console.log("Child of Beam.children in the pruning step", child)
+                    if (child.children.length > 0) {
+                        // need a copy of the whole tree to pass to the next layer
+                        toKeep.push(JSON.parse(JSON.stringify(child)))
+                        console.log("To Keep Array", toKeep)
+
+                        // this is for temporarily rendering one layer at a time
+                        let candidate = {
+                            name: child.name,
+                            score: child.score,
+                            children: []
                         }
-                    }
+                                                        
+                        toKeepTemp.push(candidate)
+                        beamChildren.push(candidate)
+
+                    } 
+                    console.log("Beam Children", beamChildren)
                 }
 
-                console.log("To Keep", toKeep)
+                if (beamChildren.length === 0) {
+                    emptyBeams += 1
+                }
+
+                console.log("Final Beam Children", beamChildren)
+                beam.children = beamChildren
+                console.log("After we add beamChildren array to beam.children", beam.children)   
+            }
+
+            console.log(stage.length)
+            if (stage.length != emptyBeams) {
+
+                console.log("Updated Stage", stage)
                 updatedTree = {
                     ...renderTree,
-                    children: toKeep
+                    children: stage
+                }   
+
+            } else {
+                console.log("WE HAVE NO MORE BEAMS TO KEEP AND HAVE REACHED THE END OF RENDERING")
+                updatedTree = {
+                    ...renderTree,
+                    children: allChildren
                 }
+            }            
 
-            }, 1000);
+            console.log("This is what we update our tree with after we pruned!", stage)
+            setRenderTree(updatedTree)  
 
-        }, 1000);
+            await new Promise(resolve => setTimeout(resolve, 4000));                    
+            console.log("To Keep for Next Iteration", depth, toKeep)
+            console.log("To Keep Temp", depth, toKeepTemp)
 
+            updatedTree = {
+                ...renderTree,
+                children: toKeepTemp
+            }
+            console.log(updatedTree)
+            setRenderTree(updatedTree)
 
+            // Recursive Case; If no more children to keep, then render the whiole tree
+            if (toKeep.length > 0) {
+                console.log("This is the toKeep array", toKeep)
+                console.log("Recursing, this is what we are passing into layer!", JSON.parse(JSON.stringify(toKeep)))
+                animate(JSON.parse(JSON.stringify(toKeep)), depth + 1);
 
-
-
-
-
-
-        // Step 1: Get all children from children of the root
-    //     const roots = fakeTree.children;
-    //     console.log('Roots:', roots);
-
-    //     let candidates = roots[0].children.map((child) => ({
-    //             ...child,
-    //             children: []
-    //     }));
-
-    //     console.log('Candidates:', candidates);
-
-    //     updatedTree = {
-    //         ...tree,
-    //         children: candidates
-    //     }
-
-    //     console.log('Updated Tree:', updatedTree);
+            } else {
+                console.log("Finished!")
+                console.log("Final Tree", JSON.parse(JSON.stringify(tree)))
+                setRenderTree([JSON.parse(JSON.stringify(tree))])
+            }
         
-    //     // setTree(updatedTree)
+        } catch (error) {
+            console.error('Error during animation:', error);
+        }
     }
+
 
 
     return (

@@ -5,9 +5,6 @@ import Markdown from 'markdown-to-jsx';
 import TreeComponent from './TreeComponent'
 import AppContext from './BeamSearchContext'
 
-
-
-
 export const BeamSearchVis = () => {
     const worker = useRef(null);                            // reference to the WebWorker that persists across renders
     const [lastMessage, setLastMessage] = useState("");     // the last partial sequence received from the WebWorker
@@ -31,7 +28,13 @@ export const BeamSearchVis = () => {
                             {
                                 name: ',',
                                 score: 0.015,
-                                children: []
+                                children: [
+                                    {
+                                        name: '!',
+                                        score: 0.002,
+                                        children: []
+                                    }
+                                ]
                             }
                         ]
                     },
@@ -42,7 +45,13 @@ export const BeamSearchVis = () => {
                             {
                                 name: '.',
                                 score: 0.008,
-                                children: []
+                                children: [
+                                    {
+                                        name: '!',
+                                        score: 0.002,
+                                        children: []
+                                    }
+                                ]
                             },
                             {
                                 name: ',',
@@ -61,6 +70,7 @@ export const BeamSearchVis = () => {
         tree,
         setTree
     };
+
 
 
     // const [numberSteps, setNumberSteps] = useState(5);

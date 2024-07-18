@@ -1,7 +1,7 @@
 
 import { pipeline, env } from '@xenova/transformers';
 
-/**
+/*
  * This class uses the Singleton pattern to ensure that only one instance of the
  * pipeline is loaded. This is because loading the pipeline is an expensive
  * operation and we don't want to do it every time we want to translate a sentence.
@@ -12,8 +12,6 @@ env.allowLocalModels = false;
 env.logLevel = 'error';
 
 console.warn = () => {};
-
-
 
 class GPT2Pipeline {
     // static task = 'text-generation';
