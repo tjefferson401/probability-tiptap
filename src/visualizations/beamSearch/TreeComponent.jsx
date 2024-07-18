@@ -1,48 +1,47 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import Tree from 'react-d3-tree';
 import { useAppContext } from './BeamSearchContext';
+import CustomNodeRender from './CustomNode';
 
 /**
  * This function tells d3-tree what to render for each node
  * @param {object} nodeDatum - the node to render
  * @returns {JSX.Element} - the JSX element to render
  */
-const customNodeRender = ({ nodeDatum }) => {
-    // Adjust the x and y offset values to change the position of the node names
-    const xOffset = 0;
-    const yOffset = 20;
+// const customNodeRender = ({ nodeDatum }) => {
+//     // Adjust the x and y offset values to change the position of the node names
+//     const xOffset = 0;
+//     const yOffset = 20;
 
-    // console.log("Node Data", nodeDatum)
-    // console.log("Node Data Score!", nodeDatum.score)
-    // console.log("Node Data Children!", nodeDatum.children)
-  
-    return (
-      <g>
-        <circle r="10" fill="red"></circle>
-        <text
-          x={xOffset}
-          y={yOffset}
-          textAnchor="middle"
-          fill="black"
-          fontSize="12"
-        >
-          {nodeDatum.name}
-        </text>
+//     return (
+//       <g>
+//         <circle r="50" fill="red"></circle>
+//         <text
+//           x={xOffset}
+//           y={yOffset}
+//           textAnchor="middle"
+//           fill="black"
+//           fontSize="12"
+//           fontWeight = "normal"
+//         >
+//           {nodeDatum.name}
+//         </text>
 
-        {(!nodeDatum.children || nodeDatum.children.length === 0) && nodeDatum.score && (
-            <text
-                x={xOffset + 30}
-                y= {0}
-                textAnchor="middle"
-                fill="black"
-                fontSize="12"
-          >
-            {nodeDatum.score}
-            </text>
-        )}
-      </g>
-    );
-  };
+//         {(!nodeDatum.children || nodeDatum.children.length === 0) && nodeDatum.score && (
+//             <text
+//                 x={xOffset + 30}
+//                 y= {0}
+//                 textAnchor="middle"
+//                 fill="black"
+//                 fontSize="12"
+//                 style = {{fontWeight: "normal"}}
+//           >
+//             {nodeDatum.score}
+//             </text>
+//         )}
+//       </g>
+//     );
+//   };
 
 const TreeComponent = () => {
     const { tree, setTree } = useAppContext();   // consume the tree state and setTree function from the context
@@ -51,8 +50,6 @@ const TreeComponent = () => {
         width: window.innerWidth, 
         height: window.innerHeight 
     });
-
-    const [hiddenNodes, setHiddenNodes] = useState([]);
 
     const [renderTree, setRenderTree] = useState({
         name: 'root',
@@ -63,11 +60,6 @@ const TreeComponent = () => {
         x: dimensions.width / 32,  // Adjusted for better positioning
         y: dimensions.height / 2.25   // Adjusted for better positioning
     };
-
-    const hideNodes = () => {
-        const toHide = ['what', 'sigma']
-        setHiddenNodes(toHide)
-    }
 
     const animate = async (layer, depth = 0) => {
         try {
@@ -80,7 +72,7 @@ const TreeComponent = () => {
                 console.log("Layer at beginning of recursive function in the Base:", layer)
 
                 let root = {
-                    name: layer[0].name,
+                    name: `"${layer[0].name}"`,
                     children: []
                 }
 
@@ -95,7 +87,7 @@ const TreeComponent = () => {
                 console.log("Layer at beginning of recursive function:", layer)
             }
 
-            await new Promise(resolve => setTimeout(resolve, 4000));
+            await new Promise(resolve => setTimeout(resolve, 2000));
 
             let beams = []
             for (let beam of layer) {
@@ -106,7 +98,7 @@ const TreeComponent = () => {
                 for (let child of beam.children) {
                     console.log("Child of Beam.children in the adding step", child)
                     let candidate = {
-                        name: child.name,
+                        name: `"${child.name}"`,
                         score: child.score,
                         children: []
                     }
@@ -117,7 +109,7 @@ const TreeComponent = () => {
                 console.log("Candidates after we add all of them!", candidates)
 
                 beams.push({
-                    name: beam.name,
+                    name: `"${beam.name}"`,
                     children: candidates
                 })
 
@@ -136,7 +128,7 @@ const TreeComponent = () => {
             console.log("Logging the layer parameter after visualizing the candidates", layer)
 
             // Prune and Pick the new Beams
-            await new Promise(resolve => setTimeout(resolve, 4000));
+            await new Promise(resolve => setTimeout(resolve, 2000));
             // look two ahead
             let toKeep = []
             let toKeepTemp = []
@@ -160,7 +152,7 @@ const TreeComponent = () => {
 
                         // this is for temporarily rendering one layer at a time
                         let candidate = {
-                            name: child.name,
+                            name: `"${child.name}"`,
                             score: child.score,
                             children: []
                         }
@@ -196,12 +188,12 @@ const TreeComponent = () => {
                     ...renderTree,
                     children: allChildren
                 }
-            }            
+            }
 
             console.log("This is what we update our tree with after we pruned!", stage)
-            setRenderTree(updatedTree)  
+            setRenderTree(updatedTree)
 
-            await new Promise(resolve => setTimeout(resolve, 4000));                    
+            await new Promise(resolve => setTimeout(resolve, 2000));                
             console.log("To Keep for Next Iteration", depth, toKeep)
             console.log("To Keep Temp", depth, toKeepTemp)
 
@@ -234,13 +226,12 @@ const TreeComponent = () => {
     return (
         <div style={{display: 'flex', height: '100vh', width: '100vw'}}>
             <div style ={{width: '20%'}}>
-                <button onClick={hideNodes}>Hide Nodes!</button>
                 <button onClick={animate}>Animate!</button>
             </div>
             <div style={{ width: '80%' }}>
                 <Tree 
                     data={renderTree}
-                    renderCustomNodeElement = {customNodeRender}
+                    renderCustomNodeElement={(rd3tProps) => <CustomNodeRender {...rd3tProps} />}
                     translate={translate}
                     zoom={.75}  // Adjusted zoom level
                     nodeSize={{x: 200, y: 30}}  // Adjusted node size
@@ -248,7 +239,7 @@ const TreeComponent = () => {
                     draggable={true}
                     transitionDuration={500}
                     enableLegacyTransitions={true}
-                    separation={{ siblings: 1, nonSiblings: 1.5}}  
+                    separation={{ siblings: 5, nonSiblings: 5}}  
                 />
             </div>
         </div>
