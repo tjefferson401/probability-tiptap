@@ -234,12 +234,12 @@ const TreeComponent = () => {
                     renderCustomNodeElement={(rd3tProps) => <CustomNodeRender {...rd3tProps} />}
                     translate={translate}
                     zoom={.75}  // Adjusted zoom level
-                    nodeSize={{x: 200, y: 30}}  // Adjusted node size
+                    nodeSize={{x: 400, y: 30}}  // Adjusted node size
                     scaleExtent={{ min: 0.1, max: 2 }}  // Allow zooming in and out
                     draggable={true}
                     transitionDuration={500}
                     enableLegacyTransitions={true}
-                    separation={{ siblings: 5, nonSiblings: 5}}  
+                    separation={{ siblings: 4, nonSiblings: 5}}  
                 />
             </div>
         </div>
