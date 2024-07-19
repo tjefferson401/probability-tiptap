@@ -22,9 +22,10 @@ const getTopKIndices = (arr, k) => {
   
     // Return the top K indices
     return indices.slice(0, k);
-  };
+};
 
 const logSoftmax = (arr) => {
+    console.log("arr", arr)
     const max = Math.max(...arr);
     const shifted = arr.map(x => x - max);
     const expShifted = shifted.map(x => Math.exp(x));
@@ -77,6 +78,7 @@ self.addEventListener('message', async (event) => {
 
         // Allows for partial output
         callback_function: x => {
+            console.log("PARTIAL OUTPUT!!!!!")
             console.log("*** Callback Function ***")
             // for (let i = 0; i < x.length; i++) {
             //     console.log("Full Object", x[i])
@@ -85,7 +87,7 @@ self.addEventListener('message', async (event) => {
             //     console.log(gpt2TextGen.tokenizer.decode(x[i].output_token_ids, { skip_special_tokens: true }))
             //     console.log(typeof(gpt2TextGen.tokenizer.decode(x[i].output_token_ids, { skip_special_tokens: true })))
             // }
-            
+
             console.log(x)
 
             const TOP_K = 2
@@ -108,9 +110,10 @@ self.addEventListener('message', async (event) => {
             steps.push(next_step);
 
             
-
+            
             self.postMessage({
                 status: 'update',
+                // output: gpt2TextGen.tokenizer.decode(x[0].output_token_ids, { skip_special_tokens: true })
             });
         }
     });

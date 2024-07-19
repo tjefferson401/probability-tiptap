@@ -17,6 +17,10 @@ const CustomNodeRender = ({ nodeDatum }) => {
     const rectWidth = (textWidth + rectPadding * 2) * 2;
     const rectHeight = 60; // Adjust the height as needed
 
+    const nodeFill = nodeDatum.highlighted ? "#FFEB3B" : "#E3F2FD"; // Yellow background if highlighted, otherwise soft blue
+    const nodeStroke = nodeDatum.highlighted ? "#FBC02D" : "none"; // Yellow border if highlighted, otherwise none
+    const textColor = nodeDatum.highlighted ? "#F57F17" : "#0D47A1"; // Darker yellow text if highlighted, otherwise dark blue
+
     // rounded corners and drop shadow
     return (
         <g>
@@ -39,8 +43,8 @@ const CustomNodeRender = ({ nodeDatum }) => {
             y={(yOffset - rectHeight) / 2}
             width={rectWidth}
             height={rectHeight}
-            fill="#E3F2FD" // Soft Blue background
-            stroke= "none"
+            fill={nodeFill} // Soft Blue background
+            stroke= {nodeStroke}
             rx="20" // Rounded corners
             ry="20" // Rounded corners
             filter="url(#dropShadow)" // Apply the drop shadow filter
@@ -50,7 +54,7 @@ const CustomNodeRender = ({ nodeDatum }) => {
             x={xOffset}
             y={yOffset - 10} // Adjust the y position to center the text vertically
             textAnchor="middle"
-            fill="#0D47A1" // Dark Blue text
+            fill={textColor} // Dark Blue text
             fontSize="24"
             fontWeight="normal"
             alignmentBaseline="middle"

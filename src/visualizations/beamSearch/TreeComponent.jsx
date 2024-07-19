@@ -57,6 +57,49 @@ const TreeComponent = () => {
         });
     };
 
+    const highlightNodes = (toKeepTemp, renderTree, setRenderTree) => {
+        let highlightedTree = JSON.parse(JSON.stringify(renderTree));
+    
+        const highlight = (node, nodesToHighlight) => {
+            nodesToHighlight.forEach(n => {
+                if (n.name === node.name && n.haveChildren && n.score === node.score) {
+                    node.highlighted = true;
+                    console.log(`Highlighted node: ${node.name} with score: ${node.score}`);
+                }
+            });
+    
+            if (node.children && Array.isArray(node.children)) {
+                node.children.forEach(child => highlight(child, nodesToHighlight));
+            }
+        };
+    
+        console.log("Initial Render Tree:", JSON.stringify(renderTree, null, 2));
+        console.log("Nodes to Highlight (toKeepTemp):", JSON.stringify(toKeepTemp, null, 2));
+    
+        // Ensure children is always an array
+        highlightedTree.children = highlightedTree.children || [];
+    
+        if (Array.isArray(highlightedTree.children)) {
+            highlightedTree.children.forEach(child => highlight(child, toKeepTemp));
+        } else {
+            console.error("highlightedTree.children is not an array");
+        }
+        setRenderTree(highlightedTree);
+    };
+
+    const removeHighlight = (renderTree, setRenderTree) => {
+        let unhighlightedTree = JSON.parse(JSON.stringify(renderTree));
+        const unhighlight = (node) => {
+            node.highlighted = false;
+            if (node.children) {
+                node.children.forEach(child => unhighlight(child));
+            }
+        };
+        unhighlightedTree.children.forEach(child => unhighlight(child));
+        setRenderTree(unhighlightedTree);
+    };
+    // Add a timeout to highlight nodes before pruning
+
 
     const animate = async (layer, depth = 0) => {
         animateRef.current = async (layer, depth) => {
@@ -64,7 +107,6 @@ const TreeComponent = () => {
                 console.log("NEW RECURSIVE CALL!!!!!!!")
                 console.log('Animating at depth:', depth);
 
-            
                 if (depth === 0) {
                     layer = [...JSON.parse(JSON.stringify(tree)).children]
                     console.log("Layer at beginning of recursive function in the Base:", layer)
@@ -145,6 +187,7 @@ const TreeComponent = () => {
                     console.log("Waiting for button press...");
                     await waitForButtonPress();
                 }
+
                 // look two ahead
                 let toKeep = []
                 let toKeepTemp = []
@@ -170,7 +213,8 @@ const TreeComponent = () => {
                             let candidate = {
                                 name: child.name,
                                 score: child.score,
-                                children: []
+                                children: [],
+                                haveChildren: true
                             }
                                                             
                             toKeepTemp.push(candidate)
@@ -189,6 +233,24 @@ const TreeComponent = () => {
                     console.log("After we add beamChildren array to beam.children", beam.children)   
                 }
 
+                if (stage.length === emptyBeams) {
+                    toKeepTemp = allChildren
+                    for (let child of toKeepTemp) {
+                        child.haveChildren = true
+                    }
+                }
+
+                console.log("TO KEEP TEMP BEFORE WE CALL HIGHLIGHT NODES", toKeepTemp)
+                
+                highlightNodes(toKeepTemp, updatedTree, setRenderTree);
+                if (useTimeout) {
+                    await waitForTimeout(2000);
+                } else {
+                    console.log("Waiting for button press...");
+                    await waitForButtonPress();
+                }
+                removeHighlight(updatedTree, setRenderTree);
+
                 console.log(stage.length)
                 if (stage.length != emptyBeams) {
 
@@ -205,6 +267,7 @@ const TreeComponent = () => {
                         children: allChildren
                     }
                 }
+
 
                 console.log("This is what we update our tree with after we pruned!", stage)
                 setRenderTree(updatedTree)
