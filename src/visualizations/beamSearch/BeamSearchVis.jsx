@@ -65,10 +65,13 @@ export const BeamSearchVis = () => {
         ]
     }
     
+    const [config, setConfig] = useState({});
     const [tree, setTree] = useState(initialTreeData);      // the tree data that the d3-tree component renders
     const initialState = {                                  // package the tree and setTree functions into an object to pass to the context
         tree,
-        setTree
+        setTree,
+        config,
+        setConfig,
     };
 
 
