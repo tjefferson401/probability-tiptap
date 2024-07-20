@@ -4,7 +4,7 @@ import { useAppContext } from './BeamSearchContext';
 import CustomNodeRender from './CustomNode';
 
 const TreeComponent = () => {
-    const { tree, config, setConfig } = useAppContext();   // consume the tree state and setTree function from the context
+    const { tree } = useAppContext();   // consume the tree state and setTree function from the context
 
     const [dimensions, setDimensions] = useState({
         width: window.innerWidth, 
@@ -21,26 +21,30 @@ const TreeComponent = () => {
         y: dimensions.height / 2.25   // Adjusted for better positioning
     };
 
-
     const [useTimeout, setUseTimeout] = useState(false); // true for timeout, false for button press
     const [isRunning, setIsRunning] = useState(false);
-    const [shouldSwitchToTimeout, setShouldSwitchToTimeout] = useState(false);
+
+    const [showButtons, setShowButtons] = useState(false);
+
     const [currentLayer, setCurrentLayer] = useState([]);
     const [currentDepth, setCurrentDepth] = useState(0);
-    const animateRef = useRef(null);
+
+    const [showAnimateButton, setShowAnimateButton] = useState(false);
+
+    // const animateRef = useRef(null);
 
     const startStepping = () => {
         setUseTimeout(false);
         setIsRunning(true);
+        setShowButtons(true); 
+        setShowAnimateButton(true);
         animate([], 0); // Pass initial parameters for your animation
     };
 
     const startAnimating = () => {
-        setShouldSwitchToTimeout(true);
-        if (!isRunning) {
-            setIsRunning(true);
-            animate([], 0); // Pass initial parameters for your animation
-        }
+        setUseTimeout(true);
+        setIsRunning(true);
+        animate(currentLayer, currentDepth); // Continue from current state
     };
 
     const waitForTimeout = async (timeout) => {
@@ -102,7 +106,7 @@ const TreeComponent = () => {
 
 
     const animate = async (layer, depth = 0) => {
-        animateRef.current = async (layer, depth) => {
+        // animateRef.current = async (layer, depth) => {
             try {
                 console.log("NEW RECURSIVE CALL!!!!!!!")
                 console.log('Animating at depth:', depth);
@@ -127,13 +131,10 @@ const TreeComponent = () => {
                     console.log("Layer at beginning of recursive function:", layer)
                 }
 
-                if (shouldSwitchToTimeout) {
-                    setUseTimeout(true);
-                    setShouldSwitchToTimeout(false);
-                }
-                
                 setCurrentLayer(layer);
                 setCurrentDepth(depth);
+
+                setShowAnimateButton(true);
 
                 if (useTimeout) {
                     await waitForTimeout(2000);
@@ -141,6 +142,8 @@ const TreeComponent = () => {
                     console.log("Waiting for button press...");
                     await waitForButtonPress();
                 }
+
+                setShowAnimateButton(false);
 
                 let beams = []
                 for (let beam of layer) {
@@ -241,7 +244,7 @@ const TreeComponent = () => {
                 }
 
                 console.log("TO KEEP TEMP BEFORE WE CALL HIGHLIGHT NODES", toKeepTemp)
-                
+
                 highlightNodes(toKeepTemp, updatedTree, setRenderTree);
                 if (useTimeout) {
                     await waitForTimeout(2000);
@@ -249,8 +252,8 @@ const TreeComponent = () => {
                     console.log("Waiting for button press...");
                     await waitForButtonPress();
                 }
-                removeHighlight(updatedTree, setRenderTree);
-
+                
+                
                 console.log(stage.length)
                 if (stage.length != emptyBeams) {
 
@@ -268,6 +271,7 @@ const TreeComponent = () => {
                     }
                 }
 
+                removeHighlight(updatedTree, setRenderTree);
 
                 console.log("This is what we update our tree with after we pruned!", stage)
                 setRenderTree(updatedTree)
@@ -279,7 +283,7 @@ const TreeComponent = () => {
                     await waitForButtonPress();
                 }
 
-                console.log("To Keep for Next Iteration", depth, toKeep)
+                console.log("To Keep for Next Stack Frame", depth, toKeep)
                 console.log("To Keep Temp", depth, toKeepTemp)
 
                 updatedTree = {
@@ -288,6 +292,10 @@ const TreeComponent = () => {
                 }
                 console.log(updatedTree)
                 setRenderTree(updatedTree)
+
+                // setCurrentLayer(JSON.parse(JSON.stringify(toKeep)));
+                // setCurrentDepth(depth + 1);
+
 
                 // Recursive Case; If no more children to keep, then render the whiole tree
                 if (toKeep.length > 0) {
@@ -300,32 +308,46 @@ const TreeComponent = () => {
                     console.log("Final Tree", JSON.parse(JSON.stringify(tree)))
                     setRenderTree([JSON.parse(JSON.stringify(tree))])
                 }
+
+                setShowAnimateButton(false);
             
             } catch (error) {
                 console.error('Error during animation:', error);
             }
         }
-        animateRef.current(layer, depth);
-    }
+    //     animateRef.current(layer, depth);
+    // }
 
     useEffect(() => {
-        if (shouldSwitchToTimeout) {
-            setShouldSwitchToTimeout(false);
-            setUseTimeout(true);
+    //     if (shouldSwitchToTimeout) {
+    //         setShouldSwitchToTimeout(false);
+    //         setUseTimeout(true);
+    //         // Continue the animation with the updated useTimeout state from the current state
+    //         animateRef.current(currentLayer, currentDepth);
+    //     }
+    // }, [shouldSwitchToTimeout, currentLayer, currentDepth]);
+
+        if (useTimeout && isRunning) {
             // Continue the animation with the updated useTimeout state from the current state
-            animateRef.current(currentLayer, currentDepth);
+            animate(currentLayer, currentDepth);
         }
-    }, [shouldSwitchToTimeout, currentLayer, currentDepth]);
+    }, [useTimeout, isRunning]);
 
     return (
         <div style={{display: 'flex', height: '100vh', width: '100vw'}}>
-            <div style ={{width: '20%'}}>
-            <button onClick={startStepping}>Start</button>
-                <button onClick={startAnimating}>Animate</button>
-                <button onClick={() => window.dispatchEvent(new CustomEvent('stepPress'))}>
-                    Step
-                </button>
-
+            <div style={{ width: '20%' }}>
+                {!showButtons ? (
+                    <button onClick={startStepping}>Start</button>
+                ) : (
+                    <>
+                        <button onClick={() => window.dispatchEvent(new CustomEvent('stepPress'))}>
+                            Step
+                        </button>
+                        {showAnimateButton && !useTimeout && (
+                            <button onClick={startAnimating}>Animate</button>
+                        )}
+                    </>
+                )}
             </div>
             <div style={{ width: '80%' }}>
                 <Tree 
