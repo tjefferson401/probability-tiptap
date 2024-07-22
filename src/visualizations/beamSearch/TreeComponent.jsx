@@ -28,6 +28,8 @@ const TreeComponent = () => {
     const [currentDepth, setCurrentDepth] = useState(0);
     const [showAnimateButton, setShowAnimateButton] = useState(false);
     const [showResetButton, setShowResetButton] = useState(false);
+    const [isStepDisabled, setIsStepDisabled] = useState(false);
+
 
     // const animateRef = useRef(null); 
     function removeScoresExceptDeepest(tree) {
@@ -66,6 +68,7 @@ const TreeComponent = () => {
     const startAnimating = () => {
         setUseTimeout(true);
         setIsRunning(true);
+        setIsStepDisabled(true);
         animate(currentLayer, currentDepth); // Continue from current state
     };
 
@@ -81,6 +84,7 @@ const TreeComponent = () => {
         setCurrentDepth(0);
         setShowAnimateButton(false);
         setShowResetButton(false);
+        setIsStepDisabled(false);
     }
 
     const waitForTimeout = async (timeout) => {
@@ -142,7 +146,6 @@ const TreeComponent = () => {
 
 
     const animate = async (layer, depth = 0) => {
-        // animateRef.current = async (layer, depth) => {
             try {
                 console.log("NEW RECURSIVE CALL!!!!!!!")
                 console.log('Animating at depth:', depth);
@@ -348,10 +351,11 @@ const TreeComponent = () => {
                     console.log("Final Tree", JSON.parse(JSON.stringify(tree)))
                     let treeWithoutScores = removeScoresExceptDeepest(JSON.parse(JSON.stringify(tree)))
                     setRenderTree(treeWithoutScores);
-
+                    
+                    setIsStepDisabled(true);
                     setShowResetButton(true);
                 }
-
+                
                 setShowAnimateButton(false);
             
             } catch (error) {
@@ -373,7 +377,7 @@ const TreeComponent = () => {
                     <button onClick={startStepping}>Start</button>
                 ) : (
                     <>
-                        <button onClick={() => window.dispatchEvent(new CustomEvent('stepPress'))}>
+                        <button onClick={() => window.dispatchEvent(new CustomEvent('stepPress'))} disabled={isStepDisabled}>
                             Step
                         </button>
                         {showAnimateButton && (
