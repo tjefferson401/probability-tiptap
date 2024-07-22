@@ -67,7 +67,7 @@ self.addEventListener('message', async (event) => {
 
     // Actually perform the translation
     let output = await gpt2TextGen([event.data.text], {
-        max_new_tokens: 2,
+        max_new_tokens: 3,
         num_beams: 2,
         num_return_sequences: 2,
         // length_penalty: 1.0,
