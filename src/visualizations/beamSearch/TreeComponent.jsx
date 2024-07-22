@@ -351,7 +351,7 @@ const TreeComponent = () => {
                     console.log("Final Tree", JSON.parse(JSON.stringify(tree)))
                     let treeWithoutScores = removeScoresExceptDeepest(JSON.parse(JSON.stringify(tree)))
                     setRenderTree(treeWithoutScores);
-                    
+
                     setIsStepDisabled(true);
                     setShowResetButton(true);
                 }
@@ -372,7 +372,7 @@ const TreeComponent = () => {
 
     return (
         <div style={{display: 'flex', height: '100vh', width: '100vw'}}>
-            <div style={{ width: '20%' }}>
+            <div style={{ width: '25%', backgroundColor: 'blue' }}>
                 {!showButtons ? (
                     <button onClick={startStepping}>Start</button>
                 ) : (

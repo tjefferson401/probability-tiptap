@@ -14,7 +14,7 @@ export const BeamSearchVis = () => {
         name: 'root',
         children: [
             {
-                name: 'Hello my name is',
+                name: 'Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is ',
                 children: [
                     {
                         name: 'Justin',
@@ -190,7 +190,7 @@ export const BeamSearchVis = () => {
 
     return (
         <div>
-            <h1>Beam Search Visualization</h1>
+            {/* <h1>Beam Search Visualization</h1> */}
             <AppContext.Provider value={initialState}>
                 <button onClick={generate}>Generate</button>
                 <input value={input} onChange={(e) => setInput(e.target.value)} />
