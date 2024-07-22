@@ -4,7 +4,7 @@ import { useAppContext } from './BeamSearchContext';
 import CustomNodeRender from './CustomNode';
 
 const TreeComponent = () => {
-    const { tree } = useAppContext();   // consume the tree state and setTree function from the context
+    const { tree, setTree } = useAppContext();   // consume the tree state and setTree function from the context
 
     const [dimensions, setDimensions] = useState({
         width: window.innerWidth, 
@@ -23,15 +23,37 @@ const TreeComponent = () => {
 
     const [useTimeout, setUseTimeout] = useState(false); // true for timeout, false for button press
     const [isRunning, setIsRunning] = useState(false);
-
     const [showButtons, setShowButtons] = useState(false);
-
     const [currentLayer, setCurrentLayer] = useState([]);
     const [currentDepth, setCurrentDepth] = useState(0);
-
     const [showAnimateButton, setShowAnimateButton] = useState(false);
+    const [showResetButton, setShowResetButton] = useState(false);
 
-    // const animateRef = useRef(null);
+    // const animateRef = useRef(null); 
+    function removeScoresExceptDeepest(tree) {
+        
+        let maxDepth = 0;   
+        function findMaxDepth(node, depth) { 
+            if (!node.children || node.children.length === 0) {
+                maxDepth = Math.max(maxDepth, depth);
+                return;
+            }
+            node.children.forEach(child => findMaxDepth(child, depth + 1));
+        }
+
+        function traverse(node, depth) {
+            if (depth < maxDepth) {
+                delete node.score
+            }
+            if (node.children) {
+                node.children.forEach(child => traverse(child, depth + 1));
+            }
+        }
+
+        findMaxDepth(tree, 0);
+        traverse(tree, 0)
+        return tree;
+    }
 
     const startStepping = () => {
         setUseTimeout(false);
@@ -46,6 +68,20 @@ const TreeComponent = () => {
         setIsRunning(true);
         animate(currentLayer, currentDepth); // Continue from current state
     };
+
+    const reset = () => {
+        setRenderTree({
+            name: 'root',
+            children: []
+        })
+        setUseTimeout(false);
+        setIsRunning(false);
+        setShowButtons(false);
+        setCurrentLayer([]);
+        setCurrentDepth(0);
+        setShowAnimateButton(false);
+        setShowResetButton(false);
+    }
 
     const waitForTimeout = async (timeout) => {
         return new Promise(resolve => setTimeout(resolve, timeout));
@@ -63,7 +99,7 @@ const TreeComponent = () => {
 
     const highlightNodes = (toKeepTemp, renderTree, setRenderTree) => {
         let highlightedTree = JSON.parse(JSON.stringify(renderTree));
-    
+        
         const highlight = (node, nodesToHighlight) => {
             nodesToHighlight.forEach(n => {
                 if (n.name === node.name && n.haveChildren && n.score === node.score) {
@@ -71,7 +107,7 @@ const TreeComponent = () => {
                     console.log(`Highlighted node: ${node.name} with score: ${node.score}`);
                 }
             });
-    
+            
             if (node.children && Array.isArray(node.children)) {
                 node.children.forEach(child => highlight(child, nodesToHighlight));
             }
@@ -134,7 +170,14 @@ const TreeComponent = () => {
                 setCurrentLayer(layer);
                 setCurrentDepth(depth);
 
-                setShowAnimateButton(true);
+                if (!useTimeout) {
+                    setShowAnimateButton(true);
+
+                    setTimeout(() => {
+                        setShowAnimateButton(true);
+                    }, 0);
+                }
+                
 
                 if (useTimeout) {
                     await waitForTimeout(2000);
@@ -293,20 +336,20 @@ const TreeComponent = () => {
                 console.log(updatedTree)
                 setRenderTree(updatedTree)
 
-                // setCurrentLayer(JSON.parse(JSON.stringify(toKeep)));
-                // setCurrentDepth(depth + 1);
-
-
-                // Recursive Case; If no more children to keep, then render the whiole tree
                 if (toKeep.length > 0) {
                     console.log("This is the toKeep array", toKeep)
                     console.log("Recursing, this is what we are passing into layer!", JSON.parse(JSON.stringify(toKeep)))
-                    animate(JSON.parse(JSON.stringify(toKeep)), depth + 1);
+                    setTimeout(() => {
+                        animate(JSON.parse(JSON.stringify(toKeep)), depth + 1);
+                    }, 0);
 
                 } else {
                     console.log("Finished!")
                     console.log("Final Tree", JSON.parse(JSON.stringify(tree)))
-                    setRenderTree([JSON.parse(JSON.stringify(tree))])
+                    let treeWithoutScores = removeScoresExceptDeepest(JSON.parse(JSON.stringify(tree)))
+                    setRenderTree(treeWithoutScores);
+
+                    setShowResetButton(true);
                 }
 
                 setShowAnimateButton(false);
@@ -315,18 +358,8 @@ const TreeComponent = () => {
                 console.error('Error during animation:', error);
             }
         }
-    //     animateRef.current(layer, depth);
-    // }
 
     useEffect(() => {
-    //     if (shouldSwitchToTimeout) {
-    //         setShouldSwitchToTimeout(false);
-    //         setUseTimeout(true);
-    //         // Continue the animation with the updated useTimeout state from the current state
-    //         animateRef.current(currentLayer, currentDepth);
-    //     }
-    // }, [shouldSwitchToTimeout, currentLayer, currentDepth]);
-
         if (useTimeout && isRunning) {
             // Continue the animation with the updated useTimeout state from the current state
             animate(currentLayer, currentDepth);
@@ -343,12 +376,16 @@ const TreeComponent = () => {
                         <button onClick={() => window.dispatchEvent(new CustomEvent('stepPress'))}>
                             Step
                         </button>
-                        {showAnimateButton && !useTimeout && (
+                        {showAnimateButton && (
                             <button onClick={startAnimating}>Animate</button>
                         )}
                     </>
                 )}
+                {showResetButton && (
+                    <button onClick={reset}>Reset</button>
+                )}
             </div>
+
             <div style={{ width: '80%' }}>
                 <Tree 
                     data={renderTree}
