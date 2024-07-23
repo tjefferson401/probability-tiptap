@@ -1,0 +1,124 @@
+diff --git a/node_modules/@xenova/transformers/src/models.js b/node_modules/@xenova/transformers/src/models.js
+index a811291..f27183d 100644
+--- a/node_modules/@xenova/transformers/src/models.js
++++ b/node_modules/@xenova/transformers/src/models.js
+@@ -997,6 +997,7 @@ export class PreTrainedModel extends Callable {
+             inputs_attention_mask = null
+         } = {},
+     ) {
++        console.log("generate was called");
+         if (!this.can_generate) {
+             const modelName = MODEL_CLASS_TO_NAME_MAPPING.get(this.constructor);
+             let errorMessage = `The current model class (${modelName}) is not compatible with \`.generate()\`, as it doesn't have a language model head.`
+@@ -1104,6 +1105,10 @@ export class PreTrainedModel extends Callable {
+                 logits_processor(beam.output_token_ids, logits);
+ 
+                 let sampledTokens = sampler(logits);
++                console.log("sampledTokens from sampler:");
++                console.log(sampledTokens);
++                console.log("finished samplingg");
++                
+                 for (let [newTokenId, logProb] of sampledTokens) {
+                     // use previous beam as a starting point
+                     let newBeam = { ...beam };
+@@ -1123,6 +1128,8 @@ export class PreTrainedModel extends Callable {
+             }
+             ++numOutputTokens;
+ 
++            const all_candidate_beams = newest_beams;
++
+             // Next, we get the best beams, per ID
+             newest_beams = this.groupBeams(newest_beams).map(
+                 group => group
+@@ -1130,12 +1137,20 @@ export class PreTrainedModel extends Callable {
+                     .slice(0, generation_config.num_beams)  // remove outside beam width
+             );
+ 
++            // Keep a version of best beams that includes all beams including the ones we don't use
++            const overgenerated_beams = this.groupBeams(all_candidate_beams).map(
++                group => group
++                    .sort((a, b) => b.score - a.score)      // sort by score
++            );
++
+             // Flatten beams
+             beams = newest_beams.flat();
+ 
++            const callback_beams = overgenerated_beams.flat();
++
+             // Run callback
+             if (generation_config.callback_function) {
+-                generation_config.callback_function(beams);
++                generation_config.callback_function(callback_beams);
+             }
+         }
+ 
+diff --git a/node_modules/@xenova/transformers/src/pipelines.js b/node_modules/@xenova/transformers/src/pipelines.js
+index c7772aa..9e78f0b 100644
+--- a/node_modules/@xenova/transformers/src/pipelines.js
++++ b/node_modules/@xenova/transformers/src/pipelines.js
+@@ -972,6 +972,8 @@ export class TextGenerationPipeline extends (/** @type {new (options: TextPipeli
+             truncation: true,
+         });
+ 
++        console.log("calling model.generate");
++
+         const outputTokenIds = await this.model.generate(input_ids, generate_kwargs, null, {
+             inputs_attention_mask: attention_mask
+         });
+diff --git a/node_modules/@xenova/transformers/src/utils/generation.js b/node_modules/@xenova/transformers/src/utils/generation.js
+index 1f9dc89..75f97f4 100644
+--- a/node_modules/@xenova/transformers/src/utils/generation.js
++++ b/node_modules/@xenova/transformers/src/utils/generation.js
+@@ -760,15 +760,18 @@ export class Sampler extends Callable {
+ 
+         // NOTE: beam search is implemented directly into the generation function
+         if (generation_config.do_sample) {
++            console.log("Doing MultinomialSampler");
+             return new MultinomialSampler(generation_config);
+ 
+         } else if (generation_config.num_beams > 1) {
++            console.log("Doing BeamSearchSampler");
+             return new BeamSearchSampler(generation_config);
+ 
+         } else {
+             if (generation_config.num_return_sequences > 1) {
+                 throw Error(`num_return_sequences has to be 1 when doing greedy search, but is ${generation_config.num_return_sequences}.`)
+             }
++            console.log("Doing GreedySampler");
+             return new GreedySampler(generation_config);
+         }
+     }
+@@ -786,6 +789,7 @@ class GreedySampler extends Sampler {
+      * @returns {Array} An array with a single tuple, containing the index of the maximum value and a meaningless score (since this is a greedy search).
+      */
+     sample(logits, index = -1) {
++        console.log("GreedySampler");
+         // NOTE: no need to do log_softmax here since we only take the maximum
+         let logs = this.getLogits(logits, index);
+         let argmax = max(logs)[1];
+@@ -811,6 +815,7 @@ class MultinomialSampler extends Sampler {
+      * @returns {Array}
+      */
+     sample(logits, index = -1) {
++        console.log("MultinomialSampler");
+         let k = logits.dims.at(-1); // defaults to vocab size
+         if (this.generation_config.top_k > 0) {
+             k = Math.min(this.generation_config.top_k, k);
+@@ -849,6 +854,7 @@ class BeamSearchSampler extends Sampler {
+      * @returns {Array}
+      */
+     sample(logits, index = -1) {
++        console.log("BeamSearchSampler");
+         let k = logits.dims.at(-1); // defaults to vocab size
+         if (this.generation_config.top_k > 0) {
+             k = Math.min(this.generation_config.top_k, k);
+@@ -863,7 +869,8 @@ class BeamSearchSampler extends Sampler {
+         // Compute softmax over logits
+         const probabilities = softmax(topLogits.map(x => x[1]));
+ 
+-        return Array.from({ length: this.generation_config.num_beams }, (_, i) => {
++        console.log("Returning extra beams");
++        return Array.from({ length: this.generation_config.num_beams + 2 }, (_, i) => {
+             return [
+                 topLogits[i][0], // token id
+                 Math.log(probabilities[i]), // score

@@ -13,6 +13,31 @@ env.logLevel = 'error';
 
 console.warn = () => {};
 
+const reconstructTree = (steps, input, tokenizer) => {
+    for (let i = steps.length - 1; i > 0; i--) {
+        let children = steps[i];
+        let parents = steps[i - 1];
+        parents.forEach(parent => {
+            parent.children = [];
+            parent.name = tokenizer.decode(parent.output_token_ids, { skip_special_tokens: true });
+            children.forEach(child => {
+                if (child.output_token_ids.slice(0, -1).join() === parent.output_token_ids.join()) {
+                    parent.children.push(child);
+                }
+            });
+        });
+    }
+    return {
+        name: 'root',
+        children: [
+            {
+                name: input,
+                children: steps[0]
+            }
+        ]
+    };
+}
+
 const getTopKIndices = (arr, k) => {
     // Create an array of indices [0, 1, 2, ..., arr.length - 1]
     const indices = Array.from(arr.keys());
@@ -67,7 +92,7 @@ self.addEventListener('message', async (event) => {
 
     // Actually perform the translation
     let output = await gpt2TextGen([event.data.text], {
-        max_new_tokens: 2,
+        max_new_tokens: 3,
         num_beams: 2,
         num_return_sequences: 2,
         // length_penalty: 1.0,
@@ -97,13 +122,14 @@ self.addEventListener('message', async (event) => {
                 const topIndices = getTopKIndices(softmaxProbs, TOP_K);
             
                 return {
-                    top_tokens_decoded: topIndices.map(index => gpt2TextGen.tokenizer.decode([index], { skip_special_tokens: true })),
+                    // top_tokens_decoded: topIndices.map(index => gpt2TextGen.tokenizer.decode([index], { skip_special_tokens: true })),
+                    name: gpt2TextGen.tokenizer.decode(elem.output_token_ids, { skip_special_tokens: true }),
                     output_sequence: gpt2TextGen.tokenizer.decode(elem.output_token_ids, { skip_special_tokens: true }),
                     output_token_ids: elem.output_token_ids,
                     score: elem.score,
-                    top_tokens: topIndices,
+                    // top_tokens: topIndices,
                     //decoded_top_tokens: gpt2TextGen.tokenizer.decode(topIndices, { skip_special_tokens: true }),
-                    probabilities: topIndices.map(index => softmaxProbs[index])
+                    // probabilities: topIndices.map(index => softmaxProbs[index])
                 };
             })
 
@@ -121,6 +147,6 @@ self.addEventListener('message', async (event) => {
     // Send the output back to the main thread
     self.postMessage({
         status: 'complete',
-        output: steps
+        output: reconstructTree(steps, event.data.text, gpt2TextGen.tokenizer)
     });
 });
