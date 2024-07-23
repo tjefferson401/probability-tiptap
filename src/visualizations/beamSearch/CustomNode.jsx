@@ -66,12 +66,12 @@ const CustomNodeRender = ({ nodeDatum }) => {
 
             <foreignObject
                 ref={foreignObjectRef}
-                x={((xOffset - rectWidth) / 2) + rectPadding}
-                y={((yOffset - rectHeight) / 2) + rectPadding}
-                width={rectWidth - rectPadding * 2}
-                height={rectHeight - rectPadding * 2}
+                x={(xOffset - rectWidth) / 2}
+                y={(yOffset - rectHeight) / 2}
+                width={rectWidth}
+                height={rectHeight}
             >
-                <div xmlns="http://www.w3.org/1999/xhtml" style={{ color: textColor, fontSize: '24px', fontWeight: 'normal', whiteSpace: 'pre-wrap', wordWrap: 'break-word', textAlign: 'center' }}>
+                <div xmlns="http://www.w3.org/1999/xhtml" style={{ color: textColor, fontSize: '24px', fontWeight: 'normal', whiteSpace: 'pre-wrap', wordWrap: 'break-word', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
                     {nodeDatum.name}
                 </div>
             </foreignObject>
