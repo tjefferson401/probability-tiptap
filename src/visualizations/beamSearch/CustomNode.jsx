@@ -8,7 +8,8 @@ const CustomNodeRender = ({ nodeDatum }) => {
     useLayoutEffect(() => {
         if (foreignObjectRef.current) {
             const foreignObjectElement = foreignObjectRef.current;
-            const height = foreignObjectElement.getBoundingClientRect().height;
+            let height = foreignObjectElement.getBoundingClientRect().height;
+            height = 60;
             setRectHeight(height + 20); // Add padding to height
         }
     }, [nodeDatum.name]);
@@ -16,7 +17,7 @@ const CustomNodeRender = ({ nodeDatum }) => {
     const xOffset = 0;
     const yOffset = rectHeight / 2;
     const rectPadding = 20;
-    const rectWidth = 200; // Set a fixed width for the rect and foreignObject
+    const rectWidth = 300; // Set a fixed width for the rect and foreignObject
 
     const nodeFill = nodeDatum.highlighted ? "#FFEB3B" : "#E3F2FD"; // Yellow background if highlighted, otherwise soft blue
     const nodeStroke = nodeDatum.highlighted ? "#FBC02D" : "none"; // Yellow border if highlighted, otherwise none

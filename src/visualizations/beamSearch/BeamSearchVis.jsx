@@ -89,16 +89,9 @@ export const BeamSearchVis = () => {
     
     const [config, setConfig] = useState({});
     const [tree, setTree] = useState(initialTreeData);// the tree data that the d3-tree component renders
-    const [GPTStepOutputs, setGPTStepOutputs] = useState([]); 
     const initialState = {                                  // package the tree and setTree functions into an object to pass to the context
         tree,
         setTree,
-        GPTStepOutputs,
-        setGPTStepOutputs
-    };
-
-    const appendGPTStepsOutput = (output) => {
-        setGPTStepOutputs(prev => [...prev, output]);
     };
 
     const findChildren = (children, older_token_sequence) => {
@@ -160,10 +153,8 @@ export const BeamSearchVis = () => {
             }
             if (event.data.status === 'complete') {
                 console.log("Complete Output:", event.data.output);
-                setLastMessage(event.data.output[0][0].output_sequence);
-                console.log("TREE BUILT")
-                const builtTree = buildTree(event.data.output);
-                setTree(builtTree)
+                //setLastMessage(event.data.output[0][0].output_sequence);
+                setTree(event.data.output);
             }
         }
 

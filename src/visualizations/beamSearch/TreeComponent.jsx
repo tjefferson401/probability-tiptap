@@ -253,7 +253,7 @@ const TreeComponent = () => {
                     for (let child of beam.children) {
                         allChildren.push(child)
                         console.log("Child of Beam.children in the pruning step", child)
-                        if (child.children.length > 0) {
+                        if (child.children?.length > 0) {
                             // need a copy of the whole tree to pass to the next layer
                             toKeep.push(JSON.parse(JSON.stringify(child)))
                             console.log("To Keep Array", toKeep)

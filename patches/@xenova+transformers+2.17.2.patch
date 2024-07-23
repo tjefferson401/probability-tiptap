@@ -66,7 +66,7 @@ index c7772aa..9e78f0b 100644
              inputs_attention_mask: attention_mask
          });
 diff --git a/node_modules/@xenova/transformers/src/utils/generation.js b/node_modules/@xenova/transformers/src/utils/generation.js
-index 1f9dc89..cc7ac47 100644
+index 1f9dc89..75f97f4 100644
 --- a/node_modules/@xenova/transformers/src/utils/generation.js
 +++ b/node_modules/@xenova/transformers/src/utils/generation.js
 @@ -760,15 +760,18 @@ export class Sampler extends Callable {
@@ -118,7 +118,7 @@ index 1f9dc89..cc7ac47 100644
  
 -        return Array.from({ length: this.generation_config.num_beams }, (_, i) => {
 +        console.log("Returning extra beams");
-+        return Array.from({ length: this.generation_config.num_beams * 2 }, (_, i) => {
++        return Array.from({ length: this.generation_config.num_beams + 2 }, (_, i) => {
              return [
                  topLogits[i][0], // token id
                  Math.log(probabilities[i]), // score
