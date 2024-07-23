@@ -1,7 +1,5 @@
 import { Slider, TextField, Button } from '@mui/material';
 
-
-
 const ControlPanel = () => {
 
     const [showButtons, setShowButtons] = useState(false);

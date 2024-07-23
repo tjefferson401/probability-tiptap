@@ -51,20 +51,6 @@ const CustomNodeRender = ({ nodeDatum }) => {
                 filter="url(#dropShadow)" // Apply the drop shadow filter
             />
 
-        {/* <text
-            ref={textRef}
-            x={xOffset}
-            y={yOffset - 10} // Adjust the y position to center the text vertically
-            textAnchor="middle"
-            fill={textColor}
-            fontSize="24"
-            fontWeight="normal"
-            alignmentBaseline="middle"
-            style={{ fontWeight: 'normal' }}
-        >
-            {nodeDatum.name}
-        </text> */}
-
             <foreignObject
                 ref={foreignObjectRef}
                 x={(xOffset - rectWidth) / 2}
