@@ -106,6 +106,12 @@ const TreeComponent = () => {
         
         const highlight = (node, nodesToHighlight) => {
             nodesToHighlight.forEach(n => {
+                console.log("Node:", node, "Node's token:", node.token);
+                console.log("Node to Highlight:", n, "Nods to Highlight's Token:", n.token);
+
+
+                console.log("Does node have children?", n.haveChildren, "Comparing Names:", n.name === node.name, "Comparing Scores:", n.score === node.score);
+
                 if (n.name === node.name && n.haveChildren && n.score === node.score) {
                     node.highlighted = true;
                     console.log(`Highlighted node: ${node.name} with score: ${node.score}`);
@@ -149,6 +155,7 @@ const TreeComponent = () => {
             try {
                 console.log("NEW RECURSIVE CALL!!!!!!!")
                 console.log('Animating at depth:', depth);
+                console.log("This is what the tree looks like", tree)
 
                 if (depth === 0) {
                     layer = [...JSON.parse(JSON.stringify(tree)).children]
@@ -161,7 +168,8 @@ const TreeComponent = () => {
 
                     let updatedTree = {
                         ...renderTree,
-                        children: [root]
+                        children: [root],
+                        highlighted: false
                     }
 
                     setRenderTree(updatedTree)
@@ -200,9 +208,10 @@ const TreeComponent = () => {
                     for (let child of beam.children) {
                         console.log("Child of Beam.children in the adding step", child)
                         let candidate = {
-                            name: child.name,
-                            score: child.score,
-                            children: []
+                            name: child.token,
+                            score: child.rank,
+                            children: [],
+                            highlighted: false,
                         }
                         console.log("Candidate:", candidate)
                         candidates.push(candidate)
@@ -212,7 +221,8 @@ const TreeComponent = () => {
 
                     beams.push({
                         name: beam.name,
-                        children: candidates
+                        children: candidates,
+                        highlighted: false
                     })
 
                     console.log("Beams after push", beams)
@@ -222,7 +232,8 @@ const TreeComponent = () => {
 
                 let updatedTree = {
                     ...renderTree,
-                    children: beams
+                    children: beams,
+                    highlighted: false
                 }
 
                 setRenderTree(updatedTree)  
@@ -252,6 +263,7 @@ const TreeComponent = () => {
 
                     for (let child of beam.children) {
                         allChildren.push(child)
+                        child.highlighted = false
                         console.log("Child of Beam.children in the pruning step", child)
                         if (child.children?.length > 0) {
                             // need a copy of the whole tree to pass to the next layer
@@ -260,10 +272,11 @@ const TreeComponent = () => {
 
                             // this is for temporarily rendering one layer at a time
                             let candidate = {
-                                name: child.name,
-                                score: child.score,
+                                name: child.token,
+                                score: child.rank,
                                 children: [],
-                                haveChildren: true
+                                haveChildren: true,
+                                highlighted: false,
                             }
                                                             
                             toKeepTemp.push(candidate)
@@ -286,6 +299,7 @@ const TreeComponent = () => {
                     toKeepTemp = allChildren
                     for (let child of toKeepTemp) {
                         child.haveChildren = true
+                        child.highlighted = false
                     }
                 }
 
