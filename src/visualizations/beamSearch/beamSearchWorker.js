@@ -13,13 +13,18 @@ env.logLevel = 'error';
 
 console.warn = () => {};
 
-const reconstructTree = (steps, input, tokenizer) => {
+const gptToTree = (steps, input, tokenizer) => {
     for (let i = steps.length - 1; i > 0; i--) {
         let children = steps[i];
         let parents = steps[i - 1];
+        
+        if (i === steps.length - 1) {
+            children.sort((a, b) => b.score - a.score); // Sort children by score
+
+        }
         parents.forEach(parent => {
             parent.children = [];
-            children.forEach(child => {
+            children.forEach(child => {           
                 if (child.output_token_ids.slice(0, -1).join(" ") === parent.output_token_ids.join(" ")) {
                     parent.children.push(child);
                 }
@@ -36,26 +41,6 @@ const reconstructTree = (steps, input, tokenizer) => {
         ]
     };
 }
-
-const getTopKIndices = (arr, k) => {
-    // Create an array of indices [0, 1, 2, ..., arr.length - 1]
-    const indices = Array.from(arr.keys());
-  
-    // Sort indices based on the corresponding values in arr
-    indices.sort((a, b) => arr[b] - arr[a]);
-  
-    // Return the top K indices
-    return indices.slice(0, k);
-};
-
-const logSoftmax = (arr) => {
-    console.log("arr", arr)
-    const max = Math.max(...arr);
-    const shifted = arr.map(x => x - max);
-    const expShifted = shifted.map(x => Math.exp(x));
-    const sumExpShifted = expShifted.reduce((a, b) => a + b, 0);
-    return shifted.map(x => x - Math.log(sumExpShifted));
-};
 
 
 class GPT2Pipeline {
@@ -122,8 +107,8 @@ self.addEventListener('message', async (event) => {
             
                 return {
                     // top_tokens_decoded: topIndices.map(index => gpt2TextGen.tokenizer.decode([index], { skip_special_tokens: true })),
-                    name: gpt2TextGen.tokenizer.decode(elem.output_token_ids, { skip_special_tokens: true }),
-                    output_sequence: gpt2TextGen.tokenizer.decode(elem.output_token_ids, { skip_special_tokens: true }),
+                    sequence: gpt2TextGen.tokenizer.decode(elem.output_token_ids, { skip_special_tokens: true }),
+                    token: gpt2TextGen.tokenizer.decode(elem.output_token_ids.slice(-1), { skip_special_tokens: true }),
                     output_token_ids: elem.output_token_ids,
                     score: elem.score,
                     // top_tokens: topIndices,
@@ -146,6 +131,6 @@ self.addEventListener('message', async (event) => {
     // Send the output back to the main thread
     self.postMessage({
         status: 'complete',
-        output: reconstructTree(steps, event.data.text, gpt2TextGen.tokenizer)
+        output: gptToTree(steps, event.data.text, gpt2TextGen.tokenizer)
     });
 });

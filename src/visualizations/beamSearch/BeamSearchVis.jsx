@@ -94,51 +94,6 @@ export const BeamSearchVis = () => {
         setTree,
     };
 
-    const findChildren = (children, older_token_sequence) => {
-        console.log("Children", children)
-        console.log("Finding Children for", older_token_sequence)
-        const foundChildren = [];
-        children.forEach(child => {
-            console.log("Checking against", child.output_token_ids.slice(0, -1))
-            if (older_token_sequence.every((token, index) => token === child.output_token_ids.slice(0, -1)[index])) {
-                foundChildren.push(child);
-            }
-        });
-        console.log("Found Children", foundChildren)
-        return foundChildren;
-    };
-
-    const buildTree = (steps) => {
-        let children = [];
-        let newChildren = [];
-        const reversedSteps = [...steps].reverse();
-        reversedSteps.forEach((step, index) => {
-            console.log("Current Step", step)
-            newChildren = [];
-            console.log("Starting a new round of children")
-            step.forEach(beam => {
-                for (let i = 0; i < beam.top_tokens.length; i++) {
-                    console.log("Pushing", beam.top_tokens_decoded[i])
-                    newChildren.push({
-                        name: beam.top_tokens_decoded[i],
-                        output_token_ids: beam.output_token_ids,
-                        score: beam.probabilities[i],
-                        children: findChildren(children, beam.output_token_ids),
-                    });
-                };
-            });
-            console.log("NEW CHILDREN", newChildren);
-            children = newChildren;
-        });
-        return {
-            name: 'root',
-            children: [{
-                name: input,
-                children: children
-            }]
-        };
-    };
-
     // Create a new WebWorker when the component mounts
     useEffect(() => {
         // Create a new WebWorker if one does not already exist
