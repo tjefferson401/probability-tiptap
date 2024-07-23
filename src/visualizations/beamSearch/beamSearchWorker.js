@@ -19,9 +19,8 @@ const reconstructTree = (steps, input, tokenizer) => {
         let parents = steps[i - 1];
         parents.forEach(parent => {
             parent.children = [];
-            parent.name = tokenizer.decode(parent.output_token_ids, { skip_special_tokens: true });
             children.forEach(child => {
-                if (child.output_token_ids.slice(0, -1).join() === parent.output_token_ids.join()) {
+                if (child.output_token_ids.slice(0, -1).join(" ") === parent.output_token_ids.join(" ")) {
                     parent.children.push(child);
                 }
             });
