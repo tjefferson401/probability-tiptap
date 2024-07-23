@@ -392,7 +392,7 @@ const TreeComponent = () => {
 
             <div style={{ width: '80%' }}>
                 <Tree 
-                    data={renderTree}
+                    data={tree}
                     renderCustomNodeElement={(rd3tProps) => <CustomNodeRender {...rd3tProps} />}
                     translate={translate}
                     zoom={.75}  // Adjusted zoom level

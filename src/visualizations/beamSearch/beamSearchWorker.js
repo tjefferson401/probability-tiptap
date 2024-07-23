@@ -17,15 +17,14 @@ const gptToTree = (steps, input, tokenizer) => {
     for (let i = steps.length - 1; i > 0; i--) {
         let children = steps[i];
         let parents = steps[i - 1];
-        
-        if (i === steps.length - 1) {
-            children.sort((a, b) => b.score - a.score); // Sort children by score
 
-        }
         parents.forEach(parent => {
             parent.children = [];
             children.forEach(child => {           
                 if (child.output_token_ids.slice(0, -1).join(" ") === parent.output_token_ids.join(" ")) {
+                    if (child.highlighted) {
+                        parent.highlighted = true;
+                    }
                     parent.children.push(child);
                 }
             });
@@ -102,12 +101,10 @@ self.addEventListener('message', async (event) => {
             const TOP_K = 2
 
             const next_step = x.map(elem => {
-                const softmaxProbs = softmax(elem.prev_model_outputs.logits.data);
-                const topIndices = getTopKIndices(softmaxProbs, TOP_K);
-            
                 return {
                     // top_tokens_decoded: topIndices.map(index => gpt2TextGen.tokenizer.decode([index], { skip_special_tokens: true })),
                     sequence: gpt2TextGen.tokenizer.decode(elem.output_token_ids, { skip_special_tokens: true }),
+                    name: gpt2TextGen.tokenizer.decode(elem.output_token_ids, { skip_special_tokens: true }),
                     token: gpt2TextGen.tokenizer.decode(elem.output_token_ids.slice(-1), { skip_special_tokens: true }),
                     output_token_ids: elem.output_token_ids,
                     score: elem.score,
@@ -127,6 +124,9 @@ self.addEventListener('message', async (event) => {
             });
         }
     });
+
+    // Highlight the final output
+    steps[steps.length - 1][0].highlighted = true;
 
     // Send the output back to the main thread
     self.postMessage({
