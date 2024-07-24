@@ -14,6 +14,10 @@ const CustomNodeRender = ({ nodeDatum }) => {
         }
     }, [nodeDatum.name]);
 
+    if (nodeDatum.name === 'root' && !nodeDatum.score) {
+        return null;
+    }
+
     const xOffset = 0;
     const yOffset = rectHeight / 2;
     const rectPadding = 20;
@@ -58,7 +62,7 @@ const CustomNodeRender = ({ nodeDatum }) => {
                 width={rectWidth}
                 height={rectHeight}
             >
-                <div xmlns="http://www.w3.org/1999/xhtml" style={{ color: textColor, fontSize: '24px', fontWeight: 'normal', whiteSpace: 'pre-wrap', wordWrap: 'break-word', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                <div xmlns="http://www.w3.org/1999/xhtml" style={{ color: textColor, fontSize: '32px', fontWeight: 'normal', whiteSpace: 'pre-wrap', wordWrap: 'break-word', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
                     {nodeDatum.name}
                 </div>
             </foreignObject>
@@ -69,7 +73,7 @@ const CustomNodeRender = ({ nodeDatum }) => {
                     y={-20}
                     textAnchor="middle"
                     fill="#0D47A1" // Dark Blue text
-                    fontSize="24"
+                    fontSize="32"
                     fontWeight="normal"
                     style={{ fontWeight: 'normal' }}
                 >

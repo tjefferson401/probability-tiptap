@@ -1,59 +1,77 @@
 import { Slider, TextField, Button } from '@mui/material';
+import React, { useState } from 'react';
+import { useAppContext } from './BeamSearchContext';
 
 const ControlPanel = () => {
+
+    const {config, setConfig, animate, generate} = useAppContext();
 
     const [showButtons, setShowButtons] = useState(false);
 
     const startStepping = () => {
-        setUseTimeout(false);
-        setIsRunning(true);
+        setConfig((prevConfig) => ({
+            ...prevConfig,
+            useTimeout: false,
+            isRunning: true,
+            showAnimateButton: true
+        }));
         setShowButtons(true); 
-        setShowAnimateButton(true);
         animate([], 0); // Pass initial parameters for your animation
     };
     
     const startAnimating = () => {
-        setUseTimeout(true);
-        setIsRunning(true);
-        setIsStepDisabled(true);
-        animate(currentLayer, currentDepth); // Continue from current state
+        setConfig((prevConfig) => ({
+            ...prevConfig,
+            useTimeout: true,
+            isRunning: true,
+            isStepDisabled: true
+        }));
+
+        animate(config.currentLayer, config.currentDepth); // Continue from current state
     };
     
     const reset = () => {
-        setRenderTree({
-            name: 'root',
-            children: []
-        })
-        
-        setUseTimeout(false);
-        setIsRunning(false);
+        setConfig((prevConfig) => ({
+            ...prevConfig,
+            renderTree: {
+                name: 'root',
+                children: []
+            },
+            useTimeout: false,
+            isRunning: false,
+            currentLayer: [],
+            currentDepth: 0,
+            showAnimateButton: false,
+            showResetButton: false,
+            isStepDisabled: false
+        }));
+
         setShowButtons(false);
-        setCurrentLayer([]);
-        setCurrentDepth(0);
-        setShowAnimateButton(false);
-        setShowResetButton(false);
-        setIsStepDisabled(false);
     }
     
     return (
-        <div style={{display: 'flex', height: '100vh', width: '100vw'}}>
-            <div style={{ width: '25%', backgroundColor: 'blue' }}>
-                {!showButtons ? (
-                    <button onClick={startStepping}>Start</button>
-                ) : (
-                    <>
-                        <button onClick={() => window.dispatchEvent(new CustomEvent('stepPress'))} disabled={isStepDisabled}>
-                            Step
-                        </button>
-                        {showAnimateButton && (
-                            <button onClick={startAnimating}>Animate</button>
-                        )}
-                    </>
-                )}
-                {showResetButton && (
-                    <button onClick={reset}>Reset</button>
-                )}
-            </div>
+
+        <div style={{ width: '25%', backgroundColor: 'blue', padding: '1rem', display: 'flex', flexDirection: 'column' }}>
+            {/* {children} */}
+
+            <button onClick={generate}>Generate!</button>
+            <input value={config.input} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, input: e.target.value }))} />
+
+            {!showButtons ? (
+                <button onClick={startStepping}>Start</button>
+            ) : (
+                <>
+                    <button onClick={() => window.dispatchEvent(new CustomEvent('stepPress'))} disabled={config.isStepDisabled}>
+                        Step
+                    </button>
+                    {config.showAnimateButton && (
+                        <button onClick={startAnimating}>Animate</button>
+                    )}
+                </>
+            )}
+            {config.showResetButton && (
+                <button onClick={reset}>Reset</button>
+            )}
         </div>
     );
 }

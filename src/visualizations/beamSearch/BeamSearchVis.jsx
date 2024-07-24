@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import TreeComponent from './TreeComponent'
 import AppContext, { useAppContext } from './BeamSearchContext'
+import ControlPanel from "./ControlPanel";
 
 export const BeamSearchVis = () => {
     const worker = useRef(null);                            // reference to the WebWorker that persists across renders
@@ -84,33 +85,29 @@ export const BeamSearchVis = () => {
         ]
     }
 
-    const [useTimeout, setUseTimeout] = useState(false); // true for timeout, false for button press
-    const [isRunning, setIsRunning] = useState(false);
-    const [currentLayer, setCurrentLayer] = useState([]);
-    const [currentDepth, setCurrentDepth] = useState(0);
-
-    const [showAnimateButton, setShowAnimateButton] = useState(false);
-    const [showResetButton, setShowResetButton] = useState(false);
-    const [isStepDisabled, setIsStepDisabled] = useState(false);
-    
-    const [config, setConfig] = useState({});
-
-    
-    const [tree, setTree] = useState(initialTreeData);// the tree data that the d3-tree component renders
-    const initialState = {                                  // package the tree and setTree functions into an object to pass to the context
-        tree,
-        setTree,
-    };
-
-    const [renderTree, setRenderTree] = useState({
+    const initialRenderTree = {
         name: 'root',
         children: []
+    };
+
+    const [config, setConfig] = useState({
+        tree: initialTreeData,
+        useTimeout: false,
+        isRunning: false,
+        currentLayer: [], 
+        currentDepth: 0, 
+        showAnimateButton: false,   
+        showResetButton: false,   
+        isStepDisabled: false, 
+        renderTree: initialRenderTree,
     });
 
 
+    {/* Animate Logic + Animate Helper Functions Go Here!*/}
+
     function removeScoresExceptDeepest(tree) {
-        
         let maxDepth = 0;   
+
         function findMaxDepth(node, depth) { 
             if (!node.children || node.children.length === 0) {
                 maxDepth = Math.max(maxDepth, depth);
@@ -199,13 +196,13 @@ export const BeamSearchVis = () => {
 
     const animate = async (layer, depth = 0) => {
             try {
-                console.log("NEW RECURSIVE CALL!!!!!!!")
-                console.log('Animating at depth:', depth);
-                console.log("This is what the tree looks like", tree)
+                // console.log("NEW RECURSIVE CALL!!!!!!!")
+                // console.log('Animating at depth:', depth);
+                // console.log("This is what the tree looks like", config.tree)
 
                 if (depth === 0) {
-                    layer = [...JSON.parse(JSON.stringify(tree)).children]
-                    console.log("Layer at beginning of recursive function in the Base:", layer)
+                    layer = [...JSON.parse(JSON.stringify(config.tree)).children]
+                    // console.log("Layer at beginning of recursive function in the Base:", layer)
 
                     let root = {
                         name: layer[0].name,
@@ -213,37 +210,39 @@ export const BeamSearchVis = () => {
                     }
 
                     let updatedTree = {
-                        ...renderTree,
+                        ...config.renderTree,
                         children: [root],
                         highlighted: false
                     }
 
-                    setRenderTree(updatedTree)
+                    setConfig(prevConfig => ({ ...prevConfig, renderTree: updatedTree }));
 
                 } else {
                     console.log("Layer at beginning of recursive function:", layer)
                 }
+                setConfig(prevConfig => ({
+                    ...prevConfig,
+                    currentLayer: layer,
+                    currentDepth: depth
+                }))
 
-                setCurrentLayer(layer);
-                setCurrentDepth(depth);
+                if (!config.useTimeout) {
+                    setConfig(prevConfig => ({ ...prevConfig, showAnimateButton: true }));
 
-                if (!useTimeout) {
-                    setShowAnimateButton(true);
-
-                    setTimeout(() => {
-                        setShowAnimateButton(true);
-                    }, 0);
+                    // setTimeout(() => {
+                    //     setConfig(prevConfig => ({ ...prevConfig, showAnimateButton: true }));
+                    // }, 0);
                 }
                 
 
-                if (useTimeout) {
+                if (config.useTimeout) {
                     await waitForTimeout(2000);
                 } else {
                     console.log("Waiting for button press...");
                     await waitForButtonPress();
                 }
 
-                setShowAnimateButton(false);
+                setConfig(prevConfig => ({ ...prevConfig, showAnimateButton: false }));
 
                 let beams = []
                 for (let beam of layer) {
@@ -277,17 +276,16 @@ export const BeamSearchVis = () => {
                 console.log("Beams", beams) 
 
                 let updatedTree = {
-                    ...renderTree,
+                    ...config.renderTree,
                     children: beams,
                     highlighted: false
                 }
 
-                setRenderTree(updatedTree)  
-f
+                setConfig(prevConfig => ({ ...prevConfig, renderTree: updatedTree }));
                 console.log("Logging the layer parameter after visualizing the candidates", layer)
 
                 // Prune and Pick the new Beams
-                if (useTimeout) {
+                if (config.useTimeout) {
                     await waitForTimeout(2000);
                 } else {
                     console.log("Waiting for button press...");
@@ -351,8 +349,11 @@ f
 
                 console.log("TO KEEP TEMP BEFORE WE CALL HIGHLIGHT NODES", toKeepTemp)
 
-                highlightNodes(toKeepTemp, updatedTree, setRenderTree);
-                if (useTimeout) {
+                highlightNodes(toKeepTemp, updatedTree, (newTree) => {
+                    setConfig(prevConfig => ({ ...prevConfig, renderTree: newTree }));
+                });
+
+                if (config.useTimeout) {
                     await waitForTimeout(2000);
                 } else {
                     console.log("Waiting for button press...");
@@ -361,28 +362,20 @@ f
                 
                 
                 console.log(stage.length)
-                if (stage.length != emptyBeams) {
 
-                    console.log("Updated Stage", stage)
-                    updatedTree = {
-                        ...renderTree,
-                        children: stage
-                    }   
+                updatedTree = {
+                    ...config.renderTree,
+                    children: stage.length === emptyBeams ? allChildren : stage
+                };
 
-                } else {
-                    console.log("WE HAVE NO MORE BEAMS TO KEEP AND HAVE REACHED THE END OF RENDERING")
-                    updatedTree = {
-                        ...renderTree,
-                        children: allChildren
-                    }
-                }
-
-                removeHighlight(updatedTree, setRenderTree);
+                removeHighlight(updatedTree, (newTree) => {
+                    setConfig(prevConfig => ({ ...prevConfig, renderTree: newTree }));
+                });
 
                 console.log("This is what we update our tree with after we pruned!", stage)
-                setRenderTree(updatedTree)
+                setConfig(prevConfig => ({ ...prevConfig, renderTree: updatedTree }));
 
-                if (useTimeout) {
+                if (config.useTimeout) {
                     await waitForTimeout(2000);
                 } else {
                     console.log("Waiting for button press...");
@@ -393,30 +386,38 @@ f
                 console.log("To Keep Temp", depth, toKeepTemp)
 
                 updatedTree = {
-                    ...renderTree,
+                    ...config.renderTree,
                     children: toKeepTemp
                 }
                 console.log(updatedTree)
-                setRenderTree(updatedTree)
+
+                setConfig(prevConfig => ({ ...prevConfig, renderTree: updatedTree }));
 
                 if (toKeep.length > 0) {
                     console.log("This is the toKeep array", toKeep)
                     console.log("Recursing, this is what we are passing into layer!", JSON.parse(JSON.stringify(toKeep)))
+
                     setTimeout(() => {
                         animate(JSON.parse(JSON.stringify(toKeep)), depth + 1);
                     }, 0);
 
                 } else {
                     console.log("Finished!")
-                    console.log("Final Tree", JSON.parse(JSON.stringify(tree)))
-                    let treeWithoutScores = removeScoresExceptDeepest(JSON.parse(JSON.stringify(tree)))
-                    setRenderTree(treeWithoutScores);
-
-                    setIsStepDisabled(true);
-                    setShowResetButton(true);
+                    console.log("Final Tree", JSON.parse(JSON.stringify(config.tree)))
+                    let treeWithoutScores = removeScoresExceptDeepest(JSON.parse(JSON.stringify(config.tree)))
+                    
+                    setConfig(prevConfig => ({
+                        ...prevConfig,
+                        renderTree: treeWithoutScores,
+                        isStepDisabled: true,
+                        showResetButton: true
+                    }));
                 }
                 
-                setShowAnimateButton(false);
+                setConfig(prevConfig => ({
+                    ...prevConfig,
+                    showAnimateButton: true
+                }));
             
             } catch (error) {
                 console.error('Error during animation:', error);
@@ -424,15 +425,22 @@ f
         }
 
     useEffect(() => {
-        if (useTimeout && isRunning) {
+        if (config.useTimeout && config.isRunning) {
             // Continue the animation with the updated useTimeout state from the current state
-            animate(currentLayer, currentDepth);
+            animate(config.currentLayer, config.currentDepth);
         }
-    }, [useTimeout, isRunning]);
+    }, [config.useTimeout, config.isRunning]);
 
 
+    {/* This is what we are Passing Into Context!*/}
 
+    const initialState = { 
+        config,
+        setConfig,
+        animate
+    };
 
+    {/* WebWorker Logic Goes Here!*/}
 
     // Create a new WebWorker when the component mounts
     useEffect(() => {
@@ -449,7 +457,10 @@ f
             if (event.data.status === 'complete') {
                 console.log("Complete Output:", event.data.output);
                 //setLastMessage(event.data.output[0][0].output_sequence);
-                setTree(event.data.output);
+                setConfig((prevConfig) => ({
+                    ...prevConfig,
+                    tree: event.data.output
+                }));
             }
         }
 
@@ -475,17 +486,36 @@ f
     }
 
     return (
-        <div>
-            {/* <h1>Beam Search Visualization</h1> */}
+
+        <div style={{ height: '100vh', width: '100vw', display: 'flex' }}>
             <AppContext.Provider value={initialState}>
-                <button onClick={generate}>Generate</button>
-                <input value={input} onChange={(e) => setInput(e.target.value)} />
-                <div>
-                    {lastMessage}
+                <ControlPanel style={{ width: '20%', backgroundColor: 'blue', color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                    <button onClick={generate}>Start</button>
+                    <input value={input} onChange={(e) => setInput(e.target.value)} />
+                    <div>{lastMessage}</div>
+                </ControlPanel>
+                <div style={{ flex: 1, backgroundColor: 'lightgray' }}>
+                    <TreeComponent />
                 </div>
-                <TreeComponent />
             </AppContext.Provider>
         </div>
+
+        // <div>
+        //     {/* <h1>Beam Search Visualization</h1> */}
+        //     <AppContext.Provider value={initialState}>
+
+        //         <div style={{ display: 'flex', height: '100%', width: '100%' }}>
+        //             <ControlPanel style={{ width: '20%', backgroundColor: 'blue' }}>
+        //                 <button onClick={generate}>Start</button>
+        //                 <input value={input} onChange={(e) => setInput(e.target.value)} />
+        //                 <div>{lastMessage}</div>
+        //             </ControlPanel>
+        //             <div style={{ flex: 1, backgroundColor: 'lightgray' }}>
+        //                 <TreeComponent />
+        //             </div>
+        //         </div>
+        //     </AppContext.Provider>
+        // </div>
 
     )
 }
