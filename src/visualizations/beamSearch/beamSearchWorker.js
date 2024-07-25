@@ -74,6 +74,7 @@ self.addEventListener('message', async (event) => {
     });
 
     // Actually perform the translation
+
     let output = await gpt2TextGen([event.data.text], {
         max_new_tokens: event.data.maxDepth,
         num_beams: event.data.numBeams,
@@ -85,8 +86,6 @@ self.addEventListener('message', async (event) => {
 
         // Allows for partial output
         callback_function: x => {
-            console.log("PARTIAL OUTPUT!!!!!")
-            console.log("*** Callback Function ***")
             // for (let i = 0; i < x.length; i++) {
             //     console.log("Full Object", x[i])
             //     console.log("Score: ", x[i].score)
