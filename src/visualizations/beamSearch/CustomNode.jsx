@@ -1,16 +1,18 @@
 import React, { useRef, useLayoutEffect, useState } from 'react';
 
 const CustomNodeRender = ({ nodeDatum }) => {
-
     const foreignObjectRef = useRef(null);
-    const [rectHeight, setRectHeight] = useState(60); // Initial height
+    const textRef = useRef(null);
+    const [rectSize, setRectSize] = useState({ width: 300, height: 60 });
 
     useLayoutEffect(() => {
-        if (foreignObjectRef.current) {
-            const foreignObjectElement = foreignObjectRef.current;
-            let height = foreignObjectElement.getBoundingClientRect().height;
-            height = 60;
-            setRectHeight(height + 20); // Add padding to height
+        if (foreignObjectRef.current && textRef.current) {
+            const textElement = textRef.current;
+
+            let width = textElement.scrollWidth + 20; // Add padding to width
+            let height = textElement.scrollHeight + 10; // Add padding to height
+
+            setRectSize({ width, height });
         }
     }, [nodeDatum.name]);
 
@@ -19,9 +21,9 @@ const CustomNodeRender = ({ nodeDatum }) => {
     }
 
     const xOffset = 0;
-    const yOffset = rectHeight / 2;
-    const rectPadding = 20;
-    const rectWidth = 300; // Set a fixed width for the rect and foreignObject
+    const yOffset = rectSize.height / 2;
+    // const rectPadding = 20;
+    // const rectWidth = 300; // Set a fixed width for the rect and foreignObject
 
     const nodeFill = nodeDatum.highlighted ? "#FFEB3B" : "#E3F2FD"; // Yellow background if highlighted, otherwise soft blue
     const nodeStroke = nodeDatum.highlighted ? "#FBC02D" : "none"; // Yellow border if highlighted, otherwise none
@@ -32,37 +34,54 @@ const CustomNodeRender = ({ nodeDatum }) => {
         <g>
             <defs>
                 <filter id="dropShadow" x="-20%" y="-20%" width="150%" height="150%">
-                <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
-                <feOffset dx="2" dy="2" result="offsetblur"/>
-                <feFlood floodColor="rgba(0,0,0,0.3)"/>
-                <feComposite in2="offsetblur" operator="in"/>
-                <feMerge>
-                    <feMergeNode/>
-                    <feMergeNode in="SourceGraphic"/>
-                </feMerge>
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                    <feOffset dx="2" dy="2" result="offsetblur"/>
+                    <feFlood floodColor="rgba(0,0,0,0.3)"/>
+                    <feComposite in2="offsetblur" operator="in"/>
+                    <feMerge>
+                        <feMergeNode/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
                 </filter>
             </defs>
         
             <rect
-                x={((xOffset - rectWidth) / 2)}
-                y={(yOffset - rectHeight) / 2}
-                width={rectWidth}
-                height={rectHeight}
+                x={((xOffset - rectSize.width) / 2)}
+                y={(yOffset - rectSize.height) / 2}
+                width={rectSize.width}
+                height={rectSize.height}
                 fill={nodeFill} // Soft Blue background
                 stroke={nodeStroke}                
                 rx="20" // Rounded corners
                 ry="20" // Rounded corners
                 filter="url(#dropShadow)" // Apply the drop shadow filter
+                style={{ transition: 'fill 0.3s ease, stroke 0.3s ease' }}
             />
 
             <foreignObject
                 ref={foreignObjectRef}
-                x={(xOffset - rectWidth) / 2}
-                y={(yOffset - rectHeight) / 2}
-                width={rectWidth}
-                height={rectHeight}
+                x={(xOffset - rectSize.width) / 2}
+                y={(yOffset - rectSize.height) / 2}
+                width={rectSize.width}
+                height={rectSize.height}
+                style={{ transition: 'transform 0.2s ease' }}
             >
-                <div xmlns="http://www.w3.org/1999/xhtml" style={{ color: textColor, fontSize: '32px', fontWeight: 'normal', whiteSpace: 'pre-wrap', wordWrap: 'break-word', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                <div ref = {textRef} xmlns="http://www.w3.org/1999/xhtml" style={{ 
+                    color: textColor, 
+                    fontSize: '32px', 
+                    fontWeight: 'normal', 
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis', 
+                    textAlign: 'center', 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    alignItems: 'center', 
+                    height: '100%',
+                    transition: 'color 0.3s ease',
+                    padding: '0 20px' // Adding padding to ensure text does not touch edges
+                    }}
+                >
                     {nodeDatum.name}
                 </div>
             </foreignObject>
@@ -72,7 +91,7 @@ const CustomNodeRender = ({ nodeDatum }) => {
                     x={xOffset}
                     y={-20}
                     textAnchor="middle"
-                    fill="#0D47A1" // Dark Blue text
+                    fill="#0D47A1"
                     fontSize="32"
                     fontWeight="normal"
                     style={{ fontWeight: 'normal' }}

@@ -6,84 +6,84 @@ import ControlPanel from "./ControlPanel";
 export const BeamSearchVis = () => {
     const worker = useRef(null);                            // reference to the WebWorker that persists across renders
     const [lastMessage, setLastMessage] = useState("");     // the last partial sequence received from the WebWorker
-    const [input, setInput] = useState("");                 // text the user inputs from which the model generates beams
+    // const [input, setInput] = useState("");                 // text the user inputs from which the model generates beams
     
-    const initialTreeData = {
-        name: 'root',
-        children: [
-            {
-                name: 'Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is ',
-                children: [
-                    {
-                        name: 'Justin',
-                        score: 0.10,
-                        children: [
-                            {
-                                name: '.',
-                                score: 0.008,
-                                children: []
-                            },
+    // const initialTreeData = {
+    //     name: 'root',
+    //     children: [
+    //         {
+    //             name: 'Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is ',
+    //             children: [
+    //                 {
+    //                     name: 'Justin',
+    //                     score: 0.10,
+    //                     children: [
+    //                         {
+    //                             name: '.',
+    //                             score: 0.008,
+    //                             children: []
+    //                         },
 
-                            {
-                                name: '-',
-                                score: 0.065,
-                                children: []
-                            },
+    //                         {
+    //                             name: '-',
+    //                             score: 0.065,
+    //                             children: []
+    //                         },
 
-                            {
-                                name: ',',
-                                score: 0.035,
-                                children: [
-                                    {
-                                        name: '!',
-                                        score: 0.002,
-                                        children: []
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        name: 'Adam',
-                        score: 0.01,
-                        children: [
-                            {
-                                name: '.',
-                                score: 0.073,
-                                children: [
-                                    {
-                                        name: '!',
-                                        score: 0.002,
-                                        children: []
-                                    }
-                                ]
-                            },
-                            {
-                                name: ',',
-                                score: 0.015,
-                                children: []
-                            },
-                            {
-                                name: '+',
-                                score: 0.045,
-                                children: []
-                            }
-                        ]
-                    },
-                    {
-                        name: ',',
-                        score: 0.025,
-                        children: []
-                    },
-                    {
-                        name: ',',
-                        score: 0.055,
-                        children: []
-                    }
-                ]
-            }
-        ]
-    }
+    //                         {
+    //                             name: ',',
+    //                             score: 0.035,
+    //                             children: [
+    //                                 {
+    //                                     name: '!',
+    //                                     score: 0.002,
+    //                                     children: []
+    //                                 }
+    //                             ]
+    //                         }
+    //                     ]
+    //                 },
+    //                 {
+    //                     name: 'Adam',
+    //                     score: 0.01,
+    //                     children: [
+    //                         {
+    //                             name: '.',
+    //                             score: 0.073,
+    //                             children: [
+    //                                 {
+    //                                     name: '!',
+    //                                     score: 0.002,
+    //                                     children: []
+    //                                 }
+    //                             ]
+    //                         },
+    //                         {
+    //                             name: ',',
+    //                             score: 0.015,
+    //                             children: []
+    //                         },
+    //                         {
+    //                             name: '+',
+    //                             score: 0.045,
+    //                             children: []
+    //                         }
+    //                     ]
+    //                 },
+    //                 {
+    //                     name: ',',
+    //                     score: 0.025,
+    //                     children: []
+    //                 },
+    //                 {
+    //                     name: ',',
+    //                     score: 0.055,
+    //                     children: []
+    //                 }
+    //             ]
+    //         }
+    //     ]
+    // }
 
     const initialRenderTree = {
         name: 'root',
@@ -91,7 +91,7 @@ export const BeamSearchVis = () => {
     };
 
     const [config, setConfig] = useState({
-        tree: initialTreeData,
+        tree: null,
         useTimeout: false,
         isRunning: false,
         currentLayer: [], 
@@ -100,6 +100,7 @@ export const BeamSearchVis = () => {
         showResetButton: false,   
         isStepDisabled: false, 
         renderTree: initialRenderTree,
+        input: "Enter Text Here",
     });
 
 
@@ -416,7 +417,7 @@ export const BeamSearchVis = () => {
                 
                 setConfig(prevConfig => ({
                     ...prevConfig,
-                    showAnimateButton: true
+                    showAnimateButton: false
                 }));
             
             } catch (error) {
@@ -432,13 +433,6 @@ export const BeamSearchVis = () => {
     }, [config.useTimeout, config.isRunning]);
 
 
-    {/* This is what we are Passing Into Context!*/}
-
-    const initialState = { 
-        config,
-        setConfig,
-        animate
-    };
 
     {/* WebWorker Logic Goes Here!*/}
 
@@ -476,7 +470,7 @@ export const BeamSearchVis = () => {
     // onClick handler for the "Generate" button to send the input text to the WebWorker
     const generate = () => {
         worker.current.postMessage({
-            text: input,
+            text: config.input,
 
             // numberSteps,
             // numberBeams,
@@ -485,14 +479,21 @@ export const BeamSearchVis = () => {
         });
     }
 
+
+    {/* This is what we are Passing Into Context!*/}
+    const initialState = { 
+        config,
+        setConfig,
+        animate,
+        generate,
+    };
+
     return (
 
         <div style={{ height: '100vh', width: '100vw', display: 'flex' }}>
             <AppContext.Provider value={initialState}>
                 <ControlPanel style={{ width: '20%', backgroundColor: 'blue', color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                    <button onClick={generate}>Start</button>
-                    <input value={input} onChange={(e) => setInput(e.target.value)} />
-                    <div>{lastMessage}</div>
+                    {/* <div>{lastMessage}</div> */}
                 </ControlPanel>
                 <div style={{ flex: 1, backgroundColor: 'lightgray' }}>
                     <TreeComponent />
