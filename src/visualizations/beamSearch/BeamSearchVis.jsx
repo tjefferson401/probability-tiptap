@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import TreeComponent from './TreeComponent'
 import AppContext, { useAppContext } from './BeamSearchContext'
 import ControlPanel from "./ControlPanel";
+import { DepthEstimationPipeline } from "@xenova/transformers";
 
 export const BeamSearchVis = () => {
     const worker = useRef(null);                            // reference to the WebWorker that persists across renders
@@ -100,8 +101,8 @@ export const BeamSearchVis = () => {
         showResetButton: false,   
         isStepDisabled: false, 
         renderTree: initialRenderTree,
-        numBeams: "",
-        maxDepth: "",
+        numBeams: 2,
+        maxDepth: 2,
         input: "",
     });
 
@@ -194,11 +195,13 @@ export const BeamSearchVis = () => {
 
 
     const animate = async (layer, depth = 0) => {
+
             try {
 
                 if (depth === 0) {
                     layer = [...JSON.parse(JSON.stringify(config.tree)).children]
 
+                    console.log("Layer", layer[0])
                     let root = {
                         name: layer[0].name,
                         children: []
@@ -215,6 +218,7 @@ export const BeamSearchVis = () => {
                 } else {
                     console.log("Layer at beginning of recursive function:", layer)
                 }
+
                 setConfig(prevConfig => ({
                     ...prevConfig,
                     currentLayer: layer,
@@ -259,7 +263,7 @@ export const BeamSearchVis = () => {
                     console.log("Candidates after we add all of them!", candidates)
 
                     beams.push({
-                        name: beam.name,
+                        name: depth === 0 ? beam.name : beam.sequence,
                         children: candidates,
                         highlighted: false
                     })
@@ -307,11 +311,18 @@ export const BeamSearchVis = () => {
                             // need a copy of the whole tree to pass to the next layer
                             toKeep.push(JSON.parse(JSON.stringify(child)))
                             console.log("To Keep Array", toKeep)
-
                             console.log(child.token)
                             // this is for temporarily rendering one layer at a time
+                            let candidateBeamChildren = {
+                                name: child.token,
+                                score: child.score,
+                                children: [],
+                                haveChildren: true,
+                                highlighted: false,
+                            }
+
                             let candidate = {
-                                name: child.name,
+                                name: child.sequence,
                                 score: child.score,
                                 children: [],
                                 haveChildren: true,
@@ -319,8 +330,7 @@ export const BeamSearchVis = () => {
                             }
                                                             
                             toKeepTemp.push(candidate)
-                            beamChildren.push(candidate)
-
+                            beamChildren.push(candidateBeamChildren)
                         } 
                         console.log("Beam Children", beamChildren)
                     }
@@ -337,6 +347,7 @@ export const BeamSearchVis = () => {
                 if (stage.length === emptyBeams) {
                     toKeepTemp = allChildren
                     for (let child of toKeepTemp) {
+                        child.name = child.sequence
                         child.haveChildren = true
                         child.highlighted = false
                     }
@@ -440,6 +451,7 @@ export const BeamSearchVis = () => {
             if (event.data.status === 'update') {
                 console.log("Update Output:", event.data.output);
             }
+
             if (event.data.status === 'complete') {
                 console.log("Complete Output:", event.data.output);
                 //setLastMessage(event.data.output[0][0].output_sequence);
@@ -461,6 +473,7 @@ export const BeamSearchVis = () => {
 
     // onClick handler for the "Generate" button to send the input text to the WebWorker
     const generate = () => {
+        console.log("This is what we are sending to the worker: ", config.input, config.numBeams, config.maxDepth)
         worker.current.postMessage({
             text: config.input,
             numBeams: config.numBeams,
