@@ -1,6 +1,5 @@
 
 import { pipeline, env, softmax } from '@xenova/transformers';
-import { useAppContext } from './BeamSearchContext';
 
 /*
  * This class uses the Singleton pattern to ensure that only one instance of the
@@ -76,9 +75,8 @@ self.addEventListener('message', async (event) => {
 
     // Actually perform the translation
     let output = await gpt2TextGen([event.data.text], {
-        max_new_tokens: 3,
-        num_beams: 2,
-        num_return_sequences: 2,
+        max_new_tokens: event.data.maxDepth,
+        num_beams: event.data.numBeams,
         // length_penalty: 1.0,
         // output_scores: true,
         do_sample: false,
