@@ -119,9 +119,7 @@ const ResetButtonStyle = styled(ButtonStyle)`
 `;
 
 const ControlPanel = () => {
-
     const {config, setConfig, animate, generate} = useAppContext();
-
     const [showButtons, setShowButtons] = useState(false);
 
     useEffect(() => {
@@ -173,7 +171,6 @@ const ControlPanel = () => {
     }
     
     return (
-
         <ControlPanelStyle>
             {/* {children} */}
             <InputContainer>

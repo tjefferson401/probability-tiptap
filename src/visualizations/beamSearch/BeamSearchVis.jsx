@@ -105,9 +105,7 @@ export const BeamSearchVis = () => {
         input: "",
     });
 
-
     {/* Animate Logic + Animate Helper Functions Go Here!*/}
-
     function removeScoresExceptDeepest(tree) {
         let maxDepth = 0;   
 
@@ -199,13 +197,9 @@ export const BeamSearchVis = () => {
 
     const animate = async (layer, depth = 0) => {
             try {
-                // console.log("NEW RECURSIVE CALL!!!!!!!")
-                // console.log('Animating at depth:', depth);
-                // console.log("This is what the tree looks like", config.tree)
 
                 if (depth === 0) {
                     layer = [...JSON.parse(JSON.stringify(config.tree)).children]
-                    // console.log("Layer at beginning of recursive function in the Base:", layer)
 
                     let root = {
                         name: layer[0].name,
@@ -363,7 +357,6 @@ export const BeamSearchVis = () => {
                     await waitForButtonPress();
                 }
                 
-                
                 console.log(stage.length)
 
                 updatedTree = {
@@ -437,7 +430,6 @@ export const BeamSearchVis = () => {
 
 
     {/* WebWorker Logic Goes Here!*/}
-
     // Create a new WebWorker when the component mounts
     useEffect(() => {
         // Create a new WebWorker if one does not already exist
@@ -473,11 +465,8 @@ export const BeamSearchVis = () => {
     const generate = () => {
         worker.current.postMessage({
             text: config.input,
-
-            // numberSteps,
-            // numberBeams,
-            // lengthPenalty,
-            // numReturnSequences,
+            numBeams: config.numBeams,
+            maxDepth: config.maxDepth
         });
     }
 
@@ -502,23 +491,5 @@ export const BeamSearchVis = () => {
                 </div>
             </AppContext.Provider>
         </div>
-
-        // <div>
-        //     {/* <h1>Beam Search Visualization</h1> */}
-        //     <AppContext.Provider value={initialState}>
-
-        //         <div style={{ display: 'flex', height: '100%', width: '100%' }}>
-        //             <ControlPanel style={{ width: '20%', backgroundColor: 'blue' }}>
-        //                 <button onClick={generate}>Start</button>
-        //                 <input value={input} onChange={(e) => setInput(e.target.value)} />
-        //                 <div>{lastMessage}</div>
-        //             </ControlPanel>
-        //             <div style={{ flex: 1, backgroundColor: 'lightgray' }}>
-        //                 <TreeComponent />
-        //             </div>
-        //         </div>
-        //     </AppContext.Provider>
-        // </div>
-
     )
 }
