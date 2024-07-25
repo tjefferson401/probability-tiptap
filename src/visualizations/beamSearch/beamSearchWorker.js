@@ -13,7 +13,7 @@ env.logLevel = 'error';
 
 console.warn = () => {};
 
-const gptToTree = (steps, input, tokenizer) => {
+const gptToTree = (steps, input) => {
     for (let i = steps.length - 1; i > 0; i--) {
         let children = steps[i];
         let parents = steps[i - 1];
@@ -100,11 +100,14 @@ self.addEventListener('message', async (event) => {
             const TOP_K = 2
 
             const next_step = x.map(elem => {
+                const sequence = gpt2TextGen.tokenizer.decode(elem.output_token_ids, { skip_special_tokens: true })
+                const token = gpt2TextGen.tokenizer.decode(elem.output_token_ids.slice(-1), { skip_special_tokens: true })
+                const rawName = String.raw`${token}`
                 return {
                     // top_tokens_decoded: topIndices.map(index => gpt2TextGen.tokenizer.decode([index], { skip_special_tokens: true })),
-                    sequence: gpt2TextGen.tokenizer.decode(elem.output_token_ids, { skip_special_tokens: true }),
-                    name: gpt2TextGen.tokenizer.decode(elem.output_token_ids, { skip_special_tokens: true }),
-                    token: gpt2TextGen.tokenizer.decode(elem.output_token_ids.slice(-1), { skip_special_tokens: true }),
+                    sequence: sequence,
+                    name: rawName,
+                    token: token,
                     output_token_ids: elem.output_token_ids,
                     score: elem.score,
                     // top_tokens: topIndices,

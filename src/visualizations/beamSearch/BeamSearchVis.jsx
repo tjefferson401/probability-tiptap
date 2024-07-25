@@ -100,9 +100,9 @@ export const BeamSearchVis = () => {
         showResetButton: false,   
         isStepDisabled: false, 
         renderTree: initialRenderTree,
-        input: "Enter Text Here",
-        maxDepth: 5,
-        numBeams: 3
+        numBeams: "",
+        maxDepth: "",
+        input: "",
     });
 
     {/* Animate Logic + Animate Helper Functions Go Here!*/}
