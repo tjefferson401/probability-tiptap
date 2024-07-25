@@ -74,10 +74,9 @@ self.addEventListener('message', async (event) => {
     });
 
     // Actually perform the translation
-
     let output = await gpt2TextGen([event.data.text], {
-        max_new_tokens: event.data.maxDepth,
-        num_beams: event.data.numBeams,
+        max_new_tokens: Number(event.data.maxDepth),
+        num_beams: Number(event.data.numBeams),
         // length_penalty: 1.0,
         // output_scores: true,
         do_sample: false,
@@ -101,11 +100,10 @@ self.addEventListener('message', async (event) => {
             const next_step = x.map(elem => {
                 const sequence = gpt2TextGen.tokenizer.decode(elem.output_token_ids, { skip_special_tokens: true })
                 const token = gpt2TextGen.tokenizer.decode(elem.output_token_ids.slice(-1), { skip_special_tokens: true })
-                const rawName = String.raw`${token}`
                 return {
                     // top_tokens_decoded: topIndices.map(index => gpt2TextGen.tokenizer.decode([index], { skip_special_tokens: true })),
                     sequence: sequence,
-                    name: rawName,
+                    name: token,
                     token: token,
                     output_token_ids: elem.output_token_ids,
                     score: elem.score,

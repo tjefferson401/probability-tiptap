@@ -1,5 +1,15 @@
 import React, { useRef, useLayoutEffect, useState } from 'react';
 
+const replaceSpecialTokens = (input) => {
+    return input
+      .replace(/\\/g, '\\\\')
+      .replace(/\n/g, '\\n')
+      .replace(/\r/g, '\\r')
+      .replace(/\t/g, '\\t')
+      .replace(/"/g, '\\"')
+      .replace(/'/g, "\\'");
+  };
+
 const CustomNodeRender = ({ nodeDatum }) => {
     const foreignObjectRef = useRef(null);
     const textRef = useRef(null);
@@ -28,6 +38,8 @@ const CustomNodeRender = ({ nodeDatum }) => {
     const nodeFill = nodeDatum.highlighted ? "#FFEB3B" : "#E3F2FD"; // Yellow background if highlighted, otherwise soft blue
     const nodeStroke = nodeDatum.highlighted ? "#FBC02D" : "none"; // Yellow border if highlighted, otherwise none
     const textColor = nodeDatum.highlighted ? "#F57F17" : "#0D47A1"; // Darker yellow text if highlighted, otherwise dark blue
+
+    console.log("Current Node:", nodeDatum);
 
     // rounded corners and drop shadow
     return (
@@ -82,7 +94,7 @@ const CustomNodeRender = ({ nodeDatum }) => {
                     padding: '0 20px' // Adding padding to ensure text does not touch edges
                     }}
                 >
-                    {nodeDatum.name}
+                    {replaceSpecialTokens(nodeDatum.name)}
                 </div>
             </foreignObject>
 
