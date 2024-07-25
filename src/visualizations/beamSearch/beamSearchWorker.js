@@ -1,5 +1,6 @@
 
 import { pipeline, env, softmax } from '@xenova/transformers';
+import { useAppContext } from './BeamSearchContext';
 
 /*
  * This class uses the Singleton pattern to ensure that only one instance of the
@@ -116,8 +117,6 @@ self.addEventListener('message', async (event) => {
 
             steps.push(next_step);
 
-            
-            
             self.postMessage({
                 status: 'update',
                 // output: gpt2TextGen.tokenizer.decode(x[0].output_token_ids, { skip_special_tokens: true })
