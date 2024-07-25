@@ -152,8 +152,6 @@ export const BeamSearchVis = () => {
             nodesToHighlight.forEach(n => {
                 console.log("Node:", node, "Node's token:", node.token);
                 console.log("Node to Highlight:", n, "Nods to Highlight's Token:", n.token);
-
-
                 console.log("Does node have children?", n.haveChildren, "Comparing Names:", n.name === node.name, "Comparing Scores:", n.score === node.score);
 
                 if (n.name === node.name && n.haveChildren && n.score === node.score) {
@@ -230,7 +228,6 @@ export const BeamSearchVis = () => {
                     //     setConfig(prevConfig => ({ ...prevConfig, showAnimateButton: true }));
                     // }, 0);
                 }
-                
 
                 if (config.useTimeout) {
                     await waitForTimeout(2000);
@@ -311,9 +308,10 @@ export const BeamSearchVis = () => {
                             toKeep.push(JSON.parse(JSON.stringify(child)))
                             console.log("To Keep Array", toKeep)
 
+                            console.log(child.token)
                             // this is for temporarily rendering one layer at a time
                             let candidate = {
-                                name: child.token,
+                                name: child.name,
                                 score: child.score,
                                 children: [],
                                 haveChildren: true,
