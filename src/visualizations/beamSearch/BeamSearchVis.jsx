@@ -100,7 +100,9 @@ export const BeamSearchVis = () => {
         showResetButton: false,   
         isStepDisabled: false, 
         renderTree: initialRenderTree,
-        input: "Enter Text Here",
+        numBeams: "",
+        maxDepth: "",
+        input: "",
     });
 
 

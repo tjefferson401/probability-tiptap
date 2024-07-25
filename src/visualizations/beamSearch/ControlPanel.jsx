@@ -178,7 +178,7 @@ const ControlPanel = () => {
             {/* {children} */}
             <InputContainer>
                 <Label>Input Text: </Label>
-                <Input value={config.input} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, input: e.target.value }))} />
+                <Input placeholder={"Enter a message"} value={config.input} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, input: e.target.value }))} />
             </InputContainer>
 
             <InputContainer>
