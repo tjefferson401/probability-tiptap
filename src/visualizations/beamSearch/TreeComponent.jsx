@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import Tree from 'react-d3-tree';
 import { useAppContext } from './BeamSearchContext';
 import CustomNodeRender from './CustomNode';
+import OutputBar from './OutputBar';
 
 const TreeComponent = () => {
 
@@ -33,7 +34,11 @@ const TreeComponent = () => {
     };
 
     return (
-        <div style={{ width: '100%', height:'100%' }}>
+        <div style={{
+             width: '100%', 
+             height:'100%', 
+             position:'relative'
+            }}>
             <Tree 
                 data={config.renderTree}
                 renderCustomNodeElement={(rd3tProps) => <CustomNodeRender {...rd3tProps} />}
@@ -46,6 +51,7 @@ const TreeComponent = () => {
                 enableLegacyTransitions={true}
                 separation={{ siblings: 4, nonSiblings: 5 }}
             />
+            <OutputBar />
         </div>
     );
 }

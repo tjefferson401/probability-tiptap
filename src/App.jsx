@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Link, Route, Routes, createBrowserRouter } from 'react-router-dom';
 import { FileStructureOuter } from './Textbook';
 import { GameOfUr } from './gameUr/GameOfUr';
-import { BeamSearchVis } from './visualizations/beamSearch/BeamSearchVis';
+import { BeamSearch } from './visualizations/beamSearch/BeamSearch';
 
 
 export const router = createBrowserRouter([
@@ -15,6 +15,6 @@ export const router = createBrowserRouter([
     },
     {
         path:"/beamsearch",
-        element: <BeamSearchVis/>
+        element: <BeamSearch/>
     }
 ])

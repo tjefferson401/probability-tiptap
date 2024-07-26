@@ -9,7 +9,7 @@ const ControlPanelStyle = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  border-radius: 12px;
+  // border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
@@ -144,6 +144,7 @@ const ResetButtonStyle = styled(ButtonStyle)`
 const ControlPanel = () => {
     const {config, setConfig, animate, generate, lastMessage} = useAppContext();
     const [showButtons, setShowButtons] = useState(false);
+    const [startPressed, setStartPressed] = useState(false);
 
     useEffect(() => {
         if (config.tree) {
@@ -217,7 +218,7 @@ const ControlPanel = () => {
 
 
             {!showButtons ? (
-                <ButtonStyle onClick={generate}>Start</ButtonStyle>
+                <ButtonStyle disabled={startPressed} onClick={() => {generate(); setStartPressed(true)}}>{startPressed ? "Loading..." : "Start"}</ButtonStyle>
             ) : (
                 <ButtonContainer>
                     <ButtonStyle onClick={() => window.dispatchEvent(new CustomEvent('stepPress'))} disabled={config.isStepDisabled}>
@@ -230,15 +231,15 @@ const ControlPanel = () => {
             )}
 
             {config.showResetButton && (
-                <ResetButtonStyle onClick={reset}>Reset</ResetButtonStyle>
+                <ResetButtonStyle onClick={() => {reset(); setStartPressed(false)}}>Reset</ResetButtonStyle>
             )}
 
-            <SequenceContainer>
+            {/* <SequenceContainer>
               <h3>Generated Sequence</h3>
               <SequenceText>
                 <p>{lastMessage}</p>
               </SequenceText>
-            </SequenceContainer>
+            </SequenceContainer> */}
 
         </ControlPanelStyle>
     );
