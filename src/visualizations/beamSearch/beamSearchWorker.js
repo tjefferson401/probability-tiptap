@@ -14,6 +14,8 @@ env.logLevel = 'error';
 console.warn = () => {};
 
 const gptToTree = (steps, input) => {
+
+    
     for (let i = steps.length - 1; i > 0; i--) {
         let children = steps[i];
         let parents = steps[i - 1];
@@ -85,6 +87,7 @@ self.addEventListener('message', async (event) => {
 
         // Allows for partial output
         callback_function: x => {
+            
             // for (let i = 0; i < x.length; i++) {
             //     console.log("Full Object", x[i])
             //     console.log("Score: ", x[i].score)
@@ -125,9 +128,12 @@ self.addEventListener('message', async (event) => {
     // Highlight the final output
     steps[steps.length - 1][0].highlighted = true;
 
+    const final_output = gptToTree(steps, event.data.text);
+
+    steps = []
     // Send the output back to the main thread
     self.postMessage({
         status: 'complete',
-        output: gptToTree(steps, event.data.text, gpt2TextGen.tokenizer)
+        output: final_output
     });
 });

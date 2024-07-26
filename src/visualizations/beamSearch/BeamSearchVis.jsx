@@ -95,11 +95,11 @@ export const BeamSearchVis = () => {
         tree: null,
         useTimeout: false,
         isRunning: false,
-        currentLayer: [], 
-        currentDepth: 0, 
-        showAnimateButton: false,   
-        showResetButton: false,   
-        isStepDisabled: false, 
+        currentLayer: [],
+        currentDepth: 0,
+        showAnimateButton: false,
+        showResetButton: false,
+        isStepDisabled: false,
         renderTree: initialRenderTree,
         numBeams: 2,
         maxDepth: 2,
@@ -233,6 +233,8 @@ export const BeamSearchVis = () => {
             try {
                 console.log("NEW RECURSIVE CALL!!!!!!!!!!!!!!!!")
 
+                console.log("THIS IS THE TREE!", config.tree)
+
                 if (depth === 0) {
                     layer = [...JSON.parse(JSON.stringify(config.tree)).children]
 
@@ -307,7 +309,7 @@ export const BeamSearchVis = () => {
                     console.log("Beams after push", beams)
                 }
 
-                console.log("Beams", beams) 
+                console.log("Beams", beams)
 
                 let updatedTree = {
                     ...config.renderTree,
@@ -367,7 +369,7 @@ export const BeamSearchVis = () => {
                                                             
                             toKeepTemp.push(candidate)
                             beamChildren.push(candidateBeamChildren)
-                        } 
+                        }
                         console.log("Beam Children", beamChildren)
                     }
 
@@ -389,7 +391,6 @@ export const BeamSearchVis = () => {
                         }
                     }
                     childArray.push(lowestChild)
-
 
                     toKeepTemp = childArray
                     beamChildren = childArray
@@ -414,33 +415,6 @@ export const BeamSearchVis = () => {
                     console.log("Waiting for button press...");
                     await waitForButtonPress();
                 }
-                
-                // console.log(stage.length)
-
-                // // how can I make the child.name attribute the child.sequence attribute?
-                // for (let beam of stage) {
-                //     if (beam.sequence) {    
-                //         beam.name = beam.sequence
-                //     }
-                // }
-
-                // console.log("This is what we are Keeping", "")
-                // updatedTree = {
-                //     ...config.renderTree,
-                //     children: stage.length === emptyBeams ? toKeepTemp : stage
-                // };
-
-                // console.log("This is what we update our tree with after we pruned!", stage)
-                // setConfig(prevConfig => ({ ...prevConfig, renderTree: updatedTree }));
-
-                // if (config.useTimeout) {
-                //     await waitForTimeout(2000);
-                // } else {
-                //     console.log("Waiting for button press...");
-                //     await waitForButtonPress();
-                // }
-
-                
 
                 console.log("To Keep for Next Stack Frame", depth, toKeep)
                 console.log("To Keep Temp", depth, toKeepTemp)
@@ -531,7 +505,9 @@ export const BeamSearchVis = () => {
     }, [])
 
     // onClick handler for the "Generate" button to send the input text to the WebWorker
-    const generate = () => {
+    const generate = async () => {
+        await waitForTimeout(0);
+        console.log("This is what tree looks like: ", config.tree)
         console.log("This is what we are sending to the worker: ", config.input, config.numBeams, config.maxDepth)
         worker.current.postMessage({
             text: config.input,

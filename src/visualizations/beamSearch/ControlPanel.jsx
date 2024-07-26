@@ -152,12 +152,14 @@ const ControlPanel = () => {
     };
     
     const reset = () => {
+      console.log("THIS IS WHAT IS IN TREE AT THIS POINT", config.tree)
         setConfig((prevConfig) => ({
             ...prevConfig,
             renderTree: {
                 name: 'root',
                 children: []
             },
+            tree: null,
             useTimeout: false,
             isRunning: false,
             currentLayer: [],
