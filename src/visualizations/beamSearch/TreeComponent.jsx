@@ -13,23 +13,30 @@ import OutputBar from './OutputBar';
             height: window.innerHeight 
         });
 
+        const [treeKey, setTreeKey] = useState(0);
+
+        const initialTranslate = {
+            x: dimensions.width - dimensions.width,  // Adjusted for better positioning
+            y: dimensions.height / 2   // Adjusted for better positioning
+        };
+
+        const [translate, setTranslate] = useState(initialTranslate);
         console.log(window.innerWidth)
 
-        useEffect(() => {
-            const handleResize = () => {
-                setDimensions({
-                    width: window.innerWidth,
-                    height: window.innerHeight
-                });
-            };
-            window.addEventListener('resize', handleResize);
-            return () => {
-                window.removeEventListener('resize', handleResize);
-            };
-        }, []);
+        // useEffect(() => {
+        //     const handleResize = () => {
+        //         setDimensions({
+        //             width: window.innerWidth,
+        //             height: window.innerHeight
+        //         });
+        //     };
+        //     window.addEventListener('resize', handleResize);
+        //     return () => {
+        //         window.removeEventListener('resize', handleResize);
+        //     };
+        // }, []);
 
         const calculateZoom = (numBeams) => {
-
             console.log("Number of Beams:", numBeams);
 
             if (numBeams === 1 || numBeams === 2) {
@@ -39,7 +46,7 @@ import OutputBar from './OutputBar';
             } else if (numBeams === 4) {
                 return 0.35;
             } else {
-                return 1; // Default zoom value, change as needed
+                return -1; // Default zoom value, change as needed
             }
         };
 
@@ -50,11 +57,15 @@ import OutputBar from './OutputBar';
             setConfig((prevConfig) => ({...prevConfig, zoom: newZoom}));
         }, [config.numBeams]);
 
-        
-        const translate = {
-            x: dimensions.width - dimensions.width,  // Adjusted for better positioning
-            y: dimensions.height / 2   // Adjusted for better positioning
-        };
+        console.log("Translate:", translate.x, translate.y);
+
+        useEffect(() => {
+            if (config.tree === null) {
+                // Perform the reload or reset logic here
+                setTranslate(initialTranslate);
+                setTreeKey((prevKey) => prevKey + 1); // Change key to force rerender of Tree component
+            }
+        }, [config.tree]);
 
     return (
         <div style={{
@@ -63,16 +74,17 @@ import OutputBar from './OutputBar';
              position:'relative'
             }}>
             <Tree 
+                key={treeKey}
                 data={config.renderTree}
                 renderCustomNodeElement={(rd3tProps) => <CustomNodeRender {...rd3tProps} />}
                 translate={translate}
-                zoom={0.75}  // Adjusted zoom level
+                zoom={config.zoom}  // Adjusted zoom level
                 nodeSize={{ x: 400, y: 30 }}  // Adjusted node size
                 scaleExtent={{ min: 0.1, max: 2 }}  // Allow zooming in and out
-                draggable={true}
+                draggable={config.isDraggable}
                 transitionDuration={500}
                 enableLegacyTransitions={true}
-                separation={{ siblings: 4, nonSiblings: 5 }}
+                separation={{ siblings: 3, nonSiblings: 4 }}
             />
             {/* <OutputBar /> */}
         </div>

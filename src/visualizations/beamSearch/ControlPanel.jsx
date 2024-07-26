@@ -180,8 +180,7 @@ const ControlPanel = () => {
         setConfig((prevConfig) => ({
             ...prevConfig,
             renderTree: {
-                name: 'root',
-                children: []
+                name: "root"
             },
             tree: null,
             useTimeout: false,
@@ -190,7 +189,8 @@ const ControlPanel = () => {
             currentDepth: 0,
             showAnimateButton: false,
             showResetButton: false,
-            isStepDisabled: false
+            isStepDisabled: false,
+            isDraggable: false,
         }));
 
         setShowButtons(false);
@@ -207,18 +207,18 @@ const ControlPanel = () => {
             <InputContainer>
                 <Label>Beams:</Label>
                 <Input value={config.numBeams} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, numBeams: e.target.value }))} />
-                <SliderStyle min="1" max="4" value={config.numBeams} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, numBeams: e.target.value }))} />
+                <SliderStyle min="1" max="4" value={config.numBeams} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, numBeams: Number(e.target.value) }))} />
             </InputContainer>
 
             <InputContainer>
                 <Label>Depth:</Label>
                 <Input value={config.maxDepth} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, maxDepth: e.target.value }))} />
-                <SliderStyle min="1" max="10" value={config.maxDepth} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, maxDepth: e.target.value }))} />
+                <SliderStyle min="1" max="10" value={config.maxDepth} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, maxDepth: Number(e.target.value) }))} />
             </InputContainer>   
 
 
             {!showButtons ? (
-                <ButtonStyle disabled={startPressed} onClick={() => {generate(); setStartPressed(true)}}>{startPressed ? "Loading..." : "Start"}</ButtonStyle>
+                <ButtonStyle disabled={startPressed || config.input === ""} onClick={() => {generate(); setStartPressed(true)}}>{startPressed ? "Loading..." : "Start"}</ButtonStyle>
             ) : (
                 <ButtonContainer>
                     <ButtonStyle onClick={() => window.dispatchEvent(new CustomEvent('stepPress'))} disabled={config.isStepDisabled}>
