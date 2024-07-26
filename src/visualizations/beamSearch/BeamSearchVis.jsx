@@ -148,11 +148,13 @@ export const BeamSearchVis = () => {
 
     const highlightNodes = (toKeepTemp, renderTree, setRenderTree) => {
         let highlightedTree = JSON.parse(JSON.stringify(renderTree));
+
+        console.log("toKeepTemp:", toKeepTemp);
         
         const highlight = (node, nodesToHighlight) => {
             nodesToHighlight.forEach(n => {
-                console.log("Node:", node, "Node's token:", node.token);
-                console.log("Node to Highlight:", n, "Nods to Highlight's Token:", n.token);
+                console.log("Node:", node, "Node's sequence:", node.sequence);
+                console.log("N to highlight:", n, "N to Highlight's sequence:", n.sequence);
                 console.log("Does node have children?", n.haveChildren, "Comparing Names:", n.name === node.name, "Comparing Scores:", n.score === node.score);
 
                 if (n.name === node.name && n.haveChildren && n.score === node.score) {
@@ -165,10 +167,34 @@ export const BeamSearchVis = () => {
                 node.children.forEach(child => highlight(child, nodesToHighlight));
             }
         };
+
+        const findLowestScoreLeafNode = (node, lowestScoreNode = null) => {
+            if (!node.children || node.children.length === 0) {
+                // It's a leaf node
+                if (!lowestScoreNode || Math.abs(node.score) < Math.abs(lowestScoreNode.score)) {
+                    lowestScoreNode = node;
+                }
+            } else {
+                node.children.forEach(child => {
+                    lowestScoreNode = findLowestScoreLeafNode(child, lowestScoreNode);
+                });
+            }
+            return lowestScoreNode;
+        };
     
+        const hasHighlightedNodes = (node) => {
+            if (node.highlighted) {
+                return true;
+            }
+            if (node.children && Array.isArray(node.children)) {
+                return node.children.some(child => hasHighlightedNodes(child));
+            }
+            return false;
+        };
+
         console.log("Initial Render Tree:", JSON.stringify(renderTree, null, 2));
         console.log("Nodes to Highlight (toKeepTemp):", JSON.stringify(toKeepTemp, null, 2));
-    
+
         // Ensure children is always an array
         highlightedTree.children = highlightedTree.children || [];
     
@@ -177,6 +203,15 @@ export const BeamSearchVis = () => {
         } else {
             console.error("highlightedTree.children is not an array");
         }
+
+        if (!hasHighlightedNodes(highlightedTree)) {
+            const lowestScoreLeafNode = findLowestScoreLeafNode(highlightedTree);
+            if (lowestScoreLeafNode) {
+                lowestScoreLeafNode.highlighted = true;
+                console.log(`Highlighted leaf node with lowest score: ${lowestScoreLeafNode.name} with score: ${lowestScoreLeafNode.score}`);
+            }
+        }
+
         setRenderTree(highlightedTree);
     };
 
@@ -191,12 +226,12 @@ export const BeamSearchVis = () => {
         unhighlightedTree.children.forEach(child => unhighlight(child));
         setRenderTree(unhighlightedTree);
     };
+
     // Add a timeout to highlight nodes before pruning
-
-
     const animate = async (layer, depth = 0) => {
 
             try {
+                console.log("NEW RECURSIVE CALL!!!!!!!!!!!!!!!!")
 
                 if (depth === 0) {
                     layer = [...JSON.parse(JSON.stringify(config.tree)).children]
@@ -204,6 +239,7 @@ export const BeamSearchVis = () => {
                     console.log("Layer", layer[0])
                     let root = {
                         name: layer[0].name,
+                        sequence: layer[0].name,
                         children: []
                     }
 
@@ -295,13 +331,13 @@ export const BeamSearchVis = () => {
                 let toKeepTemp = []
                 let stage = layer
                 let allChildren = []
-                let emptyBeams = 0
+                let beamChildren = []
+                let numEmptyBeams = 0
 
                 console.log("Layer before the prune step", layer)
 
                 for (let beam of stage) {
                     console.log("Beam", beam)
-                    let beamChildren = []
 
                     for (let child of beam.children) {
                         allChildren.push(child)
@@ -336,7 +372,7 @@ export const BeamSearchVis = () => {
                     }
 
                     if (beamChildren.length === 0) {
-                        emptyBeams += 1
+                        numEmptyBeams += 1
                     }
                     
                     console.log("Final Beam Children", beamChildren)
@@ -344,8 +380,20 @@ export const BeamSearchVis = () => {
                     console.log("After we add beamChildren array to beam.children", beam.children)   
                 }
 
-                if (stage.length === emptyBeams) {
-                    toKeepTemp = allChildren
+                if (stage.length === numEmptyBeams) {
+                    let childArray = []
+                    let lowestChild = null
+                    for (let child of allChildren) {
+                        if (!lowestChild || Math.abs(child.score) < Math.abs(lowestChild.score)) {
+                            lowestChild = child
+                        }
+                    }
+                    childArray.push(lowestChild)
+
+
+                    toKeepTemp = childArray
+                    beamChildren = childArray
+
                     for (let child of toKeepTemp) {
                         child.name = child.sequence
                         child.haveChildren = true
@@ -354,8 +402,9 @@ export const BeamSearchVis = () => {
                 }
 
                 console.log("TO KEEP TEMP BEFORE WE CALL HIGHLIGHT NODES", toKeepTemp)
+                console.log("BEAM CHILDREN", beamChildren)
 
-                highlightNodes(toKeepTemp, updatedTree, (newTree) => {
+                highlightNodes(beamChildren, updatedTree, (newTree) => {
                     setConfig(prevConfig => ({ ...prevConfig, renderTree: newTree }));
                 });
 
@@ -366,26 +415,32 @@ export const BeamSearchVis = () => {
                     await waitForButtonPress();
                 }
                 
-                console.log(stage.length)
+                // console.log(stage.length)
 
-                updatedTree = {
-                    ...config.renderTree,
-                    children: stage.length === emptyBeams ? allChildren : stage
-                };
+                // // how can I make the child.name attribute the child.sequence attribute?
+                // for (let beam of stage) {
+                //     if (beam.sequence) {    
+                //         beam.name = beam.sequence
+                //     }
+                // }
 
-                removeHighlight(updatedTree, (newTree) => {
-                    setConfig(prevConfig => ({ ...prevConfig, renderTree: newTree }));
-                });
+                // console.log("This is what we are Keeping", "")
+                // updatedTree = {
+                //     ...config.renderTree,
+                //     children: stage.length === emptyBeams ? toKeepTemp : stage
+                // };
 
-                console.log("This is what we update our tree with after we pruned!", stage)
-                setConfig(prevConfig => ({ ...prevConfig, renderTree: updatedTree }));
+                // console.log("This is what we update our tree with after we pruned!", stage)
+                // setConfig(prevConfig => ({ ...prevConfig, renderTree: updatedTree }));
 
-                if (config.useTimeout) {
-                    await waitForTimeout(2000);
-                } else {
-                    console.log("Waiting for button press...");
-                    await waitForButtonPress();
-                }
+                // if (config.useTimeout) {
+                //     await waitForTimeout(2000);
+                // } else {
+                //     console.log("Waiting for button press...");
+                //     await waitForButtonPress();
+                // }
+
+                
 
                 console.log("To Keep for Next Stack Frame", depth, toKeep)
                 console.log("To Keep Temp", depth, toKeepTemp)
@@ -401,6 +456,10 @@ export const BeamSearchVis = () => {
                 if (toKeep.length > 0) {
                     console.log("This is the toKeep array", toKeep)
                     console.log("Recursing, this is what we are passing into layer!", JSON.parse(JSON.stringify(toKeep)))
+
+                    removeHighlight(updatedTree, (newTree) => {
+                        setConfig(prevConfig => ({ ...prevConfig, renderTree: newTree }));
+                    });
 
                     setTimeout(() => {
                         animate(JSON.parse(JSON.stringify(toKeep)), depth + 1);
