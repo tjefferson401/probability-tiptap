@@ -105,7 +105,7 @@ export const BeamSearchVis = () => {
         maxDepth: 2,
         input: "",
         lastMessage: "",
-        isDraggable: true,
+        isDraggable: false,
         zoom: .75,
     });
 
@@ -451,7 +451,8 @@ export const BeamSearchVis = () => {
                         ...prevConfig,
                         renderTree: treeWithoutScores,
                         isStepDisabled: true,
-                        showResetButton: true
+                        showResetButton: true,
+                        isDraggable: true,
                     }));
                 }
                 
