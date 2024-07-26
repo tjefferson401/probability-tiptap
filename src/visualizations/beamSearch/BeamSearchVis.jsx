@@ -104,7 +104,11 @@ export const BeamSearchVis = () => {
         numBeams: 2,
         maxDepth: 2,
         input: "",
+<<<<<<< HEAD
         isDraggable: true,
+=======
+        lastMessage: ""
+>>>>>>> 58da3ff89c05ec76eab30d636713648a6b7b2409
     });
 
     {/* Animate Logic + Animate Helper Functions Go Here!*/}
@@ -535,7 +539,7 @@ export const BeamSearchVis = () => {
                 <ControlPanel style={{ width: '20%', backgroundColor: 'blue', color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                     {/* <div>{lastMessage}</div> */}
                 </ControlPanel>
-                <div style={{ flex: 1, backgroundColor: 'lightgray' }}>
+                <div style={{ flex: 1, backgroundColor: 'white' }}>
                     <TreeComponent />
                 </div>
             </AppContext.Provider>
