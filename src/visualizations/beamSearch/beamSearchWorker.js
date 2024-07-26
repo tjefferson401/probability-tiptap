@@ -15,7 +15,6 @@ console.warn = () => {};
 
 const gptToTree = (steps, input) => {
 
-    
     for (let i = steps.length - 1; i > 0; i--) {
         let children = steps[i];
         let parents = steps[i - 1];
@@ -32,6 +31,7 @@ const gptToTree = (steps, input) => {
             });
         });
     }
+
     return {
         name: 'root',
         children: [
@@ -42,7 +42,6 @@ const gptToTree = (steps, input) => {
         ]
     };
 }
-
 
 class GPT2Pipeline {
     // static task = 'text-generation';
