@@ -231,6 +231,7 @@ export const BeamSearchVis = () => {
     const animate = async (layer, depth = 0) => {
 
             try {
+                console.log("NEW RECURSIVE CALL!!!!!!!!!!!!!!!!")
 
                 if (depth === 0) {
                     layer = [...JSON.parse(JSON.stringify(config.tree)).children]
@@ -238,6 +239,7 @@ export const BeamSearchVis = () => {
                     console.log("Layer", layer[0])
                     let root = {
                         name: layer[0].name,
+                        sequence: layer[0].name,
                         children: []
                     }
 
@@ -330,7 +332,7 @@ export const BeamSearchVis = () => {
                 let stage = layer
                 let allChildren = []
                 let beamChildren = []
-                let emptyBeams = 0
+                let numEmptyBeams = 0
 
                 console.log("Layer before the prune step", layer)
 
@@ -370,7 +372,7 @@ export const BeamSearchVis = () => {
                     }
 
                     if (beamChildren.length === 0) {
-                        emptyBeams += 1
+                        numEmptyBeams += 1
                     }
                     
                     console.log("Final Beam Children", beamChildren)
@@ -378,7 +380,7 @@ export const BeamSearchVis = () => {
                     console.log("After we add beamChildren array to beam.children", beam.children)   
                 }
 
-                if (stage.length === emptyBeams) {
+                if (stage.length === numEmptyBeams) {
                     let childArray = []
                     let lowestChild = null
                     for (let child of allChildren) {
@@ -413,26 +415,32 @@ export const BeamSearchVis = () => {
                     await waitForButtonPress();
                 }
                 
-                console.log(stage.length)
+                // console.log(stage.length)
 
-                updatedTree = {
-                    ...config.renderTree,
-                    children: stage.length === emptyBeams ? toKeepTemp : stage
-                };
+                // // how can I make the child.name attribute the child.sequence attribute?
+                // for (let beam of stage) {
+                //     if (beam.sequence) {    
+                //         beam.name = beam.sequence
+                //     }
+                // }
 
-                removeHighlight(updatedTree, (newTree) => {
-                    setConfig(prevConfig => ({ ...prevConfig, renderTree: newTree }));
-                });
+                // console.log("This is what we are Keeping", "")
+                // updatedTree = {
+                //     ...config.renderTree,
+                //     children: stage.length === emptyBeams ? toKeepTemp : stage
+                // };
 
-                console.log("This is what we update our tree with after we pruned!", stage)
-                setConfig(prevConfig => ({ ...prevConfig, renderTree: updatedTree }));
+                // console.log("This is what we update our tree with after we pruned!", stage)
+                // setConfig(prevConfig => ({ ...prevConfig, renderTree: updatedTree }));
 
-                if (config.useTimeout) {
-                    await waitForTimeout(2000);
-                } else {
-                    console.log("Waiting for button press...");
-                    await waitForButtonPress();
-                }
+                // if (config.useTimeout) {
+                //     await waitForTimeout(2000);
+                // } else {
+                //     console.log("Waiting for button press...");
+                //     await waitForButtonPress();
+                // }
+
+                
 
                 console.log("To Keep for Next Stack Frame", depth, toKeep)
                 console.log("To Keep Temp", depth, toKeepTemp)
@@ -448,6 +456,10 @@ export const BeamSearchVis = () => {
                 if (toKeep.length > 0) {
                     console.log("This is the toKeep array", toKeep)
                     console.log("Recursing, this is what we are passing into layer!", JSON.parse(JSON.stringify(toKeep)))
+
+                    removeHighlight(updatedTree, (newTree) => {
+                        setConfig(prevConfig => ({ ...prevConfig, renderTree: newTree }));
+                    });
 
                     setTimeout(() => {
                         animate(JSON.parse(JSON.stringify(toKeep)), depth + 1);
