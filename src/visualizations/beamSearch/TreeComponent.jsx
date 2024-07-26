@@ -74,7 +74,7 @@ import OutputBar from './OutputBar';
                 enableLegacyTransitions={true}
                 separation={{ siblings: 4, nonSiblings: 5 }}
             />
-            <OutputBar />
+            {/* <OutputBar /> */}
         </div>
     );
 }

@@ -234,12 +234,12 @@ const ControlPanel = () => {
                 <ResetButtonStyle onClick={() => {reset(); setStartPressed(false)}}>Reset</ResetButtonStyle>
             )}
 
-            {/* <SequenceContainer>
+            <SequenceContainer>
               <h3>Generated Sequence</h3>
               <SequenceText>
                 <p>{lastMessage}</p>
               </SequenceText>
-            </SequenceContainer> */}
+            </SequenceContainer>
 
         </ControlPanelStyle>
     );
