@@ -6,7 +6,7 @@ const OutputBarStyle = styled.div`
     bottom: 10px; /* Adjust the margin from the bottom here */
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(111, 125, 255, 0.2);
+    background: #90caf9;
     display: flex;
     justify-content: center;
     align-items: center;

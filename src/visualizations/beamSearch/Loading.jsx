@@ -10,7 +10,7 @@ return (
         backgroundColor: "white"
     }}>
         <HashLoader
-            color={"#5900ff"}
+            color={"#42a5f5"}
             loading={true}
             speedMultiplier={0.85}
             size={100}

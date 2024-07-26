@@ -56,11 +56,6 @@ import OutputBar from './OutputBar';
             y: dimensions.height / 2   // Adjusted for better positioning
         };
 
-    const translate = {
-        x: dimensions.width - dimensions.width,  // Adjusted for better positioning
-        y: dimensions.height / 2.25   // Adjusted for better positioning
-    };
-
     return (
         <div style={{
              width: '100%', 
