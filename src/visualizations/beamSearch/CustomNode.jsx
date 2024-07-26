@@ -101,10 +101,10 @@ const CustomNodeRender = ({ nodeDatum }) => {
             {(!nodeDatum.children || nodeDatum.children.length === 0) && nodeDatum.score && (
                 <text
                     x={xOffset}
-                    y={-20}
+                    y={0}
                     textAnchor="middle"
                     fill="#0D47A1"
-                    fontSize="32"
+                    fontSize="24px"
                     fontWeight="normal"
                     style={{ fontWeight: 'normal' }}
                 >

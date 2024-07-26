@@ -104,6 +104,7 @@ export const BeamSearchVis = () => {
         numBeams: 2,
         maxDepth: 2,
         input: "",
+        isDraggable: true,
     });
 
     {/* Animate Logic + Animate Helper Functions Go Here!*/}
