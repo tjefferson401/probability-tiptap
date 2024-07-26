@@ -64,6 +64,7 @@ class GPT2Pipeline {
 }
 
 let steps = [];
+let bestBeam = undefined;
 
 // Listen for messages from the main thread
 self.addEventListener('message', async (event) => {
@@ -98,6 +99,8 @@ self.addEventListener('message', async (event) => {
 
             console.log(x)
 
+            bestBeam = gpt2TextGen.tokenizer.decode(x[0].output_token_ids, { skip_special_tokens: true })
+
             const TOP_K = 2
 
             const next_step = x.map(elem => {
@@ -120,7 +123,7 @@ self.addEventListener('message', async (event) => {
 
             self.postMessage({
                 status: 'update',
-                // output: gpt2TextGen.tokenizer.decode(x[0].output_token_ids, { skip_special_tokens: true })
+                sequence: bestBeam,
             });
         }
     });
@@ -134,6 +137,7 @@ self.addEventListener('message', async (event) => {
     // Send the output back to the main thread
     self.postMessage({
         status: 'complete',
-        output: final_output
+        output: final_output,
+        sequence: bestBeam
     });
 });

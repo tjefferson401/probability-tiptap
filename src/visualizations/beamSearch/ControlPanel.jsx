@@ -91,6 +91,21 @@ const Input = styled.input`
   }
 `;
 
+const SequenceText = styled.div`
+  width: 100%;
+  background-color: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+  &:focus {
+    border-color: #42a5f5;
+    box-shadow: inset 0 2px 6px rgba(0, 123, 255, 0.3);
+    outline: none;
+  }
+`
+
 const Label = styled.label`
   font-size: 1rem; 
   color: #455a64;
@@ -109,6 +124,14 @@ const ButtonContainer = styled.div`
   gap: 1rem; 
 `;
 
+const SequenceContainer = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Anchor stacked elements to the bottom */
+  align-items: center;
+`;
+
 const ResetButtonStyle = styled(ButtonStyle)`
   background: linear-gradient(135deg, #90caf9, #64b5f6);
   margin-top: 1rem;
@@ -119,7 +142,7 @@ const ResetButtonStyle = styled(ButtonStyle)`
 `;
 
 const ControlPanel = () => {
-    const {config, setConfig, animate, generate} = useAppContext();
+    const {config, setConfig, animate, generate, lastMessage} = useAppContext();
     const [showButtons, setShowButtons] = useState(false);
 
     useEffect(() => {
@@ -209,6 +232,13 @@ const ControlPanel = () => {
             {config.showResetButton && (
                 <ResetButtonStyle onClick={reset}>Reset</ResetButtonStyle>
             )}
+
+            <SequenceContainer>
+              <h3>Generated Sequence</h3>
+              <SequenceText>
+                <p>{lastMessage}</p>
+              </SequenceText>
+            </SequenceContainer>
 
         </ControlPanelStyle>
     );

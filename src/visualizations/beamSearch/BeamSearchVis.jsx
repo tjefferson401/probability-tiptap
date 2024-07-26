@@ -483,11 +483,12 @@ export const BeamSearchVis = () => {
         const onMessage = (event) => {
             if (event.data.status === 'update') {
                 console.log("Update Output:", event.data.output);
+                setLastMessage(event.data.sequence);
             }
 
             if (event.data.status === 'complete') {
                 console.log("Complete Output:", event.data.output);
-                //setLastMessage(event.data.output[0][0].output_sequence);
+                setLastMessage(event.data.sequence);
                 setConfig((prevConfig) => ({
                     ...prevConfig,
                     tree: event.data.output
@@ -523,6 +524,7 @@ export const BeamSearchVis = () => {
         setConfig,
         animate,
         generate,
+        lastMessage
     };
 
     return (
