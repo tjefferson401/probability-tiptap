@@ -4,8 +4,7 @@ import { ghPages } from 'vite-plugin-gh-pages';
 
 
 export default defineConfig({
-  plugins: [react(), ghPages()],
-  base: "/probability-tiptap/",
+  plugins: [react()],
   esbuild: {
     loader: 'jsx', // Ensure esbuild handles JSX syntax
     include: [
