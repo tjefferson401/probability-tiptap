@@ -7,7 +7,7 @@ const replaceSpecialTokens = (input) => {
       .replace(/\r/g, '\\r')
       .replace(/\t/g, '\\t')
       .replace(/"/g, '\\"')
-      .replace(/'/g, "\\'");
+    //   .replace(/'/g, "\\'");
   };
 
 const CustomNodeRender = ({ nodeDatum }) => {
