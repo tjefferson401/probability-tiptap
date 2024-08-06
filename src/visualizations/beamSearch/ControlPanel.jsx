@@ -171,7 +171,7 @@ const ControlPanel = () => {
             isRunning: true,
             isStepDisabled: true
         }));
-
+        
         animate(config.currentLayer, config.currentDepth); // Continue from current state
     };
     

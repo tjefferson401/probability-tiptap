@@ -21,9 +21,9 @@ const CustomNodeRender = ({ nodeDatum }) => {
 
             let width = textElement.scrollWidth + 20; // Add padding to width
             let height = textElement.scrollHeight + 10; // Add padding to height
-
-            setRectSize({ width, height });
+            setRectSize({ width: width, height: height });
         }
+
     }, [nodeDatum.name]);
 
     if (nodeDatum.name === 'root' && !nodeDatum.score) {
