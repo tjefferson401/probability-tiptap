@@ -80,7 +80,8 @@ import OutputBar from './OutputBar';
                 translate={translate}
                 zoom={config.zoom}  // Adjusted zoom level
                 nodeSize={{ x: 400, y: 30 }}  // Adjusted node size
-                scaleExtent={{ min: 0.1, max: 2 }}  // Allow zooming in and out
+                scaleExtent={config.showResetButton ? { min: 0.1, max: 2 } : { min: 1, max: 1 }}
+                // scaleExtent={{ min: 0.1, max: 2 }}  // Allow zooming in and out
                 draggable={config.isDraggable}
                 transitionDuration={500}
                 enableLegacyTransitions={true}
