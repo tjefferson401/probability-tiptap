@@ -295,6 +295,7 @@ export const BeamSearchVis = () => {
                         let candidate = {
                             name: child.token,
                             score: child.score,
+                            rank: child.rank,
                             children: [],
                             highlighted: false,
                         }
@@ -358,6 +359,7 @@ export const BeamSearchVis = () => {
                             let candidateBeamChildren = {
                                 name: child.token,
                                 score: child.score,
+                                rank: child.rank,
                                 children: [],
                                 haveChildren: true,
                                 highlighted: false,
@@ -366,6 +368,7 @@ export const BeamSearchVis = () => {
                             let candidate = {
                                 name: child.sequence,
                                 score: child.score,
+                                rank: child.rank,
                                 children: [],
                                 haveChildren: true,
                                 highlighted: false,

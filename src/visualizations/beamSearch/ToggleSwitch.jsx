@@ -14,8 +14,8 @@ const ToggleSwitch = () => {
     <div>
       <label>
         <Switch onChange={handleChange} checked={config.showLogProbs} />
-        {config.showLogProbs.toString()}
       </label>
+      Show Log Probabilities
     </div>
   );
 };
