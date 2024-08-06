@@ -112,7 +112,7 @@ self.addEventListener('message', async (event) => {
                     token: token,
                     output_token_ids: elem.output_token_ids,
                     score: elem.score,
-                    rank: index
+                    rank: index + 1,
                     // top_tokens: topIndices,
                     //decoded_top_tokens: gpt2TextGen.tokenizer.decode(topIndices, { skip_special_tokens: true }),
                     // probabilities: topIndices.map(index => softmaxProbs[index])

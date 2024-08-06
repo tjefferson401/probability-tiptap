@@ -8,83 +8,6 @@ export const BeamSearchVis = () => {
     const worker = useRef(null);                            // reference to the WebWorker that persists across renders
     const [lastMessage, setLastMessage] = useState("");     // the last partial sequence received from the WebWorker
     // const [input, setInput] = useState("");                 // text the user inputs from which the model generates beams
-    
-    // const initialTreeData = {
-    //     name: 'root',
-    //     children: [
-    //         {
-    //             name: 'Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is Hello my name is ',
-    //             children: [
-    //                 {
-    //                     name: 'Justin',
-    //                     score: 0.10,
-    //                     children: [
-    //                         {
-    //                             name: '.',
-    //                             score: 0.008,
-    //                             children: []
-    //                         },
-
-    //                         {
-    //                             name: '-',
-    //                             score: 0.065,
-    //                             children: []
-    //                         },
-
-    //                         {
-    //                             name: ',',
-    //                             score: 0.035,
-    //                             children: [
-    //                                 {
-    //                                     name: '!',
-    //                                     score: 0.002,
-    //                                     children: []
-    //                                 }
-    //                             ]
-    //                         }
-    //                     ]
-    //                 },
-    //                 {
-    //                     name: 'Adam',
-    //                     score: 0.01,
-    //                     children: [
-    //                         {
-    //                             name: '.',
-    //                             score: 0.073,
-    //                             children: [
-    //                                 {
-    //                                     name: '!',
-    //                                     score: 0.002,
-    //                                     children: []
-    //                                 }
-    //                             ]
-    //                         },
-    //                         {
-    //                             name: ',',
-    //                             score: 0.015,
-    //                             children: []
-    //                         },
-    //                         {
-    //                             name: '+',
-    //                             score: 0.045,
-    //                             children: []
-    //                         }
-    //                     ]
-    //                 },
-    //                 {
-    //                     name: ',',
-    //                     score: 0.025,
-    //                     children: []
-    //                 },
-    //                 {
-    //                     name: ',',
-    //                     score: 0.055,
-    //                     children: []
-    //                 }
-    //             ]
-    //         }
-    //     ]
-    // }
 
     const initialRenderTree = {
         name: 'root',
@@ -107,7 +30,6 @@ export const BeamSearchVis = () => {
         lastMessage: "",
         isDraggable: false,
         zoom: .75,
-        showLogProbs: false
     });
 
     {/* Animate Logic + Animate Helper Functions Go Here!*/}
@@ -236,10 +158,11 @@ export const BeamSearchVis = () => {
 
             try {
                 console.log("NEW RECURSIVE CALL!!!!!!!!!!!!!!!!")
-
                 console.log("THIS IS THE TREE!", config.tree)
 
                 if (depth === 0) {
+                    setConfig(prevConfig => ({ ...prevConfig, renderTree: initialRenderTree }));
+
                     layer = [...JSON.parse(JSON.stringify(config.tree)).children]
 
                     console.log("Layer", layer[0])
@@ -295,7 +218,6 @@ export const BeamSearchVis = () => {
                         let candidate = {
                             name: child.token,
                             score: child.score,
-                            rank: child.rank,
                             children: [],
                             highlighted: false,
                         }
@@ -359,7 +281,6 @@ export const BeamSearchVis = () => {
                             let candidateBeamChildren = {
                                 name: child.token,
                                 score: child.score,
-                                rank: child.rank,
                                 children: [],
                                 haveChildren: true,
                                 highlighted: false,
@@ -368,7 +289,6 @@ export const BeamSearchVis = () => {
                             let candidate = {
                                 name: child.sequence,
                                 score: child.score,
-                                rank: child.rank,
                                 children: [],
                                 haveChildren: true,
                                 highlighted: false,
@@ -450,10 +370,12 @@ export const BeamSearchVis = () => {
                     console.log("Finished!")
                     console.log("Final Tree", JSON.parse(JSON.stringify(config.tree)))
                     let treeWithoutScores = removeScoresExceptDeepest(JSON.parse(JSON.stringify(config.tree)))
+
+                    setTimeout(() => {}, 0);
                     
                     setConfig(prevConfig => ({
                         ...prevConfig,
-                        renderTree: treeWithoutScores,
+                        renderTree: removeScoresExceptDeepest(JSON.parse(JSON.stringify(config.tree))),
                         isStepDisabled: true,
                         showResetButton: true,
                         isDraggable: true,
@@ -476,7 +398,6 @@ export const BeamSearchVis = () => {
             animate(config.currentLayer, config.currentDepth);
         }
     }, [config.useTimeout, config.isRunning]);
-
 
 
     {/* WebWorker Logic Goes Here!*/}
@@ -525,7 +446,6 @@ export const BeamSearchVis = () => {
         });
     }
 
-
     {/* This is what we are Passing Into Context!*/}
     const initialState = { 
         config,
@@ -536,7 +456,6 @@ export const BeamSearchVis = () => {
     };
 
     return (
-
         <div style={{ height: '100vh', width: '100vw', display: 'flex' }}>
             <AppContext.Provider value={initialState}>
                 <ControlPanel style={{ width: '20%', backgroundColor: 'blue', color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>

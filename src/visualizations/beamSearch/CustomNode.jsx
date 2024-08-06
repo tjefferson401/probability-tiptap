@@ -15,19 +15,22 @@ const CustomNodeRender = ({ nodeDatum }) => {
     const foreignObjectRef = useRef(null);
     const textRef = useRef(null);
     const [rectSize, setRectSize] = useState({ width: 300, height: 60 });
-
     const { config } = useAppContext();
 
     useLayoutEffect(() => {
         if (foreignObjectRef.current && textRef.current) {
             const textElement = textRef.current;
+            console.log("Text Element:", textElement);
 
-            let width = textElement.scrollWidth + 20; // Add padding to width
-            let height = textElement.scrollHeight + 10; // Add padding to height
+
+            const bbox = textElement.getBoundingClientRect();
+
+            let width = bbox.width; // Add padding to width
+            let height = bbox.height; // Add padding to height
             setRectSize({ width: width, height: height });
         }
 
-    }, [nodeDatum.name]);
+    }, [textRef]);
 
     if (nodeDatum.name === 'root' && !nodeDatum.score) {
         return null;
@@ -61,10 +64,10 @@ const CustomNodeRender = ({ nodeDatum }) => {
             </defs>
         
             <rect
-                x={((xOffset - rectSize.width) / 2)}
-                y={(yOffset - rectSize.height) / 2}
-                width={rectSize.width}
-                height={rectSize.height}
+                x={((xOffset - (rectSize.width + 20)) / 2)}
+                y={(yOffset - (rectSize.height + 10)) / 2}
+                width={rectSize.width + 20}
+                height={rectSize.height + 10}
                 fill={nodeFill} // Soft Blue background
                 stroke={nodeStroke}                
                 rx="20" // Rounded corners
@@ -85,7 +88,7 @@ const CustomNodeRender = ({ nodeDatum }) => {
                     color: textColor, 
                     fontSize: '32px', 
                     fontWeight: 'normal', 
-                    whiteSpace: 'nowrap',
+                    whiteSpace: 'wrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis', 
                     textAlign: 'center', 
@@ -94,7 +97,7 @@ const CustomNodeRender = ({ nodeDatum }) => {
                     alignItems: 'center', 
                     height: '100%',
                     transition: 'color 0.3s ease',
-                    padding: '0 20px' // Adding padding to ensure text does not touch edges
+                    padding: '0 10px' // Adding padding to ensure text does not touch edges
                     }}
                 >
                     {replaceSpecialTokens(nodeDatum.name)}
