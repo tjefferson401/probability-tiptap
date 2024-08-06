@@ -102,7 +102,7 @@ self.addEventListener('message', async (event) => {
 
             const TOP_K = 2
 
-            const next_step = x.map(elem => {
+            const next_step = x.map((elem, index) => {
                 const sequence = gpt2TextGen.tokenizer.decode(elem.output_token_ids, { skip_special_tokens: true })
                 const token = gpt2TextGen.tokenizer.decode(elem.output_token_ids.slice(-1), { skip_special_tokens: true })
                 return {
@@ -112,6 +112,7 @@ self.addEventListener('message', async (event) => {
                     token: token,
                     output_token_ids: elem.output_token_ids,
                     score: elem.score,
+                    rank: index
                     // top_tokens: topIndices,
                     //decoded_top_tokens: gpt2TextGen.tokenizer.decode(topIndices, { skip_special_tokens: true }),
                     // probabilities: topIndices.map(index => softmaxProbs[index])

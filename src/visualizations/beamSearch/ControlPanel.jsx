@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAppContext } from './BeamSearchContext';
 import styled from 'styled-components';
+import ToggleSwitch from './ToggleSwitch';
 
 const ControlPanelStyle = styled.div`
   width: 25%;
@@ -234,6 +235,8 @@ const ControlPanel = () => {
             {config.showResetButton && (
                 <ResetButtonStyle onClick={() => {reset(); setStartPressed(false)}}>Reset</ResetButtonStyle>
             )}
+
+            <ToggleSwitch />
 
             <SequenceContainer>
               <h3>Generated Sequence</h3>

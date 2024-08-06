@@ -1,4 +1,5 @@
 import React, { useRef, useLayoutEffect, useState } from 'react';
+import { useAppContext } from './BeamSearchContext';
 
 const replaceSpecialTokens = (input) => {
     return input
@@ -7,13 +8,15 @@ const replaceSpecialTokens = (input) => {
       .replace(/\r/g, '\\r')
       .replace(/\t/g, '\\t')
       .replace(/"/g, '\\"')
-      .replace(/'/g, "\\'");
+    //   .replace(/'/g, "\\'");
   };
 
 const CustomNodeRender = ({ nodeDatum }) => {
     const foreignObjectRef = useRef(null);
     const textRef = useRef(null);
     const [rectSize, setRectSize] = useState({ width: 300, height: 60 });
+
+    const { config } = useAppContext();
 
     useLayoutEffect(() => {
         if (foreignObjectRef.current && textRef.current) {
@@ -108,7 +111,7 @@ const CustomNodeRender = ({ nodeDatum }) => {
                     fontWeight="normal"
                     style={{ fontWeight: 'normal' }}
                 >
-                    {nodeDatum.score}
+                    {config.showLogProbs ? nodeDatum.score : nodeDatum.rank}
                 </text>
             )}
         </g>

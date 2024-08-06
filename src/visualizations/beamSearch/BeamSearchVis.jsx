@@ -107,6 +107,7 @@ export const BeamSearchVis = () => {
         lastMessage: "",
         isDraggable: false,
         zoom: .75,
+        showLogProbs: false
     });
 
     {/* Animate Logic + Animate Helper Functions Go Here!*/}
@@ -294,6 +295,7 @@ export const BeamSearchVis = () => {
                         let candidate = {
                             name: child.token,
                             score: child.score,
+                            rank: child.rank,
                             children: [],
                             highlighted: false,
                         }
@@ -357,6 +359,7 @@ export const BeamSearchVis = () => {
                             let candidateBeamChildren = {
                                 name: child.token,
                                 score: child.score,
+                                rank: child.rank,
                                 children: [],
                                 haveChildren: true,
                                 highlighted: false,
@@ -365,6 +368,7 @@ export const BeamSearchVis = () => {
                             let candidate = {
                                 name: child.sequence,
                                 score: child.score,
+                                rank: child.rank,
                                 children: [],
                                 haveChildren: true,
                                 highlighted: false,
