@@ -180,7 +180,8 @@ const ControlPanel = () => {
         setConfig((prevConfig) => ({
             ...prevConfig,
             renderTree: {
-                name: "root"
+                name: 'root',
+                children: []
             },
             tree: null,
             useTimeout: false,
@@ -201,19 +202,19 @@ const ControlPanel = () => {
             {/* {children} */}
             <InputContainer>
                 <Label>Input Text: </Label>
-                <Input placeholder={"Enter a message"} value={config.input} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, input: e.target.value }))} />
+                <Input placeholder={"Enter a message"} value={config.input} disabled={config.isRunning} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, input: e.target.value }))} />
             </InputContainer>
 
             <InputContainer>
                 <Label>Beams:</Label>
-                <Input value={config.numBeams} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, numBeams: e.target.value }))} />
-                <SliderStyle min="1" max="4" value={config.numBeams} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, numBeams: Number(e.target.value) }))} />
+                <Input value={config.numBeams} readOnly />
+                <SliderStyle min="1" max="4" value={config.numBeams} disabled={config.isRunning} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, numBeams: Number(e.target.value) }))} />
             </InputContainer>
 
             <InputContainer>
                 <Label>Depth:</Label>
-                <Input value={config.maxDepth} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, maxDepth: e.target.value }))} />
-                <SliderStyle min="1" max="10" value={config.maxDepth} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, maxDepth: Number(e.target.value) }))} />
+                <Input value={config.maxDepth} readOnly />
+                <SliderStyle min="1" max="10" value={config.maxDepth} disabled={config.isRunning} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, maxDepth: Number(e.target.value) }))} />
             </InputContainer>   
 
 
