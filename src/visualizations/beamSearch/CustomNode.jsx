@@ -1,5 +1,8 @@
 import React, { useRef, useLayoutEffect, useState } from 'react';
 import { useAppContext } from './BeamSearchContext';
+import { max } from 'd3';
+
+const MAX_TEXT_LENGTH = 5;
 
 const replaceSpecialTokens = (input) => {
     return input
@@ -10,6 +13,16 @@ const replaceSpecialTokens = (input) => {
       .replace(/"/g, '\\"')
     //   .replace(/'/g, "\\'");
   };
+
+const truncateFront = (text, maxLength) => {
+    const words = text.split(' ');
+    if (words.length <= maxLength) {
+        return text;
+    }
+    const truncatedWords = words.slice(words.length - maxLength);
+    return '...' + truncatedWords.join(' ');
+};
+
 
 const CustomNodeRender = ({ nodeDatum }) => {
     const foreignObjectRef = useRef(null);
@@ -100,7 +113,7 @@ const CustomNodeRender = ({ nodeDatum }) => {
                     padding: '0 10px' // Adding padding to ensure text does not touch edges
                     }}
                 >
-                    {replaceSpecialTokens(nodeDatum.name)}
+                    {replaceSpecialTokens(truncateFront(nodeDatum.name, MAX_TEXT_LENGTH))}
                 </div>
             </foreignObject>
 

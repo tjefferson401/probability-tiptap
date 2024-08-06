@@ -85,7 +85,7 @@ import OutputBar from './OutputBar';
                 draggable={config.isDraggable}
                 transitionDuration={500}
                 enableLegacyTransitions={true}
-                separation={{ siblings: 3, nonSiblings: 4 }}
+                separation={{ siblings: 4, nonSiblings: 5 }}
             />
             {/* <OutputBar /> */}
         </div>
