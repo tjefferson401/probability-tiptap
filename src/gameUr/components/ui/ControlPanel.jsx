@@ -35,10 +35,14 @@ const ControlPanel = () => {
     useEffect(() => {
         if (appState.winner) {
             Swal.fire({
-                title: `Player ${appState.winner === "b" ? "Blue" : "Red"} wins!`,
-                text: `Congratulations!`,
-                icon: 'success',
-                confirmButtonText: 'Ok'
+              title: `Player ${appState.winner === "b" ? "Blue" : "Red"} wins!`,
+              text: "Congratulations!",
+              icon: "success",
+              confirmButtonText: "Restart Game",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    dispatch(Dispatcher.resetGame());
+                }
             });
         }
     }, [appState.winner]);

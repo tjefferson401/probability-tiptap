@@ -9,9 +9,11 @@ export const initGameState = {
     diceRoll: [0, 0, 0, 0],
     moveLength: 0,
     diceOff: false,
-    redScore: 0,
-    blueScore: 0,
-    redStack: 7,
-    blueStack: 7,
-    diceFrequency: [0, 0, 0, 0, 0, 0]
+    piecesOn: false,
+    redScore: 6,
+    blueScore: 6,
+    redStack: 1,
+    blueStack: 1,
+    diceFrequency: [0, 0, 0, 0, 0, 0],
+    winner: null
 }
