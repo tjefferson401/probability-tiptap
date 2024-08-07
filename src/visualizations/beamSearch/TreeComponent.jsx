@@ -67,25 +67,27 @@ import OutputBar from './OutputBar';
             }
         }, [config.tree]);
 
+        console.log("New Zoom in config:", config.zoom);
+
     return (
         <div style={{
              width: '100%', 
              height:'100%', 
              position:'relative'
             }}>
+
             <Tree 
                 key={treeKey}
                 data={config.renderTree}
                 renderCustomNodeElement={(rd3tProps) => <CustomNodeRender {...rd3tProps} />}
                 translate={translate}
-                zoom={config.zoom}  // Adjusted zoom level
+                zoom = {config.zoom}  // Adjusted zoom level
                 nodeSize={{ x: 400, y: 30 }}  // Adjusted node size
-                scaleExtent={config.showResetButton ? { min: 0.1, max: 2 } : { min: 1, max: 1 }}
-                // scaleExtent={{ min: 0.1, max: 2 }}  // Allow zooming in and out
+                scaleExtent={config.isRunning ?  { min: config.zoom, max: config.zoom } : { min: 0.1, max: 2 }}
                 draggable={config.isDraggable}
                 transitionDuration={500}
                 enableLegacyTransitions={true}
-                separation={{ siblings: 4, nonSiblings: 5 }}
+                separation={{ siblings: 3, nonSiblings: 4}}
             />
             {/* <OutputBar /> */}
         </div>
