@@ -1,6 +1,6 @@
 import { useAppContext } from "../../contexts/Context";
 import Dispatcher from "../../util/Dispatcher";
-import tutorialIcon from "../../assets/react.svg";
+import tutorialIcon from "../../../assets/react.svg";
 
 export const Tutorial = () => {
     const { dispatch } = useAppContext();
