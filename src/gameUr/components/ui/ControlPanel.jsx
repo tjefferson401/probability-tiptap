@@ -5,6 +5,8 @@ import Dice from "./Dice";
 import { useAppContext } from "../../contexts/Context";
 import Dispatcher from "../../util/Dispatcher";
 import styled from "styled-components";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
 
 const StyledControlPanel = styled(SoftenedDiv)`
     width: 30vh;
@@ -29,6 +31,18 @@ const StyledButton = styled(Button)`
 
 const ControlPanel = () => {
     const { appState, dispatch } = useAppContext();
+
+    useEffect(() => {
+        if (appState.winner) {
+            Swal.fire({
+                title: `Player ${appState.winner === "b" ? "Blue" : "Red"} wins!`,
+                text: `Congratulations!`,
+                icon: 'success',
+                confirmButtonText: 'Ok'
+            });
+        }
+    }, [appState.winner]);
+
     console.log("Checking current turn: ", appState.turn)
     return (
         <StyledControlPanel turn={appState.turn}>
