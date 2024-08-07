@@ -1,8 +1,7 @@
 // action in 2 parts -- payload and type
-
-import { useEffect } from "react";
-import ActionTypes from "./ActionTypes";
-import { rollDice } from "./helper";
+import { canMove } from "./helper"
+import ActionTypes from "./ActionTypes"
+import { rollDice } from "./helper"
 
 // based on the payload and the type we change the state 
 export const reducer = (state, action) => {
@@ -16,7 +15,7 @@ export const reducer = (state, action) => {
             console.log("You may move ", newMoveLength, " spaces.");
             // console.log("AppState: ", state)
 
-            if (!newMoveLength) {
+            if (!newMoveLength || !canMove(state.position[0], turn, newMoveLength)) {
                 turn = turn === 'b' ? 'r' : 'b'
                 state.diceOff = false
             } else {

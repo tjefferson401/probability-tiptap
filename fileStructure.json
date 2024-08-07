@@ -1,0 +1,1176 @@
+[
+  {
+    "name": "chapters",
+    "type": "directory",
+    "children": [
+      {
+        "name": ".DS_Store",
+        "type": "file"
+      },
+      {
+        "name": "examples",
+        "type": "directory",
+        "children": [
+          {
+            "name": ".DS_Store",
+            "type": "file"
+          },
+          {
+            "name": "100_binomial_problems",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "algorithmic_art",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "approximate_counting",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "bacteria_evolution",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "bayesian_carbon_dating",
+            "type": "directory",
+            "children": [
+              {
+                "name": "historical_c14.csv",
+                "type": "file"
+              },
+              {
+                "name": "historical_c14.json",
+                "type": "file"
+              },
+              {
+                "name": "incalc14.csv",
+                "type": "file"
+              },
+              {
+                "name": "index.html",
+                "type": "file"
+              },
+              {
+                "name": "process_c14.py",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "bayesian_viral_load_test",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "bridge_distribution",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "climate_sensitivity",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "counting_graphs",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "curse_of_dimensionality",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "dart_logo",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "differential_privacy",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "digital_vision_test",
+            "type": "directory",
+            "children": [
+              {
+                "name": "Presentation1 [Autosaved].pptx",
+                "type": "file"
+              },
+              {
+                "name": "index.html",
+                "type": "file"
+              },
+              {
+                "name": "make_table.py",
+                "type": "file"
+              },
+              {
+                "name": "prior.csv",
+                "type": "file"
+              },
+              {
+                "name": "priorTable.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "enigma",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "fairness",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "fast_dot_com",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "federalist",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "grades_not_normal",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "grading_eye_inflammation",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "greenhouse_effect",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "jury",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "mixture_models",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "mle_demo",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "mle_pareto",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "name2age",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "night_sight",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "norm_cdf_calculator",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "p_hacking",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "period_tracker",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "prob_baby_delivery",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "random_shuffles",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "serendipity",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "thompson",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "tracking_in_2D",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "winning_series",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "index.html",
+        "type": "file"
+      },
+      {
+        "name": "intro",
+        "type": "directory",
+        "children": [
+          {
+            "name": "all_distributions",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "calculators",
+            "type": "directory",
+            "children": [
+              {
+                "name": "betaCdf.html",
+                "type": "file"
+              },
+              {
+                "name": "choose.html",
+                "type": "file"
+              },
+              {
+                "name": "factorial.html",
+                "type": "file"
+              },
+              {
+                "name": "index.html",
+                "type": "file"
+              },
+              {
+                "name": "invPhi.html",
+                "type": "file"
+              },
+              {
+                "name": "normCdf.html",
+                "type": "file"
+              },
+              {
+                "name": "phi.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "core_probability_ref",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "free_book",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "intro",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "notation",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "prob_code",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "python",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "part1",
+        "type": "directory",
+        "children": [
+          {
+            "name": "bayes_theorem",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              },
+              {
+                "name": "medicalBayes.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "combinatorics",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "cond_prob",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "counting",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "equally_likely",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "independence",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "law_total",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "log_probabilities",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "many_flips",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              },
+              {
+                "name": "simulator.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "prob_and",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "prob_or",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "probability",
+            "type": "directory",
+            "children": [
+              {
+                "name": "diceLimitExample.html",
+                "type": "file"
+              },
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "random_computers",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "part2",
+        "type": "directory",
+        "children": [
+          {
+            "name": ".DS_Store",
+            "type": "file"
+          },
+          {
+            "name": "bernoulli",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "binomial",
+            "type": "directory",
+            "children": [
+              {
+                "name": ".DS_Store",
+                "type": "file"
+              },
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "binomial_approx",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "categorical",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "continuous",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "convolution",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "expectation",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "exponential",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "hyper_geo",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "more_discrete",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "normal",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "pmf",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              },
+              {
+                "name": "sumDiceList.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "poisson",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "rvs",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "uniform",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "variance",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "part3",
+        "type": "directory",
+        "children": [
+          {
+            "name": "bayesian_networks",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "computational_inference",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "continuous_joint",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "correlation",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "independent_vars",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "inference",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "joint",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              },
+              {
+                "name": "spotify.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "marginalization",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "multinomial",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "multivariate_gaussian",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "sampling_revisited",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "variable_bayes",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "part4",
+        "type": "directory",
+        "children": [
+          {
+            "name": ".DS_Store",
+            "type": "file"
+          },
+          {
+            "name": "algorithmic_analysis",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "beta",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "bootstrapping",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "bounds",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "clt",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              },
+              {
+                "name": "simulateMany.html",
+                "type": "file"
+              },
+              {
+                "name": "simulateOnce.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "parameters",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "samples",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "summation_vars",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "part5",
+        "type": "directory",
+        "children": [
+          {
+            "name": "linear_regression",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "log_regression",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "machine_learning",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "map",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "mle",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "naive_bayes",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "neural_nets",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "optimization",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "parameter_estimation",
+            "type": "directory",
+            "children": [
+              {
+                "name": "index.html",
+                "type": "file"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "search.html",
+        "type": "file"
+      }
+    ]
+  },
+  {
+    "name": "vite.svg",
+    "type": "file"
+  }
+]
