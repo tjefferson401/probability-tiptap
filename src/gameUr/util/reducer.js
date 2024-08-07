@@ -1,5 +1,5 @@
 // action in 2 parts -- payload and type
-
+import { canMove } from "./helper"
 import ActionTypes from "./ActionTypes"
 import { rollDice } from "./helper"
 
@@ -14,7 +14,7 @@ export const reducer = (state, action) => {
             console.log("You may move ", newMoveLength, " spaces.");
             // console.log("AppState: ", state)
 
-            if (!newMoveLength) {
+            if (!newMoveLength || !canMove(state.position[0], turn, newMoveLength)) {
                 turn = turn === 'b' ? 'r' : 'b'
                 state.diceOff = false
             } else {

@@ -108,7 +108,7 @@ export const getMove = (position, piece, row, col, moveLength) => {
         const index = coordinateMapRed[coordString];
         const newIndex = index + moveLength;
         if (newIndex > 15) {
-            return null
+            return [-1, -1]
         } else {
             move = indexMapRed[newIndex];
         }
@@ -117,7 +117,7 @@ export const getMove = (position, piece, row, col, moveLength) => {
         const index = coordinateMapBlue[coordString];
         const newIndex = index + moveLength;
         if (newIndex > 15) {
-            return null
+            return [-1, -1]
         } else {
             move = indexMapBlue[newIndex];
         }
@@ -132,4 +132,26 @@ export const getMove = (position, piece, row, col, moveLength) => {
 export const normalize = (arr) => {
     const sum = arr.reduce((a, b) => a + b, 0);
     return arr.map(x => x / sum);
+}
+
+export const canMove = (board, turn, moveLength) => {
+    console.log("This is the board", board)
+
+    for (let row = 0; row < 3; row++) {
+        for (let col = 0; col < 8; col++) {
+            console.log("This is the board", row, col, board[row][col])
+            if (board[row][col][0] === turn) {
+                const [newRow, newCol] = getMove(board, board[row][col], row, col, moveLength);
+                console.log("This is the new row and col", newRow, newCol)
+                if (newRow !== -1 && (board[newRow][newCol] === '' || board[newRow][newCol][0] !== turn)) {
+                    if ((newRow === 1 && newCol === 4) && board[1][4] !== '') {
+                        continue;
+                    } else {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
 }
