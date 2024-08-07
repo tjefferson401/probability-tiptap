@@ -14,5 +14,7 @@ export const initGameState = {
     redStack: 7,
     blueStack: 7,
     diceFrequency: [0, 0, 0, 0, 0, 0],
-    showTutorial: true
+    showTutorial: true,
+    winner: null,
+    piecesOn: false,
 }

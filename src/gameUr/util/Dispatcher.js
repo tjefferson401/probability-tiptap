@@ -59,4 +59,11 @@ const toggleTutorial = () => {
     }
 }
 
-export default { rollDice, movePiece, generateCandidateMove, toggleDice, decrementBlueStack, decrementRedStack, capture, clearCandidateMove, toggleTutorial};
+const resetGame = () => {
+    console.log("Resetting the game ??")
+    return {
+        type: ActionTypes.RESET_GAME
+    }
+}
+
+export default { rollDice, movePiece, generateCandidateMove, toggleDice, decrementBlueStack, decrementRedStack, capture, clearCandidateMove, resetGame, toggleTutorial};
