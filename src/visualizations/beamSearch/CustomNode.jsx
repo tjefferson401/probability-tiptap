@@ -127,7 +127,7 @@ const CustomNodeRender = ({ nodeDatum }) => {
                     fontWeight="normal"
                     style={{ fontWeight: 'normal' }}
                 >
-                    {config.showLogProbs ? nodeDatum.score : nodeDatum.rank}
+                    {config.showLogProbs ? parseFloat(nodeDatum.score.toFixed(5)) : nodeDatum.rank}
                 </text>
             )}
         </g>
