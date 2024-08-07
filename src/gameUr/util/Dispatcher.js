@@ -53,4 +53,10 @@ const toggleDice = () => {
     }
 }
 
-export default { rollDice, movePiece, generateCandidateMove, toggleDice, decrementBlueStack, decrementRedStack, capture, clearCandidateMove};
+const toggleTutorial = () => {
+    return {
+        type: ActionTypes.TOGGLE_TUTORIAL,
+    }
+}
+
+export default { rollDice, movePiece, generateCandidateMove, toggleDice, decrementBlueStack, decrementRedStack, capture, clearCandidateMove, toggleTutorial};

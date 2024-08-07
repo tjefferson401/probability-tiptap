@@ -126,6 +126,13 @@ export const reducer = (state, action) => {
 
         }
 
+        case ActionTypes.TOGGLE_TUTORIAL : {
+            return {
+                ...state,
+                showTutorial: !state.showTutorial
+            }
+        }
+
         default : // if not a new-move return the state
             // console.log("Default case. Returning state.")
             return state;
