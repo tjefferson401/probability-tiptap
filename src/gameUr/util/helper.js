@@ -59,7 +59,6 @@ export const getMove = (position, piece, row, col, moveLength) => {
         '0-0': 13,
         '0-1': 14,
         '0-2': 15
-    
     }
 
     const indexMapRed = {
@@ -107,21 +106,21 @@ export const getMove = (position, piece, row, col, moveLength) => {
     if (piece[0] === 'r') {
         const index = coordinateMapRed[coordString];
         const newIndex = index + moveLength;
+        console.log("New Index: ", newIndex)
         if (newIndex > 15) {
-            return null
+            return [-1, -1]
         } else {
             move = indexMapRed[newIndex];
         }
-
     } else {
         const index = coordinateMapBlue[coordString];
         const newIndex = index + moveLength;
+        console.log("New Index: ", newIndex)
         if (newIndex > 15) {
-            return null
+            return [-1, -1]
         } else {
             move = indexMapBlue[newIndex];
         }
-        
     }
 
     const [newRow, newCol] = move.split('-');

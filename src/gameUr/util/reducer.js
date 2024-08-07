@@ -1,7 +1,8 @@
 // action in 2 parts -- payload and type
 
-import ActionTypes from "./ActionTypes"
-import { rollDice } from "./helper"
+import { useEffect } from "react";
+import ActionTypes from "./ActionTypes";
+import { rollDice } from "./helper";
 
 // based on the payload and the type we change the state 
 export const reducer = (state, action) => {
@@ -11,6 +12,7 @@ export const reducer = (state, action) => {
             let { turn } = state;
             const newDiceRoll = rollDice();
             const newMoveLength = newDiceRoll.reduce((sum, value) => sum + value, 0); // summing up values in an array
+
             console.log("You may move ", newMoveLength, " spaces.");
             // console.log("AppState: ", state)
 
@@ -29,7 +31,7 @@ export const reducer = (state, action) => {
                 diceRoll: newDiceRoll,
                 moveLength: newMoveLength,
                 diceOff: state.diceOff,
-                piecesOn: true,
+                piecesOn: Boolean(newMoveLength),
                 diceFrequency: state.diceFrequency
             };
         };
@@ -54,14 +56,18 @@ export const reducer = (state, action) => {
             const addRed = 1 ? recentCoords[0] === 2 && recentCoords[1] === 2 : 0;
             const addBlue = 1 ? recentCoords[0] === 0 && recentCoords[1] === 2 : 0;
 
+            const newRedScore = state.redScore + addRed;
+            const newBlueScore = state.blueScore + addBlue;
+
             return {
                 ...state, // return whatever the state was
                 turn,
                 position,
                 diceOff: false,
                 piecesOn: false,
-                redScore: state.redScore + addRed,
-                blueScore: state.blueScore + addBlue
+                redScore: newRedScore,
+                blueScore: newBlueScore,
+                winner: newRedScore === 7 ? 'r' : newBlueScore === 7 ? 'b' : null
             };
         };
 
