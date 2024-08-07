@@ -38,8 +38,8 @@ const CustomNodeRender = ({ nodeDatum }) => {
 
             const bbox = textElement.getBoundingClientRect();
 
-            let width = bbox.width; // Add padding to width
-            let height = bbox.height; // Add padding to height
+            let width = textElement.scrollWidth; // Add padding to width
+            let height = textElement.scrollHeight; // Add padding to height
             setRectSize({ width: width, height: height });
         }
 
@@ -99,10 +99,10 @@ const CustomNodeRender = ({ nodeDatum }) => {
             >
                 <div ref = {textRef} xmlns="http://www.w3.org/1999/xhtml" style={{ 
                     color: textColor, 
-                    fontSize: '32px', 
+                    fontSize: '30px', 
                     fontWeight: 'normal', 
-                    whiteSpace: 'pre-wrap',
-                    overflow: 'visible',
+                    whiteSpace: 'wrap',
+                    overflow: 'hidden',
                     textOverflow: 'ellipsis', 
                     textAlign: 'center', 
                     display: 'flex', 
@@ -110,7 +110,7 @@ const CustomNodeRender = ({ nodeDatum }) => {
                     alignItems: 'center', 
                     height: '100%',
                     transition: 'color 0.3s ease',
-                    padding: '0 10px' // Adding padding to ensure text does not touch edges
+                    padding: '20px' // Adding padding to ensure text does not touch edges
                     }}
                 >
                     {replaceSpecialTokens(truncateFront(nodeDatum.name, MAX_TEXT_LENGTH))}
