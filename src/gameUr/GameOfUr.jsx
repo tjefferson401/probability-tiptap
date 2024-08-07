@@ -9,7 +9,7 @@ import { initGameState } from './util/Constant';
 import { reducer } from './util/reducer';
 import BarChart from './components/ui/BarChart';
 import { GameWindow, BarWindow, BoardWindow, ControlsWindow } from './styles/Windows.style';
-import Tutorial from './components/ui/Tutorial';
+import { Tutorial, TutorialButton } from './components/ui/Tutorial';
 
 export function GameOfUr() {
     const [appState, dispatch] = useReducer(reducer, initGameState)
@@ -35,6 +35,7 @@ export function GameOfUr() {
                     <BarWindow>
                         <BarChart />
                     </BarWindow>
+                    <TutorialButton />
                 </>
             )}
         </AppContext.Provider>
