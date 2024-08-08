@@ -10,16 +10,10 @@ export const GameWindow = styled.div`
 
     /* Set the width to 100% and the height to 50vh */
     width: 100%;
+    height: 50vh;
 
     /* Set the background color to #f0f0f0 */
     background-color: #f0f0f0;
-    
-    /* Add a border radius of 10px */
-    border-radius: 10px;
-    /* Apply margin to all direct children elements */
-    & > * {
-        margin-right: 10px;
-    }
 `;
 
 export const BarWindow = styled.div`
@@ -30,13 +24,4 @@ export const BarWindow = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-`;
-
-export const BoardWindow = styled.div`
-    /* background-color: green; */
-`;
-
-export const ControlsWindow = styled.div`
-    height: 100%;
-    /* background-color: blue; */
 `;

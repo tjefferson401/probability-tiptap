@@ -8,7 +8,7 @@ import AppContext from './contexts/Context';
 import { initGameState } from './util/Constant';
 import { reducer } from './util/reducer';
 import BarChart from './components/ui/BarChart';
-import { GameWindow, BarWindow, BoardWindow, ControlsWindow } from './styles/Windows.style';
+import { GameWindow, BarWindow } from './styles/Windows.style';
 import { Tutorial, TutorialButton } from './components/ui/Tutorial';
 
 export function GameOfUr() {
@@ -25,12 +25,8 @@ export function GameOfUr() {
             {appState.showTutorial ? <Tutorial /> : (
                 <>
                     <GameWindow>
-                    <BoardWindow>
                         <Board />
-                    </BoardWindow>
-                    <ControlsWindow>
                         <ControlPanel />
-                    </ControlsWindow>
                     </GameWindow>
                     <BarWindow>
                         <BarChart />

@@ -8,26 +8,31 @@ import styled from "styled-components";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
 
-const StyledControlPanel = styled(SoftenedDiv)`
+const StyledControlPanel = styled.div`
     width: 30vh;
     height: 30vh;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 2vh rgba(0, 0, 0, 0.5);
     transition: background-color 0.3s ease-in-out;
     background-color: ${props => props.turn === "r" ? "tomato" : "#4e949a"};
+    display: flex;
+    flex-direction: column;
+    gap: 5%;
+    border-radius: 5%;
+    padding: 1%;
 `;
 
-const StyledButton = styled(Button)`
-    &.btn-primary {
-        transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out;
-        background-color: ${props => props.turn === "r" ? "white" : "black"};
-        border-color: ${props => props.turn === "r" ? "white" : "black"};
+// const StyledButton = styled(Button)`
+//     &.btn-primary {
+//         transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out;
+//         background-color: ${props => props.turn === "r" ? "white" : "black"};
+//         border-color: ${props => props.turn === "r" ? "white" : "black"};
 
-        &:hover, &:focus, &:active {
-            background-color: ${props => props.turn === "r" ? "lightgray" : "darkgray"};
-            border-color: ${props => props.turn === "r" ? "lightgray" : "darkgray"};
-        }
-    }
-`;
+//         &:hover, &:focus, &:active {
+//             background-color: ${props => props.turn === "r" ? "lightgray" : "darkgray"};
+//             border-color: ${props => props.turn === "r" ? "lightgray" : "darkgray"};
+//         }
+//     }
+// `;
 
 const ControlPanel = () => {
     const { appState, dispatch } = useAppContext();
@@ -56,7 +61,6 @@ const ControlPanel = () => {
                 disabled={appState.diceOff} 
                 variant="primary" 
                 turn={appState.turn}
-                style={{width: '100%', marginBottom: '5px'}}
             >
                 Roll Dice
             </Button>            

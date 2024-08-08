@@ -7,15 +7,15 @@ const DiceBar = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: center;
-    gap: 2px;
+    background-color: #3d09d8;
 `;
 
 const Die = ({ color }) => {
     return (
         <div
             style={{
-                width: "50px",
-                height: "50px",
+                width: "3vh",
+                height: "3vh",
                 borderRadius: "50%",
                 backgroundColor: color,
             }}
