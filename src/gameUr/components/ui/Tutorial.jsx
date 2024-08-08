@@ -1,6 +1,6 @@
 import { useAppContext } from "../../contexts/Context";
 import Dispatcher from "../../util/Dispatcher";
-import tutorialIcon from "../../../assets/react.svg";
+import questionIcon from "../../assets/question-solid.svg";
 
 const styles = {
     body: {
@@ -60,14 +60,24 @@ const styles = {
         backgroundColor: '#A0522D',
     },
     tutorialButton: {
-        position: 'absolute',
-        bottom: '10px', // Adjust as needed
-        right: '10px',  // Adjust as needed
+        position: 'fixed', 
+        bottom: '20px', 
+        right: '20px', 
+        backgroundColor: '#FFFFFF', // Match your app's primary color
+        border: 'none', 
+        borderRadius: '50%', 
+        padding: '15px', 
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center'
     },
     tutorialIcon: {
         width: '24px',
         height: '24px',
+        fill: 'white'
     },
+
 };
 
 
@@ -96,16 +106,17 @@ export const Tutorial = () => {
                         If there is not a valid move to be made, the turn goes to the opposition. Pieces move in a directed path, and must be moved off the board in the direction of the player's home row.
                         The first player to move all seven of their pieces off the board wins.
                     </p>
-
-                    <button 
-                        style={styles.button} 
-                        onClick={() => dispatch(Dispatcher.toggleTutorial())}
-                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = styles.buttonHover.backgroundColor}
-                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = styles.button.backgroundColor}
-                    >
-                        Are you ready to play the Royal Game of Ur?
-                    </button>
                 </div>
+                
+                <button 
+                    style={styles.button} 
+                    onClick={() => dispatch(Dispatcher.toggleTutorial())}
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = styles.buttonHover.backgroundColor}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = styles.button.backgroundColor}
+                >
+                    Are you ready to play the Royal Game of Ur?
+                </button>
+                
             </div>
         </div>
     );
@@ -121,7 +132,7 @@ export const TutorialButton = () => {
                 onClick={() => dispatch(Dispatcher.toggleTutorial())}
                 style={styles.tutorialButton}
             >
-                <img src={tutorialIcon} alt="Tutorial Icon" style={styles.tutorialIcon} />
+                <img src={questionIcon} alt="Tutorial Icon" style={styles.tutorialIcon} />
             </button>
         </div>
     );

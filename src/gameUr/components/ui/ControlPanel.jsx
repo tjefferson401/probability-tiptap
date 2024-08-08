@@ -11,6 +11,8 @@ import Swal from "sweetalert2";
 const StyledControlPanel = styled.div`
     width: 30vh;
     height: 30vh;
+    max-width: 30vw;
+    max-height: 30vw;
     box-shadow: 0 0 2vh rgba(0, 0, 0, 0.5);
     transition: background-color 0.3s ease-in-out;
     background-color: ${props => props.turn === "r" ? "tomato" : "#4e949a"};
@@ -20,19 +22,6 @@ const StyledControlPanel = styled.div`
     border-radius: 5%;
     padding: 1%;
 `;
-
-// const StyledButton = styled(Button)`
-//     &.btn-primary {
-//         transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out;
-//         background-color: ${props => props.turn === "r" ? "white" : "black"};
-//         border-color: ${props => props.turn === "r" ? "white" : "black"};
-
-//         &:hover, &:focus, &:active {
-//             background-color: ${props => props.turn === "r" ? "lightgray" : "darkgray"};
-//             border-color: ${props => props.turn === "r" ? "lightgray" : "darkgray"};
-//         }
-//     }
-// `;
 
 const ControlPanel = () => {
     const { appState, dispatch } = useAppContext();

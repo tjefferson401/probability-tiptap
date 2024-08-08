@@ -3,7 +3,6 @@ import React, { useReducer } from 'react';
 import ControlPanel from './components/ui/ControlPanel';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Board from './components/ui/Board';
-import './util/constants.css'
 import AppContext from './contexts/Context';
 import { initGameState } from './util/Constant';
 import { reducer } from './util/reducer';
