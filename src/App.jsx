@@ -2,11 +2,15 @@ import { BrowserRouter as Router, Link, Route, Routes, createBrowserRouter } fro
 import { FileStructureOuter } from './Textbook';
 import { GameOfUr } from './gameUr/GameOfUr';
 import { BeamSearch } from './visualizations/beamSearch/BeamSearch';
-
+import { Home } from './Home';
 
 export const router = createBrowserRouter([
     {
         path: "/",
+        element: <Home/>
+    },
+    {
+        path: "/files",
         element: <FileStructureOuter/>
     },
     {

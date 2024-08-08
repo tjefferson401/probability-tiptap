@@ -3,12 +3,12 @@ import { useAppContext } from '../../contexts/Context';
 import SoftenedDiv from '../../styles/SoftenedDiv.style';
 
 const StyledScoreBoard = styled.div`
-    background-color: pink;
+    //background-color: pink;
     display: flex;
     flex-direction: row;
     justify-content: center; /* Center children horizontally */
     align-items: center; /* Center children vertically */
-    height: 100%;
+    height: 50%;
     width: 100%;
     gap: 5%; /* Add a gap of 10 pixels between the children */
 `;
@@ -24,8 +24,9 @@ const StyledScoreCard = styled(SoftenedDiv)`
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     
     h2 {
-        font-size: 2vw; /* Example of scaling based on viewport */
+        font-size: 150%;
         /* Adjust the value as needed to fit your design */
+        line-height: 75%; /* Decrease the space between lines of text */
     }
 `;
 

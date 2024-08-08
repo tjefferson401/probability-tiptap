@@ -9,8 +9,8 @@ import { useEffect } from "react";
 import Swal from "sweetalert2";
 
 const StyledControlPanel = styled.div`
-    width: 30vh;
-    height: 30vh;
+    height: 50%;
+    aspect-ratio: 1 / 1;
     box-shadow: 0 0 2vh rgba(0, 0, 0, 0.5);
     transition: background-color 0.3s ease-in-out;
     background-color: ${props => props.turn === "r" ? "tomato" : "#4e949a"};
@@ -18,7 +18,15 @@ const StyledControlPanel = styled.div`
     flex-direction: column;
     gap: 5%;
     border-radius: 5%;
-    padding: 1%;
+    padding: 0.5%;
+`;
+
+const StyledButton = styled(Button)`
+    height: 25%;
+
+    p {
+        font-size: 100%;
+    }
 `;
 
 // const StyledButton = styled(Button)`
@@ -56,14 +64,14 @@ const ControlPanel = () => {
     return (
         <StyledControlPanel turn={appState.turn}>
             <ScoreBoard />
-            <Button 
+            <StyledButton 
                 onClick={() => dispatch(Dispatcher.rollDice())} 
                 disabled={appState.diceOff} 
                 variant="primary" 
                 turn={appState.turn}
             >
-                Roll Dice
-            </Button>            
+                <p>Roll Dice</p>
+            </StyledButton>            
             <Dice/>
         </StyledControlPanel>
     );

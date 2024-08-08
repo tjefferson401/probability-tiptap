@@ -96,16 +96,15 @@ export const Tutorial = () => {
                         If there is not a valid move to be made, the turn goes to the opposition. Pieces move in a directed path, and must be moved off the board in the direction of the player's home row.
                         The first player to move all seven of their pieces off the board wins.
                     </p>
-
-                    <button 
+                </div>
+                <button 
                         style={styles.button} 
                         onClick={() => dispatch(Dispatcher.toggleTutorial())}
                         onMouseOver={(e) => e.currentTarget.style.backgroundColor = styles.buttonHover.backgroundColor}
                         onMouseOut={(e) => e.currentTarget.style.backgroundColor = styles.button.backgroundColor}
                     >
                         Are you ready to play the Royal Game of Ur?
-                    </button>
-                </div>
+                </button>
             </div>
         </div>
     );

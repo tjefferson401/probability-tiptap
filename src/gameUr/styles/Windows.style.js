@@ -1,15 +1,15 @@
 import styled from "styled-components"
 
-
 export const GameWindow = styled.div`
     /* Set the display to flex and arrange items in a row */
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    gap: 1%;
 
     /* Set the width to 100% and the height to 50vh */
-    width: 100%;
+    width: 100vw;
     height: 50vh;
 
     /* Set the background color to #f0f0f0 */
