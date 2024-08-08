@@ -29,19 +29,6 @@ const StyledButton = styled(Button)`
     }
 `;
 
-// const StyledButton = styled(Button)`
-//     &.btn-primary {
-//         transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out;
-//         background-color: ${props => props.turn === "r" ? "white" : "black"};
-//         border-color: ${props => props.turn === "r" ? "white" : "black"};
-
-//         &:hover, &:focus, &:active {
-//             background-color: ${props => props.turn === "r" ? "lightgray" : "darkgray"};
-//             border-color: ${props => props.turn === "r" ? "lightgray" : "darkgray"};
-//         }
-//     }
-// `;
-
 const ControlPanel = () => {
     const { appState, dispatch } = useAppContext();
 

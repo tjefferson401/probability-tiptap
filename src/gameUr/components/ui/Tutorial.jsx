@@ -1,6 +1,6 @@
 import { useAppContext } from "../../contexts/Context";
 import Dispatcher from "../../util/Dispatcher";
-import tutorialIcon from "../../../assets/react.svg";
+import questionIcon from "../../assets/question-solid.svg";
 
 const styles = {
     body: {
@@ -60,14 +60,24 @@ const styles = {
         backgroundColor: '#A0522D',
     },
     tutorialButton: {
-        position: 'absolute',
-        bottom: '10px', // Adjust as needed
-        right: '10px',  // Adjust as needed
+        position: 'fixed', 
+        bottom: '20px', 
+        right: '20px', 
+        backgroundColor: '#FFFFFF', // Match your app's primary color
+        border: 'none', 
+        borderRadius: '50%', 
+        padding: '15px', 
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center'
     },
     tutorialIcon: {
         width: '24px',
         height: '24px',
+        fill: 'white'
     },
+
 };
 
 
@@ -120,7 +130,7 @@ export const TutorialButton = () => {
                 onClick={() => dispatch(Dispatcher.toggleTutorial())}
                 style={styles.tutorialButton}
             >
-                <img src={tutorialIcon} alt="Tutorial Icon" style={styles.tutorialIcon} />
+                <img src={questionIcon} alt="Tutorial Icon" style={styles.tutorialIcon} />
             </button>
         </div>
     );
