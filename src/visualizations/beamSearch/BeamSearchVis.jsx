@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import TreeComponent from './TreeComponent'
 import AppContext, { useAppContext } from './BeamSearchContext'
 import ControlPanel from "./ControlPanel";
-import { DepthEstimationPipeline } from "@xenova/transformers";
 
 export const BeamSearchVis = () => {
     // Reference the Webworker that will persist across renders
@@ -54,7 +53,6 @@ export const BeamSearchVis = () => {
         /* findMaxDepth - Finds the maximum depth of the tree
          * @param {Object} node - The current node
          * @param {Number} depth - The current depth
-         * @returns {undefined}
          * @sideEffects - Updates the maxDepth variable
          */
         function findMaxDepth(node, depth) { 
@@ -70,7 +68,6 @@ export const BeamSearchVis = () => {
         /* traverse - Removes scores from all nodes except the deepest nodes
          * @param {Object} node - The current node
          * @param {Number} depth - The current depth
-         * @returns {undefined}
          * @sideEffects - Removes scores from all nodes except the deepest nodes
          */
         function traverse(node, depth) {
@@ -118,7 +115,6 @@ export const BeamSearchVis = () => {
      * @param {Array} toKeepTemp - The array of nodes to highlight
      * @param {Object} renderTree - The render tree to highlight nodes in
      * @param {Function} setRenderTree - The function to update the render tree
-     * @returns {undefined}
      * @sideEffects - Updates the render tree to highlight the nodes in the toKeepTemp array
      */
     const highlightNodes = (toKeepTemp, renderTree, setRenderTree) => {
@@ -129,7 +125,6 @@ export const BeamSearchVis = () => {
         /* highlight - Recursively highlights the nodes in the render tree that match the nodes in the toKeepTemp array
          * @param {Object} node - The current node
          * @param {Array} nodesToHighlight - The array of nodes to highlight
-         * @returns {undefined}
          * @sideEffects - Updates the highlighted property of the nodes in the render tree
          */
         const highlight = (node, nodesToHighlight) => {
@@ -207,7 +202,6 @@ export const BeamSearchVis = () => {
     /* removeHighlight - Removes the highlight from all nodes in the render tree
      * @param {Object} renderTree - The render tree to remove the highlight from
      * @param {Function} setRenderTree - The function to update the render tree
-     * @returns {undefined}
      * @sideEffects - Updates the render tree to remove the highlight from all nodes
      */
     const removeHighlight = (renderTree, setRenderTree) => {
@@ -226,7 +220,6 @@ export const BeamSearchVis = () => {
     /* animate - Recursively visualizes the beam search algorithm in steps or all at once
      * @param {Array} layer - The current layer of beams
      * @param {Number} depth - The current depth of the tree
-     * @returns {undefined}
      * @sideEffects - Updates the render tree to visualize the beam search algorithm
      * @sideEffects - Waits for a button press or a timeout to continue the animation
      */
@@ -420,7 +413,7 @@ export const BeamSearchVis = () => {
                 }
 
 
-                
+
                 {/* Recurse to the next layer/ Finish the animation */}
                 updatedTree = {
                     ...config.renderTree,
@@ -534,12 +527,22 @@ export const BeamSearchVis = () => {
     return (
         <div style={{ height: '100vh', width: '100vw', display: 'flex' }}>
             <AppContext.Provider value={initialState}>
-                <ControlPanel style={{ width: '20%', backgroundColor: 'blue', color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                    {/* <div>{lastMessage}</div> */}
+                <ControlPanel 
+                    style={{ 
+                        width: '20%', 
+                        backgroundColor: 'blue', 
+                        color: 'white', 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        justifyContent: 'center', 
+                        alignItems: 'center' 
+                    }}>
                 </ControlPanel>
+
                 <div style={{ flex: 1, backgroundColor: 'lightgray' }}>
                     <TreeComponent />
                 </div>
+                
             </AppContext.Provider>
         </div>
     )

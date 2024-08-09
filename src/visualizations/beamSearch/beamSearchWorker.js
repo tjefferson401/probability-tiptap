@@ -1,5 +1,5 @@
 
-import { pipeline, env, softmax } from '@xenova/transformers';
+import { pipeline, env } from '@xenova/transformers';
 
 /*
  * This class uses the Singleton pattern to ensure that only one instance of the
