@@ -5,15 +5,18 @@ import ControlPanel from "./ControlPanel";
 import { DepthEstimationPipeline } from "@xenova/transformers";
 
 export const BeamSearchVis = () => {
-    const worker = useRef(null);                            // reference to the WebWorker that persists across renders
-    const [lastMessage, setLastMessage] = useState("");     // the last partial sequence received from the WebWorker
-    // const [input, setInput] = useState("");                 // text the user inputs from which the model generates beams
+    // Reference the Webworker that will persist across renders
+    const worker = useRef(null);
+
+    // Last message from the WebWorker
+    const [lastMessage, setLastMessage] = useState("");
 
     const initialRenderTree = {
         name: 'root',
         children: []
     };
 
+    {/* Initialize the state for the Beam Search Visualization */}
     const [config, setConfig] = useState({
         tree: null,
         useTimeout: false,
@@ -32,10 +35,28 @@ export const BeamSearchVis = () => {
         zoom: .75,
     });
 
-    {/* Animate Logic + Animate Helper Functions Go Here!*/}
+
+
+    {/* Animate's Helper Functions Go Here */}
+
+
+
+    /* removeScoresExceptDeepest - Removes scores from all nodes except the deepest nodes in the tree
+     * @param {Object} tree - The tree to remove scores from
+     * @returns {Object} - The tree with scores removed from all nodes except the deepest nodes
+     */
     function removeScoresExceptDeepest(tree) {
+        // Initialize the maxDepth variable
         let maxDepth = 0;   
 
+
+
+        /* findMaxDepth - Finds the maximum depth of the tree
+         * @param {Object} node - The current node
+         * @param {Number} depth - The current depth
+         * @returns {undefined}
+         * @sideEffects - Updates the maxDepth variable
+         */
         function findMaxDepth(node, depth) { 
             if (!node.children || node.children.length === 0) {
                 maxDepth = Math.max(maxDepth, depth);
@@ -44,6 +65,14 @@ export const BeamSearchVis = () => {
             node.children.forEach(child => findMaxDepth(child, depth + 1));
         }
 
+
+
+        /* traverse - Removes scores from all nodes except the deepest nodes
+         * @param {Object} node - The current node
+         * @param {Number} depth - The current depth
+         * @returns {undefined}
+         * @sideEffects - Removes scores from all nodes except the deepest nodes
+         */
         function traverse(node, depth) {
             if (depth < maxDepth) {
                 delete node.score
@@ -58,10 +87,21 @@ export const BeamSearchVis = () => {
         return tree;
     }
 
+
+
+    /* waitForTimeout - Waits for a specified amount of time
+     * @param {Number} timeout - The amount of time to wait in milliseconds
+     * @returns {Promise} - A promise that resolves after the specified amount of time
+     */
     const waitForTimeout = async (timeout) => {
         return new Promise(resolve => setTimeout(resolve, timeout));
     };
 
+
+
+    /* waitForButtonPress - Waits for a button press event
+     * @returns {Promise} - A promise that resolves when a button press event is detected
+     */
     const waitForButtonPress = () => {
         return new Promise(resolve => {
             const handlePress = () => {
@@ -72,20 +112,30 @@ export const BeamSearchVis = () => {
         });
     };
 
+
+
+    /* highlightNodes - Highlights the nodes in the render tree that match the nodes in the toKeepTemp array
+     * @param {Array} toKeepTemp - The array of nodes to highlight
+     * @param {Object} renderTree - The render tree to highlight nodes in
+     * @param {Function} setRenderTree - The function to update the render tree
+     * @returns {undefined}
+     * @sideEffects - Updates the render tree to highlight the nodes in the toKeepTemp array
+     */
     const highlightNodes = (toKeepTemp, renderTree, setRenderTree) => {
         let highlightedTree = JSON.parse(JSON.stringify(renderTree));
-
-        console.log("toKeepTemp:", toKeepTemp);
         
+
+
+        /* highlight - Recursively highlights the nodes in the render tree that match the nodes in the toKeepTemp array
+         * @param {Object} node - The current node
+         * @param {Array} nodesToHighlight - The array of nodes to highlight
+         * @returns {undefined}
+         * @sideEffects - Updates the highlighted property of the nodes in the render tree
+         */
         const highlight = (node, nodesToHighlight) => {
             nodesToHighlight.forEach(n => {
-                console.log("Node:", node, "Node's sequence:", node.sequence);
-                console.log("N to highlight:", n, "N to Highlight's sequence:", n.sequence);
-                console.log("Does node have children?", n.haveChildren, "Comparing Names:", n.name === node.name, "Comparing Scores:", n.score === node.score);
-
                 if (n.name === node.name && n.haveChildren && n.score === node.score) {
                     node.highlighted = true;
-                    console.log(`Highlighted node: ${node.name} with score: ${node.score}`);
                 }
             });
             
@@ -94,6 +144,13 @@ export const BeamSearchVis = () => {
             }
         };
 
+
+
+        /* findLowestScoreLeafNode - Finds the lowest score leaf node in the render tree
+         * @param {Object} node - The current node
+         * @param {Object} lowestScoreNode - The current lowest score node
+         * @returns {Object} - The lowest score leaf node in the render tree
+         */
         const findLowestScoreLeafNode = (node, lowestScoreNode = null) => {
             if (!node.children || node.children.length === 0) {
                 // It's a leaf node
@@ -108,6 +165,12 @@ export const BeamSearchVis = () => {
             return lowestScoreNode;
         };
     
+
+
+        /* hasHighlightedNodes - Checks if the render tree has any highlighted nodes
+         * @param {Object} node - The current node
+         * @returns {Boolean} - True if the render tree has any highlighted nodes, false otherwise
+         */
         const hasHighlightedNodes = (node) => {
             if (node.highlighted) {
                 return true;
@@ -118,29 +181,35 @@ export const BeamSearchVis = () => {
             return false;
         };
 
-        console.log("Initial Render Tree:", JSON.stringify(renderTree, null, 2));
-        console.log("Nodes to Highlight (toKeepTemp):", JSON.stringify(toKeepTemp, null, 2));
-
         // Ensure children is always an array
         highlightedTree.children = highlightedTree.children || [];
     
+        // Highlight the nodes in the toKeepTemp array
         if (Array.isArray(highlightedTree.children)) {
             highlightedTree.children.forEach(child => highlight(child, toKeepTemp));
         } else {
             console.error("highlightedTree.children is not an array");
         }
 
+        // Highlight the lowest score leaf node if no nodes were highlighted; this is a fallback for the last layer
+        // where there are no nodes in toKeepTemp
         if (!hasHighlightedNodes(highlightedTree)) {
             const lowestScoreLeafNode = findLowestScoreLeafNode(highlightedTree);
             if (lowestScoreLeafNode) {
                 lowestScoreLeafNode.highlighted = true;
-                console.log(`Highlighted leaf node with lowest score: ${lowestScoreLeafNode.name} with score: ${lowestScoreLeafNode.score}`);
             }
         }
-
         setRenderTree(highlightedTree);
     };
 
+
+
+    /* removeHighlight - Removes the highlight from all nodes in the render tree
+     * @param {Object} renderTree - The render tree to remove the highlight from
+     * @param {Function} setRenderTree - The function to update the render tree
+     * @returns {undefined}
+     * @sideEffects - Updates the render tree to remove the highlight from all nodes
+     */
     const removeHighlight = (renderTree, setRenderTree) => {
         let unhighlightedTree = JSON.parse(JSON.stringify(renderTree));
         const unhighlight = (node) => {
@@ -153,25 +222,30 @@ export const BeamSearchVis = () => {
         setRenderTree(unhighlightedTree);
     };
 
-    // Add a timeout to highlight nodes before pruning
+
+    /* animate - Recursively visualizes the beam search algorithm in steps or all at once
+     * @param {Array} layer - The current layer of beams
+     * @param {Number} depth - The current depth of the tree
+     * @returns {undefined}
+     * @sideEffects - Updates the render tree to visualize the beam search algorithm
+     * @sideEffects - Waits for a button press or a timeout to continue the animation
+     */
     const animate = async (layer, depth = 0) => {
-
             try {
-                console.log("NEW RECURSIVE CALL!!!!!!!!!!!!!!!!")
-                console.log("THIS IS THE TREE!", config.tree)
 
+                // If we are at the beginning of the animation, reset the render tree
                 if (depth === 0) {
                     setConfig(prevConfig => ({ ...prevConfig, renderTree: initialRenderTree }));
-
                     layer = [...JSON.parse(JSON.stringify(config.tree)).children]
 
-                    console.log("Layer", layer[0])
+                    // Create the root node
                     let root = {
                         name: layer[0].name,
                         sequence: layer[0].name,
                         children: []
                     }
 
+                    // Create the updated tree with the root node
                     let updatedTree = {
                         ...config.renderTree,
                         children: [root],
@@ -180,41 +254,40 @@ export const BeamSearchVis = () => {
 
                     setConfig(prevConfig => ({ ...prevConfig, renderTree: updatedTree }));
 
-                } else {
-                    console.log("Layer at beginning of recursive function:", layer)
                 }
 
+                // Update the current layer and depth in the config
                 setConfig(prevConfig => ({
                     ...prevConfig,
                     currentLayer: layer,
                     currentDepth: depth
                 }))
 
+                // Show the animate button
                 if (!config.useTimeout) {
                     setConfig(prevConfig => ({ ...prevConfig, showAnimateButton: true }));
-
-                    // setTimeout(() => {
-                    //     setConfig(prevConfig => ({ ...prevConfig, showAnimateButton: true }));
-                    // }, 0);
                 }
 
+                // Wait for a button press or a timeout to continue the animation; visualizing the beams in the current layer
                 if (config.useTimeout) {
                     await waitForTimeout(2000);
+
                 } else {
-                    console.log("Waiting for button press...");
                     await waitForButtonPress();
                 }
 
+                // Prevent the showAnimateButton from showing again; prepare to visualize the candidates of each beam
                 setConfig(prevConfig => ({ ...prevConfig, showAnimateButton: false }));
 
+
+
+                {/* Visualize the candidates of each beam in the current layer */}
                 let beams = []
                 for (let beam of layer) {
-                    console.log("Beam in the layer", beam)
-                    console.log("Beam Children", beam.children)
-
                     let candidates  = []
+                    
+                    // Add each candidate to the candidates array
                     for (let child of beam.children) {
-                        console.log("Child of Beam.children in the adding step", child)
                         let candidate = {
                             name: child.token,
                             score: child.score,
@@ -222,23 +295,19 @@ export const BeamSearchVis = () => {
                             children: [],
                             highlighted: false,
                         }
-                        console.log("Candidate:", candidate)
+
                         candidates.push(candidate)
                     }
 
-                    console.log("Candidates after we add all of them!", candidates)
-
+                    // Add each beam full of candiates to the beams array
                     beams.push({
                         name: depth === 0 ? beam.name : beam.sequence,
                         children: candidates,
                         highlighted: false
                     })
-
-                    console.log("Beams after push", beams)
                 }
 
-                console.log("Beams", beams)
-
+                // Update the render tree with the beams
                 let updatedTree = {
                     ...config.renderTree,
                     children: beams,
@@ -246,38 +315,38 @@ export const BeamSearchVis = () => {
                 }
 
                 setConfig(prevConfig => ({ ...prevConfig, renderTree: updatedTree }));
-                console.log("Logging the layer parameter after visualizing the candidates", layer)
 
-                // Prune and Pick the new Beams
+                // Wait for a button press or a timeout to continue the animation; Now it is time to prune and pick off 
+                // candidates for the new beams
                 if (config.useTimeout) {
                     await waitForTimeout(2000);
                 } else {
-                    console.log("Waiting for button press...");
                     await waitForButtonPress();
                 }
 
-                // look two ahead
+
+
+                {/*Prepare to Prune and Pick the New Beams*/}
                 let toKeep = []
                 let toKeepTemp = []
                 let stage = layer
+
+                // Keeping track of all children for when we render the deepest layer of the tree
                 let allChildren = []
                 let beamChildren = []
                 let numEmptyBeams = 0
 
-                console.log("Layer before the prune step", layer)
-
+                // Look at each child for each of the baems
                 for (let beam of stage) {
-                    console.log("Beam", beam)
-
                     for (let child of beam.children) {
                         allChildren.push(child)
                         child.highlighted = false
-                        console.log("Child of Beam.children in the pruning step", child)
+
+                        // If the child has children, we need to keep it for the next layer
                         if (child.children?.length > 0) {
-                            // need a copy of the whole tree to pass to the next layer
+                            // need a copy of the whole tree to pass to the next layer recursively
                             toKeep.push(JSON.parse(JSON.stringify(child)))
-                            console.log("To Keep Array", toKeep)
-                            console.log(child.token)
+
                             // this is for temporarily rendering one layer at a time
                             let candidateBeamChildren = {
                                 name: child.token,
@@ -287,6 +356,7 @@ export const BeamSearchVis = () => {
                                 haveChildren: true,
                                 highlighted: false,
                             }
+
 
                             let candidate = {
                                 name: child.sequence,
@@ -300,21 +370,24 @@ export const BeamSearchVis = () => {
                             toKeepTemp.push(candidate)
                             beamChildren.push(candidateBeamChildren)
                         }
-                        console.log("Beam Children", beamChildren)
+  
                     }
 
+                    // If the beam has no children, aggregate how many empty beams we have
                     if (beamChildren.length === 0) {
                         numEmptyBeams += 1
                     }
                     
-                    console.log("Final Beam Children", beamChildren)
-                    beam.children = beamChildren
-                    console.log("After we add beamChildren array to beam.children", beam.children)   
+                    // add beamChildren array to beam.children
+                    beam.children = beamChildren  
                 }
 
+                // Gone through all the beams, all are empty, we are at the deepest layer
                 if (stage.length === numEmptyBeams) {
                     let childArray = []
                     let lowestChild = null
+
+                    // Go through all the Children and find the one with the lowest score
                     for (let child of allChildren) {
                         if (!lowestChild || Math.abs(child.score) < Math.abs(lowestChild.score)) {
                             lowestChild = child
@@ -325,6 +398,8 @@ export const BeamSearchVis = () => {
                     toKeepTemp = childArray
                     beamChildren = childArray
 
+                    // Update the names of the children to be the sequence -- this allows us to make the name the full phrase instead
+                    // of just the token
                     for (let child of toKeepTemp) {
                         child.name = child.sequence
                         child.haveChildren = true
@@ -332,35 +407,33 @@ export const BeamSearchVis = () => {
                     }
                 }
 
-                console.log("TO KEEP TEMP BEFORE WE CALL HIGHLIGHT NODES", toKeepTemp)
-                console.log("BEAM CHILDREN", beamChildren)
-
+                // Highlight the nodes in beamChildren, indicating which nodes are being kept for the next layer
                 highlightNodes(beamChildren, updatedTree, (newTree) => {
                     setConfig(prevConfig => ({ ...prevConfig, renderTree: newTree }));
                 });
 
+                // Wait for a button press or a timeout to continue the animation
                 if (config.useTimeout) {
                     await waitForTimeout(2000);
                 } else {
-                    console.log("Waiting for button press...");
                     await waitForButtonPress();
                 }
 
-                console.log("To Keep for Next Stack Frame", depth, toKeep)
-                console.log("To Keep Temp", depth, toKeepTemp)
 
+                
+                {/* Recurse to the next layer/ Finish the animation */}
                 updatedTree = {
                     ...config.renderTree,
                     children: toKeepTemp
                 }
-                console.log(updatedTree)
 
+                // Update the render tree with the nodes that are being kept for the next layer
                 setConfig(prevConfig => ({ ...prevConfig, renderTree: updatedTree }));
 
+                // If there are nodes to keep, recurse to the next layer
                 if (toKeep.length > 0) {
-                    console.log("This is the toKeep array", toKeep)
-                    console.log("Recursing, this is what we are passing into layer!", JSON.parse(JSON.stringify(toKeep)))
 
+                    // Remove the Highlight from the nodes in the render tree, recurse to the next layer
                     removeHighlight(updatedTree, (newTree) => {
                         setConfig(prevConfig => ({ ...prevConfig, renderTree: newTree }));
                     });
@@ -370,12 +443,12 @@ export const BeamSearchVis = () => {
                     }, 0);
 
                 } else {
-                    console.log("Finished!")
-                    console.log("Final Tree", JSON.parse(JSON.stringify(config.tree)))
-                    let treeWithoutScores = removeScoresExceptDeepest(JSON.parse(JSON.stringify(config.tree)))
-
-                    setTimeout(() => {}, 0);
                     
+                    // We have finished the animation; remove the scores from all nodes except the deepest nodes; and render the full tree
+                    // Force a re-render w/ Timeout
+                    setTimeout(() => {}, 0);
+                 
+                    // Enable the resetButton, disable the stepButton, and enable dragging
                     setConfig(prevConfig => ({
                         ...prevConfig,
                         renderTree: removeScoresExceptDeepest(JSON.parse(JSON.stringify(config.tree))),
@@ -385,6 +458,7 @@ export const BeamSearchVis = () => {
                     }));
                 }
                 
+                // If we are at the end of the animation, disable the animate button
                 setConfig(prevConfig => ({
                     ...prevConfig,
                     showAnimateButton: false
@@ -396,14 +470,17 @@ export const BeamSearchVis = () => {
         }
 
     useEffect(() => {
+        // Continue the animation with the updated useTimeout state from the current state if we press the animate button!
         if (config.useTimeout && config.isRunning) {
-            // Continue the animation with the updated useTimeout state from the current state
             animate(config.currentLayer, config.currentDepth);
         }
     }, [config.useTimeout, config.isRunning]);
 
 
     {/* WebWorker Logic Goes Here!*/}
+
+
+
     // Create a new WebWorker when the component mounts
     useEffect(() => {
         // Create a new WebWorker if one does not already exist
@@ -414,12 +491,10 @@ export const BeamSearchVis = () => {
         // When the worker returns an output, update the lastMessage to be the "most likely" sequence at that point
         const onMessage = (event) => {
             if (event.data.status === 'update') {
-                console.log("Update Output:", event.data.output);
                 setLastMessage(event.data.sequence);
             }
 
             if (event.data.status === 'complete') {
-                console.log("Complete Output:", event.data.output);
                 setLastMessage(event.data.sequence);
                 setConfig((prevConfig) => ({
                     ...prevConfig,
@@ -440,8 +515,6 @@ export const BeamSearchVis = () => {
     // onClick handler for the "Generate" button to send the input text to the WebWorker
     const generate = async () => {
         await waitForTimeout(0);
-        console.log("This is what tree looks like: ", config.tree)
-        console.log("This is what we are sending to the worker: ", config.input, config.numBeams, config.maxDepth)
         worker.current.postMessage({
             text: config.input,
             numBeams: config.numBeams,
