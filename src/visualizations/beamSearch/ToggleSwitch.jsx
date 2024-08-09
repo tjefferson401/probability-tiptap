@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import Switch from 'react-switch';
 import { useAppContext } from './BeamSearchContext';
 
+
+{/* NEED TO ADD STYLING HERE */}
+
 const ToggleSwitch = () => {
 
-  const { setConfig, config, showLogProbs } = useAppContext();
+  const { setConfig, config } = useAppContext();
 
   const handleChange = (nextChecked) => {
     setConfig({ ...config, showLogProbs: nextChecked });

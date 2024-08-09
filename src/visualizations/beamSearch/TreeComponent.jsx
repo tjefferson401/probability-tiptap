@@ -2,13 +2,12 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import Tree from 'react-d3-tree';
 import { useAppContext } from './BeamSearchContext';
 import CustomNodeRender from './CustomNode';
-import OutputBar from './OutputBar';
 
     const TreeComponent = () => {
 
         const {config, setConfig} = useAppContext();
 
-        const [dimensions, setDimensions] = useState({
+        const dimensions = useState({
             width: window.innerWidth, 
             height: window.innerHeight 
         });
@@ -16,58 +15,42 @@ import OutputBar from './OutputBar';
         const [treeKey, setTreeKey] = useState(0);
 
         const initialTranslate = {
-            x: dimensions.width - dimensions.width,  // Adjusted for better positioning
-            y: dimensions.height / 2   // Adjusted for better positioning
+            x: dimensions.width - dimensions.width,  // As far left as possible
+            y: dimensions.height / 2   // Center of the Screen
         };
 
         const [translate, setTranslate] = useState(initialTranslate);
-        console.log(window.innerWidth)
 
-        // useEffect(() => {
-        //     const handleResize = () => {
-        //         setDimensions({
-        //             width: window.innerWidth,
-        //             height: window.innerHeight
-        //         });
-        //     };
-        //     window.addEventListener('resize', handleResize);
-        //     return () => {
-        //         window.removeEventListener('resize', handleResize);
-        //     };
-        // }, []);
-
+        /* calculateZoom - sets the zoom level based on the number of beams
+         * @param {number} numBeams - the number of beams in the beam search
+         * @return {number} the zoom level to be set
+         */
         const calculateZoom = (numBeams) => {
-            console.log("Number of Beams:", numBeams);
-
             if (numBeams === 1 || numBeams === 2) {
                 return 0.75;
             } else if (numBeams === 3) {
                 return 0.5;
-            } else if (numBeams === 4) {
-                return 0.35;
             } else {
                 return -1; // Default zoom value, change as needed
             }
         };
 
         useEffect(() => {
+        // When the number of beams changes, calculate the new zoom level, and set the config state
             const newZoom = calculateZoom(config.numBeams);
-            console.log("New Zoom:", newZoom);
-
             setConfig((prevConfig) => ({...prevConfig, zoom: newZoom}));
         }, [config.numBeams]);
 
-        console.log("Translate:", translate.x, translate.y);
 
         useEffect(() => {
+        // When the tree is reset, reload the tree with the initial translate values and reset the key
             if (config.tree === null) {
-                // Perform the reload or reset logic here
                 setTranslate(initialTranslate);
-                setTreeKey((prevKey) => prevKey + 1); // Change key to force rerender of Tree component
+                // Force rerender of Tree component
+                setTreeKey((prevKey) => prevKey + 1);
             }
         }, [config.tree]);
 
-        console.log("New Zoom in config:", config.zoom);
 
     return (
         <div style={{
@@ -81,15 +64,16 @@ import OutputBar from './OutputBar';
                 data={config.renderTree}
                 renderCustomNodeElement={(rd3tProps) => <CustomNodeRender {...rd3tProps} />}
                 translate={translate}
-                zoom = {config.zoom}  // Adjusted zoom level
-                nodeSize={{ x: 400, y: 30 }}  // Adjusted node size
+                zoom = {config.zoom}
+                nodeSize={{ x: 400, y: 30 }} 
+
+                // Disable Zooming when the Visualization is Running
                 scaleExtent={config.isRunning ?  { min: config.zoom, max: config.zoom } : { min: 0.1, max: 2 }}
                 draggable={config.isDraggable}
                 transitionDuration={500}
                 enableLegacyTransitions={true}
                 separation={{ siblings: 3, nonSiblings: 4}}
             />
-            {/* <OutputBar /> */}
         </div>
     );
 }

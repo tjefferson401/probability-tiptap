@@ -1,5 +1,8 @@
 import { HashLoader } from 'react-spinners';
 
+/* HashLoader is a loading spinner from the react-spinners library.
+ * Renders this  loading spinner while Pyodide is loading.
+ */
 const Loading = () => {
 return (
     <div className="loading" style={{

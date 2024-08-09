@@ -8,6 +8,7 @@ export const BeamSearch = () => {
   
   return (
     <div>
+      {/* If Pyodide is not ready, display a loading spinner */}
       {pyodideLoadingState !== 'ready' ? (
         <Loading />
       ) : (

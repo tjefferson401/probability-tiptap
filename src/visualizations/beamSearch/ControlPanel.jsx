@@ -10,7 +10,6 @@ const ControlPanelStyle = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  // border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
@@ -39,7 +38,7 @@ const ButtonStyle = styled.button`
   }
 `;
 
-const SliderStyle = styled.input.attrs({ type: 'range' })`
+const SliderStyle = styled.input.attrs({ type: 'range' })` 
   width: 100%;
   height: 25px;
   background: #cfd8dc;
@@ -147,12 +146,14 @@ const ControlPanel = () => {
     const [showButtons, setShowButtons] = useState(false);
     const [startPressed, setStartPressed] = useState(false);
 
+    // On tree generation, once the web worker is done, call startStepping
     useEffect(() => {
         if (config.tree) {
           startStepping();
         }
       }, [config.tree]);
 
+    // Start the visualization once the Start button is pressed
     const startStepping = () => {
         setConfig((prevConfig) => ({
             ...prevConfig,
@@ -165,6 +166,7 @@ const ControlPanel = () => {
         animate([], 0); // Pass initial parameters for your animation
     };
     
+    // Start the animation at the current layer of visualization once the Animate button is pressed
     const startAnimating = () => {
         setConfig((prevConfig) => ({
             ...prevConfig,
@@ -176,6 +178,7 @@ const ControlPanel = () => {
         animate(config.currentLayer, config.currentDepth); // Continue from current state
     };
     
+    // Once we have rendered the entire tree, reset all of the states to their original values
     const reset = () => {
       console.log("THIS IS WHAT IS IN TREE AT THIS POINT", config.tree)
         setConfig((prevConfig) => ({
@@ -200,7 +203,6 @@ const ControlPanel = () => {
     
     return (
         <ControlPanelStyle>
-            {/* {children} */}
             <InputContainer>
                 <Label>Input Text: </Label>
                 <Input placeholder={"Enter a message"} value={config.input} disabled={config.isRunning} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, input: e.target.value }))} />
