@@ -48,20 +48,11 @@ const Pieces = () => {
 		const { x, y } = calcCoords(e);
 		const [piece, row, col] = e.dataTransfer.getData('text').split(',');
 
-		console.log("Piece: ", piece, "X: ", x, "Y: ", y)
-
 		if (!piece || !row || !col) {
 			return;
 		}
 
-		// console.log("New Position: ", newPosition[x][y])
-		// console.log(piece !== newPosition[x][y])
-		// console.log(newPosition[x][y] !== '')
-		// console.log(x === 1)
-		// console.log(x === 4)
-
 		if (piece !== newPosition[x][y] && newPosition[x][y] !== '' && x === 1 && y === 4) {
-			console.log("Returned Early")
 			return;
 		}
 

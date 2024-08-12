@@ -26,8 +26,6 @@ const Die = ({ color }) => {
 };
 
 
-
-
 const Dice = () => {
     const { appState } = useAppContext();
     

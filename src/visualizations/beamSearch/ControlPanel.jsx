@@ -180,7 +180,6 @@ const ControlPanel = () => {
     
     // Once we have rendered the entire tree, reset all of the states to their original values
     const reset = () => {
-      console.log("THIS IS WHAT IS IN TREE AT THIS POINT", config.tree)
         setConfig((prevConfig) => ({
             ...prevConfig,
             renderTree: {
