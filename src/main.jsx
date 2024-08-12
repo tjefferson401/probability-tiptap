@@ -5,11 +5,11 @@ import { router } from './App.jsx'
 import { RouterProvider } from 'react-router-dom'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <PyodideProvider>
     <RouterProvider
       router={router}
     />
     </PyodideProvider>
-  </React.StrictMode>,
+  /* </React.StrictMode> */
 )

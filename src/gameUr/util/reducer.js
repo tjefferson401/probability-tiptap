@@ -1,24 +1,26 @@
 // action in 2 parts -- payload and type
-
+import { canMove } from "./helper"
 import ActionTypes from "./ActionTypes"
-import { rollDice } from "./helper"
+import { rollDice, createPosition } from "./helper"
 
 // based on the payload and the type we change the state 
 export const reducer = (state, action) => {
     switch(action.type) {
 
         case ActionTypes.ROLL_DICE : {
-            let { turn } = state;
+            let { turn, position } = state;
             const newDiceRoll = rollDice();
             const newMoveLength = newDiceRoll.reduce((sum, value) => sum + value, 0); // summing up values in an array
             console.log("You may move ", newMoveLength, " spaces.");
             // console.log("AppState: ", state)
 
-            if (!newMoveLength) {
+            if (!newMoveLength || !canMove(position[position.length - 1], turn, newMoveLength)) {
                 turn = turn === 'b' ? 'r' : 'b'
+                state.piecesOn = false
                 state.diceOff = false
             } else {
                 state.diceOff = true
+                state.piecesOn = true
             }
 
             state.diceFrequency[newMoveLength] += 1
@@ -29,7 +31,7 @@ export const reducer = (state, action) => {
                 diceRoll: newDiceRoll,
                 moveLength: newMoveLength,
                 diceOff: state.diceOff,
-                piecesOn: true,
+                piecesOn: state.piecesOn,
                 diceFrequency: state.diceFrequency
             };
         };
@@ -54,14 +56,18 @@ export const reducer = (state, action) => {
             const addRed = 1 ? recentCoords[0] === 2 && recentCoords[1] === 2 : 0;
             const addBlue = 1 ? recentCoords[0] === 0 && recentCoords[1] === 2 : 0;
 
+            const newRedScore = state.redScore + addRed;
+            const newBlueScore = state.blueScore + addBlue;
+
             return {
                 ...state, // return whatever the state was
                 turn,
                 position,
                 diceOff: false,
                 piecesOn: false,
-                redScore: state.redScore + addRed,
-                blueScore: state.blueScore + addBlue
+                redScore: newRedScore,
+                blueScore: newBlueScore,
+                winner: newRedScore === 7 ? 'r' : newBlueScore === 7 ? 'b' : null
             };
         };
 
@@ -117,8 +123,30 @@ export const reducer = (state, action) => {
             }
         }
         
-        case ActionTypes.SCORE : {
+        case ActionTypes.RESET_GAME : {
+            console.log("We are resetting the game :)")
+            return {
+                ...state,
+                position: [createPosition()],
+                turn: 'b',
+                candidateMove: [],
+                diceRoll: [0, 0, 0, 0],
+                moveLength: 0,
+                diceOff: false,
+                redScore: 0,
+                blueScore: 0,
+                redStack: 7,
+                blueStack: 7,
+                diceFrequency: [0, 0, 0, 0, 0, 0],
+                winner: null
+            }
+        }
 
+        case ActionTypes.TOGGLE_TUTORIAL : {
+            return {
+                ...state,
+                showTutorial: !state.showTutorial
+            }
         }
 
         default : // if not a new-move return the state
