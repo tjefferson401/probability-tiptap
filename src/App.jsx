@@ -1,10 +1,10 @@
-import { BrowserRouter as Router, Link, Route, Routes, createBrowserRouter } from 'react-router-dom';
+import { HashRouter as Router, Link, Route, Routes, createHashRouter } from 'react-router-dom';
 import { FileStructureOuter } from './Textbook';
 import { GameOfUr } from './gameUr/GameOfUr';
 import { BeamSearch } from './visualizations/beamSearch/BeamSearch';
 import { Home } from './Home';
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
     {
         path: "/",
         element: <Home/>
