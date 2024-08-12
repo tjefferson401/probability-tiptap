@@ -1,0 +1,86 @@
+
+% rebase('templates/chapter.html', title="Random Variable Reference")
+ 
+<center><h1>Random Variable Reference</h1></center>
+<hr/>
+
+<h3>Discrete Random Variables</h3>
+<p>
+<%
+  include('templates/rvCards/bernoulli.html')
+%>
+</p>
+
+<!-- put a page break in the PDF -->
+<div class="newpage-after"></div>
+
+<p >
+<%
+  include('templates/rvCards/binomial.html')
+%>
+</p>
+
+<!-- put a page break in the PDF -->
+<div class="newpage-after"></div>
+
+<p>
+<%
+  include('templates/rvCards/poisson.html')
+%>
+</p>
+
+<!-- put a page break in the PDF -->
+<div class="newpage-after"></div>
+
+<p>
+<%
+  include('templates/rvCards/geometric.html')
+%>
+</p>
+
+<!-- put a page break in the PDF -->
+<div class="newpage-after"></div>
+
+<p>
+<%
+  include('templates/rvCards/negBinomial.html')
+%>
+</p>
+
+<!-- put a page break in the PDF -->
+<div class="newpage-after"></div>
+
+<h3>Continuous Random Variables</h3>
+
+<p>
+<%
+  include('templates/rvCards/uniform.html')
+%>
+</p>
+
+<!-- put a page break in the PDF -->
+<div class="newpage-after"></div>
+
+<p>
+<%
+  include('templates/rvCards/exponential.html')
+%>
+</p>
+
+<!-- put a page break in the PDF -->
+<div class="newpage-after"></div>
+
+<p>
+<%
+  include('templates/rvCards/normal.html')
+%>
+</p>
+
+<!-- put a page break in the PDF -->
+<div class="newpage-after"></div>
+
+<p>
+<%
+  include('templates/rvCards/beta.html')
+%>
+</p>

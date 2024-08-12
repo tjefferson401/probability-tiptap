@@ -56,27 +56,22 @@ const Pieces = () => {
 
 		// Guard against errors when some other non-piece item on screen is dropped onto the board
 		const [piece, row, col] = e.dataTransfer.getData('text').split(',');
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 		if (!piece || !row || !col) {
 			return;
 		}
 
-<<<<<<< Updated upstream
-=======
 		// Get a copy of the current state of the board and the coordinates of the drop location
 		const newPosition = copyPosition(appState.position[appState.position.length - 1]);
 		const { x, y } = calcCoords(e);
 
 		// Disallow capturing an enemy piece on the middle rosette at (1, 4)
+
 		if (piece !== newPosition[x][y] && newPosition[x][y] !== '' && x === 1 && y === 4) {
 			return;
 		}
 
+
 		// There is always at most one valid location to move. Make sure drop location is that location.
->>>>>>> Stashed changes
 		if (appState.candidateMove && appState.candidateMove[0] === x && appState.candidateMove[1] === y) {
 			
 			// Piece was taken from red stack. Decrement red counter and hide if stack is empty
