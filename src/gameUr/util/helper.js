@@ -22,7 +22,7 @@ export const rollDice = () => {
     return Array.from({ length: 4 }, () => Math.floor(Math.random() * 2));
 };
 
-export const getMove = (position, piece, row, col, moveLength) => {
+export const getMove = (piece, row, col, moveLength) => {
     const coordinateMapRed = {
         '2-3': 0,
         '2-4': 1,

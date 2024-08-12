@@ -1,10 +1,19 @@
+/*
+ * Piece.jsx
+ * Implements the Pieces component for handling drag events and 
+ * overlaying a single piece on the board.
+ * Authors: Adam Boswell and Justin Blumencranz
+ */
+
 import React from 'react';
-import { useAppContext } from '../../contexts/Context.jsx';
-import { getMove } from "../../util/helper.js";
+import Rp from '../../assets/rp.png';   
+import Bp from '../../assets/bp.png';  
 import Dispatcher from "../../util/Dispatcher.js";
 import styled, { css } from 'styled-components';
-import Rp from '../../assets/rp.png';   
-import Bp from '../../assets/bp.png';   
+import { useAppContext } from '../../contexts/Context.jsx';
+import { getMove } from "../../util/helper.js";
+ 
+// STYLED COMPONENTS //
 
 const StyledPiece = styled.div`
     width: 12.5%;
@@ -12,9 +21,11 @@ const StyledPiece = styled.div`
     position: absolute;
     background-size: 100%;
 
+    // Gives Blue and Red Pieces their respective images
     &.bp { background-image: url(${Bp});}
     &.rp { background-image: url(${Rp});}
-
+    
+    // These define how much to translate the absolute position of each piece to display correctly on the board
     &.p-20 { transform: translate(0%, 0%); }
     &.p-21 { transform: translate(100%, 0%); }
     &.p-22 { transform: translate(200%, 0%); }
@@ -43,27 +54,45 @@ const StyledPiece = styled.div`
     &.p-07 { transform: translate(700%, 200%); }
 `;
 
-const Piece = ({ row, col, piece }) => {
-    const { appState, dispatch } = useAppContext();
-    const { turn, position, moveLength } = appState;
-    const currentPosition = position[position.length - 1];
+// COMPONENTS //
 
+/**
+ * Piece component overlays a single piece on the board.
+ * @param {Object} props - the row, column, and piece type of the piece to be rendered. 
+ * @returns {JSX.Element} - A single Piece component rendering the correct piece at the correct board location
+ */
+const Piece = ({ row, col, piece }) => {
+    const { appState, dispatch } = useAppContext();                 // Access and modify the appState reducer
+    const { turn, moveLength } = appState;                          // Who's turn and how far to move
+    const currentPosition = appState.position[position.length - 1]; // Current board state
+
+    /**
+     * Handle when a piece is picked up
+     * @param {Object} e - The event object
+     */
     const onDragStart = e => {
+        // Piece can only be moved after dice have been rolled (piecesOn is true)
         if (appState.piecesOn) {
+            // Allow the piece image to be moved
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text/plain', `${piece},${row},${col}`);
     
+            // Hide the piece on the board while dragging
             setTimeout(() => {
                 e.target.style.display = 'none';
             }, 0);
         }
-       
+
+        // Only allow piece to move if it is that pieces turn
+        // piece is either 'bp' or 'rp'
         if (turn === piece[0]) {
-            const newCandidateMove = getMove(currentPosition, piece, row, col, moveLength);
+            // Calculate where the piece can go based on it's current location
+            const newCandidateMove = getMove(piece, row, col, moveLength);
             dispatch(Dispatcher.generateCandidateMove({ candidateMove: newCandidateMove }));
         }
     };
 
+    // Move the piece back to it's original position after dragging (piece reappears if move failed)
     const onDragEnd = e => e.target.style.display = "block";
 
     return (
