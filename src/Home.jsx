@@ -1,4 +1,5 @@
 import { Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 export const Home = () => {
     return (
@@ -10,9 +11,9 @@ export const Home = () => {
             gap: '5px' // Adjust the value as per your desired gap size
         }}>
             <h1>Home</h1>
-            <Button onClick={() => window.location.href = '/files'}>File Structure</Button>
-            <Button onClick={() => window.location.href = '/ur'}>The Game of Ur</Button>
-            <Button onClick={() => window.location.href = '/beamsearch'}>Beam Search Visualizer</Button>
+            <Link to="/files"><Button>File Structure</Button></Link>
+            <Link to="/ur"><Button>Game of Ur</Button></Link>
+            <Link to="/beamsearch"><Button>Beam Search Visualizer</Button></Link>
         </div>
     );
 }
