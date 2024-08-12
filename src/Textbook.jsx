@@ -38,7 +38,7 @@ import { BrowserRouter as Router, Link, Route, Routes } from 'react-router-dom';
 import { FileDisplay } from './components/FileDisplay';
 
 const fetchFileStructure = async () => {
-    const response = await fetch('/fileStructure.json');
+    const response = await fetch('/probability-tiptap/fileStructure.json');
     return response.json();
 };
 

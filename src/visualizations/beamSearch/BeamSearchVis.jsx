@@ -32,6 +32,7 @@ export const BeamSearchVis = () => {
         lastMessage: "",
         isDraggable: false,
         zoom: .75,
+        showLogProbs: false,
     });
 
 

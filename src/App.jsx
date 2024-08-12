@@ -20,5 +20,9 @@ export const router = createHashRouter([
     {
         path:"/beamsearch",
         element: <BeamSearch/>
+    },
+    {
+        path:"*",
+        element: <Home/>
     }
 ])

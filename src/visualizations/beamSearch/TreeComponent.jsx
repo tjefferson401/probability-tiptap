@@ -7,10 +7,10 @@ import CustomNodeRender from './CustomNode';
 
         const {config, setConfig} = useAppContext();
 
-        const dimensions = useState({
+        const dimensions = {
             width: window.innerWidth, 
             height: window.innerHeight 
-        });
+        };
 
         const [treeKey, setTreeKey] = useState(0);
 
