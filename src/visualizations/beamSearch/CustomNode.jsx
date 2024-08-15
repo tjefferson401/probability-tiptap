@@ -35,7 +35,6 @@ const CustomNodeRender = ({ nodeDatum }) => {
             const textElement = textRef.current;
             console.log("Text Element:", textElement);
 
-
             const bbox = textElement.getBoundingClientRect();
 
             let width = textElement.scrollWidth; // Add padding to width

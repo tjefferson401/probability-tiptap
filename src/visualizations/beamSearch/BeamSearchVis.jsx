@@ -447,6 +447,7 @@ export const BeamSearchVis = () => {
                         isStepDisabled: true,
                         showResetButton: true,
                         isDraggable: true,
+                        isRunning: false
                     }));
                 }
                 
