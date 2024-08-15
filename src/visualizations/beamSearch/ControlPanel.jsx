@@ -210,7 +210,7 @@ const ControlPanel = () => {
             <InputContainer>
                 <Label>Beams:</Label>
                 <Input value={config.numBeams} readOnly />
-                <SliderStyle min="1" max="3" value={config.numBeams}  onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, numBeams: Number(e.target.value) }))} />
+                <SliderStyle min="1" max="3" value={config.numBeams} disabled={config.isRunning} onChange={(e) => setConfig(prevConfig => ({ ...prevConfig, numBeams: Number(e.target.value) }))} />
             </InputContainer>
 
             <InputContainer>
