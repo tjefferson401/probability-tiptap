@@ -344,8 +344,6 @@ export const BeamSearchVis = () => {
                             // this is for temporarily rendering one layer at a time
                             let candidateBeamChildren = {
                                 name: child.token,
-                                score: child.score,
-                                rank: child.rank,
                                 children: [],
                                 haveChildren: true,
                                 highlighted: false,
@@ -354,8 +352,6 @@ export const BeamSearchVis = () => {
 
                             let candidate = {
                                 name: child.sequence,
-                                score: child.score,
-                                rank: child.rank,
                                 children: [],
                                 haveChildren: true,
                                 highlighted: false,
