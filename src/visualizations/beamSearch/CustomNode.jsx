@@ -54,11 +54,18 @@ const CustomNodeRender = ({ nodeDatum }) => {
     // const rectPadding = 20;
     // const rectWidth = 300; // Set a fixed width for the rect and foreignObject
 
-    const nodeFill = nodeDatum.highlighted ? "#FFEB3B" : "#E3F2FD"; // Yellow background if highlighted, otherwise soft blue
-    const nodeStroke = nodeDatum.highlighted ? "#FBC02D" : "none"; // Yellow border if highlighted, otherwise none
-    const textColor = nodeDatum.highlighted ? "#F57F17" : "#0D47A1"; // Darker yellow text if highlighted, otherwise dark blue
+    const nodeFill = nodeDatum.highlighted_special 
+    ? "#0dcd1a" : (nodeDatum.highlighted ? "#FFEB3B": "#E3F2FD"); 
 
-    console.log("Current Node:", nodeDatum);
+    const nodeStroke = nodeDatum.highlighted_special 
+    ? "#aeeeb1": (nodeDatum.highlighted ? "#FBC02D": "none"); 
+
+    const textColor = nodeDatum.highlighted_special 
+    ? "#093f0c" : (nodeDatum.highlighted ? "#F57F17": "#0D47A1");
+
+
+    // const textColor = nodeDatum.highlighted ? "#F57F17" : "#0D47A1"; // Darker yellow text if highlighted, otherwise dark blue
+
 
     // rounded corners and drop shadow
     return (

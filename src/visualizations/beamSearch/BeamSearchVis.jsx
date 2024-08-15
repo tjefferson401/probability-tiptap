@@ -192,7 +192,7 @@ export const BeamSearchVis = () => {
         if (!hasHighlightedNodes(highlightedTree)) {
             const lowestScoreLeafNode = findLowestScoreLeafNode(highlightedTree);
             if (lowestScoreLeafNode) {
-                lowestScoreLeafNode.highlighted = true;
+                lowestScoreLeafNode.highlighted_special = true;
             }
         }
         setRenderTree(highlightedTree);
@@ -344,6 +344,8 @@ export const BeamSearchVis = () => {
                             // this is for temporarily rendering one layer at a time
                             let candidateBeamChildren = {
                                 name: child.token,
+                                score: child.score,
+                                rank: child.rank,
                                 children: [],
                                 haveChildren: true,
                                 highlighted: false,
