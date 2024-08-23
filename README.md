@@ -1,6 +1,9 @@
-# Get Started
+# Beam Search Visualizer
+An interactive tree visualizer of the popular Beam Search algorithm for selecting LLM output text
 
-`npm install`
-`npm run dev`
+Authors:
+Justin Blumencranz and Adam Boswell (Equal Contribution)
 
-You're done!
+React.js
+Xenova/transformers
+react-d3-tree
