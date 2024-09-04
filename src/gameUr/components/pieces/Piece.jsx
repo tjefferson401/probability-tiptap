@@ -64,7 +64,6 @@ const StyledPiece = styled.div`
 const Piece = ({ row, col, piece }) => {
     const { appState, dispatch } = useAppContext();                 // Access and modify the appState reducer
     const { turn, moveLength } = appState;                          // Who's turn and how far to move
-    const currentPosition = appState.position[position.length - 1]; // Current board state
 
     /**
      * Handle when a piece is picked up
